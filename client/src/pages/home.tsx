@@ -1,6 +1,46 @@
 import { Shield, Car, Cross, PiggyBank, ShieldCheck, Building2, Zap, Users, Phone, Quote } from "lucide-react";
 import { SiFacebook, SiX, SiInstagram, SiYoutube } from "react-icons/si";
 
+function NamibianFlag() {
+  const W = 90, H = 60;
+  const sunCx = 19, sunCy = 16, sunR = 6.5, rayOuter = 11;
+  const rayCount = 12;
+  const rays: string[] = [];
+  for (let i = 0; i < rayCount; i++) {
+    const a = (i * 360) / rayCount;
+    const tipAngle = (a * Math.PI) / 180 - Math.PI / 2;
+    const lAngle = ((a - 14) * Math.PI) / 180 - Math.PI / 2;
+    const rAngle = ((a + 14) * Math.PI) / 180 - Math.PI / 2;
+    const tx = sunCx + rayOuter * Math.cos(tipAngle);
+    const ty = sunCy + rayOuter * Math.sin(tipAngle);
+    const lx = sunCx + sunR * Math.cos(lAngle);
+    const ly = sunCy + sunR * Math.sin(lAngle);
+    const rx = sunCx + sunR * Math.cos(rAngle);
+    const ry = sunCy + sunR * Math.sin(rAngle);
+    rays.push(`M ${lx.toFixed(2)},${ly.toFixed(2)} L ${tx.toFixed(2)},${ty.toFixed(2)} L ${rx.toFixed(2)},${ry.toFixed(2)} Z`);
+  }
+
+  return (
+    <svg width="60" height="40" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" style={{ borderRadius: 3, display: "block", boxShadow: "0 1px 4px rgba(0,0,0,0.4)" }}>
+      <defs>
+        <clipPath id="flagClip">
+          <rect width={W} height={H} rx="2"/>
+        </clipPath>
+      </defs>
+      <g clipPath="url(#flagClip)">
+        <rect width={W} height={H} fill="#003580"/>
+        <polygon points={`0,${H} ${W},${H} ${W},0`} fill="#009A44"/>
+        <line x1="0" y1={H} x2={W} y2="0" stroke="white" strokeWidth="13"/>
+        <line x1="0" y1={H} x2={W} y2="0" stroke="#D21034" strokeWidth="7"/>
+        {rays.map((d, i) => (
+          <path key={i} d={d} fill="#FFCC00"/>
+        ))}
+        <circle cx={sunCx} cy={sunCy} r={sunR * 0.58} fill="#FFCC00"/>
+      </g>
+    </svg>
+  );
+}
+
 function Navbar() {
   return (
     <nav className="w-full flex items-center justify-between px-6 md:px-12 py-4 bg-[#0a2e3a]" role="navigation" aria-label="Main navigation" data-testid="navbar">
@@ -31,18 +71,7 @@ function HeroSection() {
       data-testid="hero-section"
     >
       <div className="mb-6" data-testid="flag-icon">
-        <svg width="40" height="28" viewBox="0 0 40 28" fill="none" aria-hidden="true">
-          <rect width="40" height="28" rx="2" fill="#003580"/>
-          <polygon points="0,0 40,28 40,20 0,8" fill="#009543"/>
-          <polygon points="0,6 40,22 40,28 0,12" fill="white"/>
-          <polygon points="0,0 0,6 40,22 40,16" fill="#c8102e"/>
-          <circle cx="10" cy="10" r="5" fill="#FFD700"/>
-          <circle cx="10" cy="10" r="3" fill="#003580"/>
-          <line x1="10" y1="3" x2="10" y2="5" stroke="#FFD700" strokeWidth="1.2"/>
-          <line x1="10" y1="15" x2="10" y2="17" stroke="#FFD700" strokeWidth="1.2"/>
-          <line x1="3" y1="10" x2="5" y2="10" stroke="#FFD700" strokeWidth="1.2"/>
-          <line x1="15" y1="10" x2="17" y2="10" stroke="#FFD700" strokeWidth="1.2"/>
-        </svg>
+        <NamibianFlag />
       </div>
 
       <h1 className="text-white text-3xl md:text-5xl font-bold leading-tight max-w-2xl mb-4" data-testid="hero-title">
