@@ -229,9 +229,10 @@ function ServicesSection() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
           {services.map((svc) => (
-            <div
+            <a
               key={svc.id}
-              className="group bg-white rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all duration-300 overflow-hidden"
+              href={`/services/${svc.id}`}
+              className="group bg-white rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
               data-testid={`card-service-${svc.id}`}
             >
               <div className="relative h-44 overflow-hidden">
@@ -252,8 +253,8 @@ function ServicesSection() {
                 </div>
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${svc.color}`}/>
               </div>
-              <div className="p-5">
-                <ul className="space-y-2.5">
+              <div className="p-5 flex-1 flex flex-col">
+                <ul className="space-y-2.5 flex-1">
                   {svc.items.map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-gray-600">
                       <ChevronRight className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
@@ -261,8 +262,12 @@ function ServicesSection() {
                     </li>
                   ))}
                 </ul>
+                <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-blue-600">Learn more</span>
+                  <ArrowRight className="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform" aria-hidden="true"/>
+                </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
         <div className="text-center mt-12">
