@@ -9,34 +9,6 @@ import { SiFacebook, SiX, SiInstagram, SiLinkedin } from "react-icons/si";
 const BLUE = "#1e7bc4";
 const DARK = "#0d2e52";
 
-function NamibianFlag() {
-  const W = 90, H = 60;
-  const sunCx = 19, sunCy = 16, sunR = 6.5, rayOuter = 11;
-  const rays: string[] = [];
-  for (let i = 0; i < 12; i++) {
-    const a = (i * 360) / 12;
-    const tipA = (a * Math.PI) / 180 - Math.PI / 2;
-    const lA = ((a - 14) * Math.PI) / 180 - Math.PI / 2;
-    const rA = ((a + 14) * Math.PI) / 180 - Math.PI / 2;
-    const tx = sunCx + rayOuter * Math.cos(tipA), ty = sunCy + rayOuter * Math.sin(tipA);
-    const lx = sunCx + sunR * Math.cos(lA), ly = sunCy + sunR * Math.sin(lA);
-    const rx = sunCx + sunR * Math.cos(rA), ry = sunCy + sunR * Math.sin(rA);
-    rays.push(`M ${lx.toFixed(2)},${ly.toFixed(2)} L ${tx.toFixed(2)},${ty.toFixed(2)} L ${rx.toFixed(2)},${ry.toFixed(2)} Z`);
-  }
-  return (
-    <svg width="24" height="16" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" style={{ borderRadius: 2 }}>
-      <defs><clipPath id="fc"><rect width={W} height={H} rx="2"/></clipPath></defs>
-      <g clipPath="url(#fc)">
-        <rect width={W} height={H} fill="#003580"/>
-        <polygon points={`0,${H} ${W},${H} ${W},0`} fill="#009A44"/>
-        <line x1="0" y1={H} x2={W} y2="0" stroke="white" strokeWidth="13"/>
-        <line x1="0" y1={H} x2={W} y2="0" stroke="#D21034" strokeWidth="7"/>
-        {rays.map((d, i) => <path key={i} d={d} fill="#FFCC00"/>)}
-        <circle cx={sunCx} cy={sunCy} r={sunR * 0.58} fill="#FFCC00"/>
-      </g>
-    </svg>
-  );
-}
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -102,13 +74,9 @@ function HeroSection() {
 
       <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-24 md:py-32 w-full">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/25 text-white/90 text-xs font-medium mb-6" data-testid="hero-badge">
-            <NamibianFlag />
-            <span>Trusted Insurance Brokers in Namibia</span>
-          </div>
-          <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-5" data-testid="hero-title">
+          <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold leading-snug mb-5" data-testid="hero-title">
             A Comprehensive<br />
-            <span className="text-blue-300">Protection</span> for<br />
+            <span className="text-blue-300 font-extrabold">Protection</span> for<br />
             Individuals &amp; Businesses
           </h1>
           <p className="text-blue-100/90 text-base md:text-lg leading-relaxed mb-8 max-w-xl" data-testid="hero-description">
