@@ -69,14 +69,14 @@ const serviceData: Record<string, {
   "pension-fund": {
     id: "pension-fund",
     icon: PiggyBank,
-    title: "Pension Fund",
+    title: "Group Pension",
     subtitle: "Secure Your Retirement",
     tagline: "A workplace or personal retirement savings solution that grows your wealth with tax advantages and employer contributions.",
     image: "/images/retirement.png",
     color: "from-indigo-500 to-indigo-700",
     gradientFrom: "#4f46e5",
     gradientTo: "#312e81",
-    what: "A Pension Fund is a structured, tax-efficient retirement savings plan — often provided through an employer — that builds wealth over your working life so you have a steady, reliable income when you retire. Quantz helps you navigate, join or supplement your pension fund effectively.",
+    what: "A Group Pension is a structured, tax-efficient retirement savings plan — often provided through an employer — that builds wealth over your working life so you have a steady, reliable income when you retire. Quantz helps you navigate, join or supplement your group pension effectively.",
     whatInside: [
       "Employer-linked pension fund membership and advice",
       "Preservation funds when you change jobs",
@@ -114,14 +114,14 @@ const serviceData: Record<string, {
   "medical-aid": {
     id: "medical-aid",
     icon: HeartPulse,
-    title: "Medical Aid",
+    title: "Medical Aid Gap Cover",
     subtitle: "Comprehensive Health Cover",
     tagline: "Fill the gaps in your existing medical cover and ensure you're protected for every healthcare event — without the financial shock.",
     image: "/images/medical-aid.png",
     color: "from-sky-500 to-sky-700",
     gradientFrom: "#0ea5e9",
     gradientTo: "#0369a1",
-    what: "Medical Aid and Gap Cover ensures that when you need healthcare, you are not left with unexpected bills. Quantz helps you find the right medical aid plan or gap cover to fill shortfalls — covering doctor visits, hospitalisations, chronic medication and specialist consultations.",
+    what: "Medical Aid Gap Cover ensures that when you need healthcare, you are not left with unexpected bills. Quantz helps you find the right gap cover product to fill shortfalls between what your medical aid pays and what providers actually charge — covering doctor visits, hospitalisations, chronic medication and specialist consultations.",
     whatInside: [
       "Medical aid plan comparison and selection",
       "Gap cover to top up shortfalls from your medical aid",

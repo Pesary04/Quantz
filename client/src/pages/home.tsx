@@ -128,7 +128,7 @@ const services = [
   {
     id: "pension-fund",
     icon: PiggyBank,
-    title: "Pension Fund",
+    title: "Group Pension",
     subtitle: "Secure Your Retirement",
     image: "/images/retirement.png",
     color: "from-indigo-500 to-indigo-700",
@@ -139,7 +139,7 @@ const services = [
   {
     id: "medical-aid",
     icon: HeartPulse,
-    title: "Medical Aid",
+    title: "Medical Aid Gap Cover",
     subtitle: "Comprehensive Health Cover",
     image: "/images/medical-aid.png",
     color: "from-sky-500 to-sky-700",
@@ -509,8 +509,8 @@ function ContactSection() {
                 <select className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-gray-700 bg-white" data-testid="select-insurance-type">
                   <option value="">Select an insurance type</option>
                   <option>Life Insurance</option>
-                  <option>Pension Fund</option>
-                  <option>Medical Aid</option>
+                  <option>Group Pension</option>
+                  <option>Medical Aid Gap Cover</option>
                   <option>Short-term Insurance</option>
                   <option>Retirement Annuity</option>
                   <option>Savings &amp; Investment</option>
@@ -561,7 +561,7 @@ function Footer() {
           <div>
             <h4 className="text-white font-semibold text-sm mb-5 uppercase tracking-widest">Services</h4>
             <ul className="space-y-3 text-sm">
-              {["Life Insurance", "Pension Fund", "Medical Aid", "Short-term Insurance", "Retirement Annuity", "Savings & Investment"].map((s) => (
+              {["Life Insurance", "Group Pension", "Medical Aid Gap Cover", "Short-term Insurance", "Retirement Annuity", "Savings & Investment"].map((s) => (
                 <li key={s}><a href="#services" className="hover:text-white transition-colors">{s}</a></li>
               ))}
             </ul>
