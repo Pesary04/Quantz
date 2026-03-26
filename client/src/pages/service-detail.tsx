@@ -58,7 +58,7 @@ const serviceData: Record<string, {
       { title: "Tell Us Your Needs", desc: "Share your family structure, income, debts and goals with our advisor." },
       { title: "We Compare Insurers", desc: "We search Sanlam, Old Mutual, Hollard and more to find your best match." },
       { title: "Choose Your Plan", desc: "We present your options clearly — no jargon, no pressure." },
-      { title: "You're Covered", desc: "Policy is activated, and we support you through every claim." },
+      { title: "You Are Covered", desc: "Policy is activated, and we support you through every claim." },
     ],
     faq: [
       { q: "What does life insurance pay out?", a: "A tax-free lump sum paid to your nominated beneficiaries upon your death, or to you upon critical illness or disability diagnosis." },
@@ -116,7 +116,7 @@ const serviceData: Record<string, {
     icon: HeartPulse,
     title: "Medical Aid Gap Cover",
     subtitle: "Comprehensive Health Cover",
-    tagline: "Fill the gaps in your existing medical cover and ensure you're protected for every healthcare event — without the financial shock.",
+    tagline: "Fill the gaps in your existing medical cover and ensure you are protected for every healthcare event — without the financial shock.",
     image: "/images/medical-aid.png",
     color: "from-sky-500 to-sky-700",
     gradientFrom: "#0ea5e9",
@@ -193,7 +193,7 @@ const serviceData: Record<string, {
       { title: "List Your Assets", desc: "Tell us what you need to cover — vehicle, home, contents, or business." },
       { title: "We Source Quotes", desc: "We compare rates from Santam, Sanlam, Hollard and more." },
       { title: "Choose Your Cover", desc: "Select the right policy and excess levels for your needs." },
-      { title: "You're Protected", desc: "Your assets are covered and we handle your claims when needed." },
+      { title: "You Are Protected", desc: "Your assets are covered and we handle your claims when needed." },
     ],
     faq: [
       { q: "What is the difference between comprehensive and third-party vehicle cover?", a: "Comprehensive covers your vehicle for any damage including accidents, theft and weather. Third-party only covers damage you cause to others' property." },
@@ -256,7 +256,7 @@ const serviceData: Record<string, {
     color: "from-teal-500 to-blue-600",
     gradientFrom: "#14b8a6",
     gradientTo: "#1e7bc4",
-    what: "Savings and Investment products help you grow wealth beyond your day-to-day needs. Whether you're saving for a short-term goal, building an emergency fund or growing long-term wealth, Quantz connects you with unit trusts, balanced funds and structured savings plans that match your goals and risk appetite.",
+    what: "Savings and Investment products help you grow wealth beyond your day-to-day needs. Whether you are saving for a short-term goal, building an emergency fund or growing long-term wealth, Quantz connects you with unit trusts, balanced funds and structured savings plans that match your goals and risk appetite.",
     whatInside: [
       "Unit Trusts – pooled investment funds with diversified exposure",
       "Balanced Funds – mix of equities, bonds and cash",
@@ -280,14 +280,14 @@ const serviceData: Record<string, {
       "Young professionals starting their wealth journey",
     ],
     steps: [
-      { title: "Define Your Goals", desc: "We identify what you're saving for and your time horizon." },
+      { title: "Define Your Goals", desc: "We identify what you are saving for and your time horizon." },
       { title: "Assess Your Risk Appetite", desc: "We match your comfort level with the right investment strategy." },
       { title: "Select Your Product", desc: "From unit trusts to goal-based savings, we recommend the best fit." },
       { title: "Track & Grow", desc: "We monitor performance and rebalance your portfolio as needed." },
     ],
     faq: [
       { q: "What is the difference between saving and investing?", a: "Saving is putting money aside safely with low risk and low return. Investing puts money into assets that can grow significantly over time but carry some risk." },
-      { q: "How much do I need to start investing?", a: "Many unit trusts and savings products start from as little as N$500/month. There's no perfect amount — starting early matters more than starting big." },
+      { q: "How much do I need to start investing?", a: "Many unit trusts and savings products start from as little as N$500/month. There is no perfect amount — starting early matters more than starting big." },
       { q: "Are my investments safe?", a: "Investments are managed by regulated asset managers and protected under Namibian financial law. Market investments can fluctuate, but diversification reduces risk." },
     ],
   },
@@ -397,7 +397,7 @@ export default function ServiceDetail() {
             </div>
 
             <div data-testid="section-what-inside">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">What You'll Find Inside</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">What You Will Find Inside</h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {svc.whatInside.map((item, i) => (
                   <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-gray-50 border border-gray-100 hover:border-blue-100 hover:bg-blue-50/40 transition-all">
@@ -491,7 +491,7 @@ export default function ServiceDetail() {
 
               <div className="px-6 pb-6 bg-white">
                 <div className="pt-4 border-t border-gray-100">
-                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Who It's For</h4>
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Who It Is For</h4>
                   <ul className="space-y-2" data-testid="sidebar-who-for">
                     {svc.whoFor.map((w, i) => (
                       <li key={i} className="flex items-start gap-2 text-xs text-gray-600">

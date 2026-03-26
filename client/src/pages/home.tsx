@@ -433,7 +433,7 @@ function ContactSection() {
             <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/80 text-xs font-semibold uppercase tracking-wide mb-6">Get In Touch</div>
             <h2 className="text-white text-3xl md:text-4xl font-bold mb-4" data-testid="contact-title">Ready for Proper Protection?</h2>
             <p className="text-blue-200 text-base mb-10">
-              Speak to one of our expert advisors today. We'll find the right cover for you —
+              Speak to one of our expert advisors today. We will find the right cover for you —
               at the right price, with complete peace of mind.
             </p>
             <div className="space-y-5">
@@ -486,7 +486,7 @@ function ContactSection() {
               <img src="/quantz-logo.png" alt="Quantz" className="h-10 w-auto"/>
               <div>
                 <h3 className="text-gray-900 font-bold text-lg leading-tight">Request a Free Quote</h3>
-                <p className="text-gray-400 text-xs">We'll get back to you within 24 hours</p>
+                <p className="text-gray-400 text-xs">We will get back to you within 24 hours</p>
               </div>
             </div>
             <form className="space-y-4">
@@ -518,7 +518,7 @@ function ContactSection() {
               </div>
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Message (Optional)</label>
-                <textarea placeholder="Tell us more about what you're looking for…" rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="input-message"/>
+                <textarea placeholder="Tell us more about what you are looking for…" rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="input-message"/>
               </div>
               <button type="submit" className="w-full py-4 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:opacity-95" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }} data-testid="button-submit-quote">
                 Request My Free Quote
