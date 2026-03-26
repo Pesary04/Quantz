@@ -22,9 +22,9 @@ function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/97 backdrop-blur-sm shadow-sm border-b border-gray-100" data-testid="navbar">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-20">
         <a href="#home" className="flex-shrink-0" data-testid="logo">
-          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-10 w-auto" />
+          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-14 w-auto" />
         </a>
         <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation" data-testid="nav-links">
           {links.map((l) => (
@@ -483,7 +483,7 @@ function ContactSection() {
 
           <div className="bg-white rounded-3xl p-8 shadow-2xl" data-testid="contact-form">
             <div className="flex items-center gap-3 mb-6">
-              <img src="/quantz-logo.png" alt="Quantz" className="h-10 w-auto"/>
+              <img src="/quantz-logo.png" alt="Quantz" className="h-12 w-auto"/>
               <div>
                 <h3 className="text-gray-900 font-bold text-lg leading-tight">Request a Free Quote</h3>
                 <p className="text-gray-400 text-xs">We will get back to you within 24 hours</p>
@@ -538,7 +538,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-800">
           <div>
-            <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-12 w-auto mb-4"/>
+            <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-14 w-auto mb-4"/>
             <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
               Providing tailored insurance and financial protection solutions to safeguard your life, assets, and future.
             </p>

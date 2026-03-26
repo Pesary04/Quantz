@@ -298,9 +298,9 @@ const serviceOrder = ["life-insurance", "pension-fund", "medical-aid", "short-te
 function Navbar({ currentService }: { currentService: string }) {
   return (
     <header className="sticky top-0 z-50 bg-white/97 backdrop-blur-sm shadow-sm border-b border-gray-100" data-testid="service-navbar">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-20">
         <a href="/" className="flex-shrink-0" data-testid="logo">
-          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-10 w-auto"/>
+          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-14 w-auto"/>
         </a>
         <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
           <a href="/" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Home</a>
@@ -449,7 +449,7 @@ export default function ServiceDetail() {
           <div className="space-y-6">
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm sticky top-24">
               <div className="p-6" style={{ background: `linear-gradient(135deg, ${svc.gradientFrom}, ${svc.gradientTo})` }}>
-                <img src="/quantz-logo.png" alt="Quantz" className="h-10 w-auto mb-4"/>
+                <img src="/quantz-logo.png" alt="Quantz" className="h-12 w-auto mb-4"/>
                 <p className="text-white font-bold text-lg leading-tight mb-1">Ready to get covered?</p>
                 <p className="text-blue-100 text-sm">Get a free, no-obligation quote today.</p>
               </div>
