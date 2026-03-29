@@ -75,13 +75,12 @@ function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-24 md:py-32 w-full">
         <div className="max-w-2xl">
           <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold leading-snug mb-5" data-testid="hero-title">
-            A Comprehensive<br />
-            <span className="text-blue-300 font-extrabold">Protection</span> for<br />
-            Individuals &amp; Businesses
+            Your Partner in<br />
+            <span className="text-blue-300 font-extrabold">Financial Confidence</span>
           </h1>
           <p className="text-blue-100/90 text-base md:text-lg leading-relaxed mb-8 max-w-xl" data-testid="hero-description">
-            Quantz Financial Services provides tailored insurance and financial protection solutions
-            designed to safeguard your life, assets, and future.
+            From protecting your loved ones and assets to building wealth and planning for retirement,
+            Quantz Financial Services supports you with solutions tailored to your evolving needs.
           </p>
           <div className="flex flex-wrap gap-4" data-testid="hero-cta">
             <a href="#contact"
