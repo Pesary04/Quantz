@@ -1,5 +1,5 @@
 import { useParams, useLocation } from "wouter";
-import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Phone, Mail, Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote, HelpCircle, Users, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Phone, Mail, Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote, HelpCircle, Users, Star, Scroll, Briefcase } from "lucide-react";
 
 const BLUE = "#1e7bc4";
 const DARK = "#0d2e52";
@@ -291,9 +291,145 @@ const serviceData: Record<string, {
       { q: "Are my investments safe?", a: "Investments are managed by regulated asset managers and protected under Namibian financial law. Market investments can fluctuate, but diversification reduces risk." },
     ],
   },
+  "pension-fund-individuals": {
+    id: "pension-fund-individuals",
+    icon: PiggyBank,
+    title: "Pension Fund for Individuals",
+    subtitle: "Secure Your Personal Retirement",
+    tagline: "Tailored retirement solutions for individuals and self-employed professionals who want to build their own retirement savings — with flexible contributions and tax advantages.",
+    image: "/images/retirement.png",
+    color: "from-indigo-500 to-indigo-700",
+    gradientFrom: "#4f46e5",
+    gradientTo: "#312e81",
+    what: "A Pension Fund for Individuals is a structured, tax-efficient retirement savings plan designed for people who want to build their own retirement income outside of an employer scheme. Whether you are self-employed or simply want more control over your retirement savings, Quantz helps you find the right solution.",
+    whatInside: [
+      "Individual retirement savings plans tailored to your needs",
+      "Flexible monthly or lump-sum contribution options",
+      "Tax-efficient investment growth within the fund",
+      "Guaranteed income stream options at retirement",
+      "Preservation fund solutions when changing jobs",
+    ],
+    benefits: [
+      "Flexible contribution options — increase, decrease or pause anytime",
+      "Tax-efficient retirement savings (up to 27.5% deductible)",
+      "Guaranteed income in retirement",
+      "Easy access to your funds when needed (from age 55)",
+      "Ideal for self-employed and freelance professionals",
+      "Protects retirement savings from creditors",
+    ],
+    whoFor: [
+      "Self-employed individuals without employer pension",
+      "Freelancers and independent contractors",
+      "Employees wanting to top up their employer pension",
+      "Anyone aged 30+ serious about retirement planning",
+      "Individuals changing jobs and needing fund preservation",
+    ],
+    steps: [
+      { title: "Assess Your Retirement Goals", desc: "We work out how much income you need at retirement and by when." },
+      { title: "Calculate Your Contribution", desc: "We determine the monthly or lump sum amount needed to meet your goal." },
+      { title: "Select Your Fund", desc: "We compare pension fund products from top Namibian providers." },
+      { title: "Grow with Confidence", desc: "We review your fund annually and adjust your strategy as life changes." },
+    ],
+    faq: [
+      { q: "When can I access my individual pension fund?", a: "You can typically access your pension fund from age 55. At retirement, you may take a portion as a lump sum and use the rest to purchase an annuity for monthly income." },
+      { q: "How much tax can I save?", a: "Contributions up to 27.5% of your taxable income are tax-deductible. This can mean significant annual tax savings, effectively making your pension contributions more affordable." },
+      { q: "What if I need to stop contributing?", a: "Most individual pension plans are flexible. You can reduce, pause or stop contributions without penalty, though your projected retirement income will adjust accordingly." },
+    ],
+  },
+  "pension-fund-groups": {
+    id: "pension-fund-groups",
+    icon: Briefcase,
+    title: "Pension Fund for Groups",
+    subtitle: "Employee Pension Fund Solutions",
+    tagline: "Comprehensive group retirement benefits for companies and organisations — attracting talent, retaining staff and meeting regulatory obligations.",
+    image: "/images/why-quantz.png",
+    color: "from-violet-500 to-violet-700",
+    gradientFrom: "#7c3aed",
+    gradientTo: "#4c1d95",
+    what: "A Group Pension Fund provides comprehensive retirement benefits for companies and their employees. Quantz assists businesses in setting up, administering and optimising group pension fund arrangements that meet regulatory requirements, support employee financial wellness and offer competitive investment options.",
+    whatInside: [
+      "Group Pension Fund setup and administration",
+      "Customised fund rules tailored to your company",
+      "Competitive investment options for employee contributions",
+      "Full compliance and regulatory support",
+      "Employee financial wellness programmes",
+    ],
+    benefits: [
+      "Group Pension Fund administration handled on your behalf",
+      "Customised fund rules for your company structure",
+      "Competitive investment options for employees",
+      "Full compliance with Namibian pension legislation",
+      "Employee financial wellness support included",
+      "Employer contributions improve staff retention and morale",
+    ],
+    whoFor: [
+      "Business owners setting up employee retirement benefits",
+      "Companies with existing pension schemes needing review",
+      "HR managers looking to improve employee benefit packages",
+      "Organisations seeking regulatory compliance support",
+      "Companies wanting to attract and retain top talent",
+    ],
+    steps: [
+      { title: "Assess Your Company Needs", desc: "We evaluate your company size, structure and employee demographics." },
+      { title: "Design the Fund Rules", desc: "We help draft fund rules tailored to your business and workforce." },
+      { title: "Select Investment Options", desc: "We source competitive investment portfolios for your group fund." },
+      { title: "Administer and Comply", desc: "We manage ongoing administration and ensure full regulatory compliance." },
+    ],
+    faq: [
+      { q: "Is it compulsory to have a group pension fund?", a: "While not always legally required, group pension funds are strongly recommended and may be obligatory depending on your industry sector agreement. We will advise you on your specific obligations." },
+      { q: "Who manages the fund investments?", a: "Funds are managed by regulated asset managers. Employees can often choose from a range of investment portfolios based on their risk appetite and years to retirement." },
+      { q: "What happens when an employee leaves?", a: "The employee's accumulated pension benefit can be transferred to a preservation fund, another pension fund, or paid out subject to tax — we guide both employer and employee through this process." },
+    ],
+  },
+  "wills-estates": {
+    id: "wills-estates",
+    icon: Scroll,
+    title: "Wills & Estates",
+    subtitle: "Secure Your Legacy",
+    tagline: "Protect what matters most for the people you love. We help you create clear, legally sound wills and estate plans so your assets are distributed exactly as you wish.",
+    image: "/images/why-quantz.png",
+    color: "from-amber-500 to-orange-600",
+    gradientFrom: "#d97706",
+    gradientTo: "#c2410c",
+    what: "Wills and Estate Planning ensures that when you are no longer here, your assets go to the right people — quickly, clearly and without unnecessary stress or family disputes. Quantz helps you create legally sound wills, set up trusts, and put comprehensive estate plans in place that reflect your exact wishes.",
+    whatInside: [
+      "Drafting and updating of Wills",
+      "Estate planning and administration",
+      "Living Wills and Advance Directives",
+      "Trust formation and management",
+      "Inheritance and succession planning",
+      "Power of Attorney documents",
+    ],
+    benefits: [
+      "Legally sound, professionally drafted Will",
+      "Assets distributed exactly as you wish",
+      "Minimises estate duty and taxes on your estate",
+      "Protects minor children with guardian nominations",
+      "Avoids family disputes and lengthy court processes",
+      "Peace of mind that your legacy is secured",
+    ],
+    whoFor: [
+      "Anyone who owns property, savings or investments",
+      "Parents wanting to protect their children's inheritance",
+      "Business owners planning for succession",
+      "Married couples and life partners",
+      "Individuals with complex family or financial circumstances",
+    ],
+    steps: [
+      { title: "Understand Your Wishes", desc: "We discuss your assets, beneficiaries, guardianship wishes and estate goals." },
+      { title: "Draft Your Will", desc: "We prepare a clear, legally sound Will that reflects your exact instructions." },
+      { title: "Set Up Supporting Structures", desc: "Where needed, we establish trusts, powers of attorney and advance directives." },
+      { title: "Review and Update", desc: "We recommend reviewing your Will every 3-5 years or after major life events." },
+    ],
+    faq: [
+      { q: "What happens if I die without a Will?", a: "Without a Will, Namibian intestate succession laws determine who inherits your estate. This may not reflect your wishes and can cause significant delays, costs and family conflict." },
+      { q: "Can I update my Will after it is drafted?", a: "Yes. You can update your Will at any time by drafting a new one or adding a codicil (amendment). We recommend reviewing it every 3-5 years or after major life changes such as marriage, divorce or having children." },
+      { q: "What is a Living Will?", a: "A Living Will (Advance Directive) records your wishes regarding medical treatment if you become incapacitated. It ensures your healthcare decisions are respected even if you cannot communicate them yourself." },
+    ],
+  },
 };
 
-const serviceOrder = ["life-insurance", "pension-fund", "medical-aid", "short-term-insurance", "retirement-annuity", "savings-investment"];
+const serviceOrder = ["life-insurance", "pension-fund-individuals", "pension-fund-groups", "medical-aid", "short-term-insurance", "retirement-annuity", "savings-investment", "wills-estates"];
 
 function Navbar({ currentService }: { currentService: string }) {
   return (

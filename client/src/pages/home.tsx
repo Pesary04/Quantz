@@ -2,7 +2,8 @@ import { useState } from "react";
 import {
   Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote,
   CheckCircle2, Phone, Mail, MapPin, Menu, X, ArrowRight, Star,
-  Users, Award, Globe, ChevronRight, ShieldCheck
+  Users, Award, Globe, ChevronRight, ShieldCheck,
+  Scroll, FileDown, UserCircle, BarChart2, Briefcase
 } from "lucide-react";
 import { SiFacebook, SiX, SiInstagram, SiLinkedin } from "react-icons/si";
 
@@ -95,7 +96,7 @@ function HeroSection() {
           <div className="flex flex-wrap gap-8 mt-10 pt-10 border-t border-white/15">
             {[
               { icon: Users, label: "500+ Clients Served" },
-              { icon: Award, label: "Trusted Since 2015" },
+              { icon: Award, label: "Trusted Since 2007" },
               { icon: Globe, label: "Nationwide Coverage" },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-2.5 text-white/85 text-sm">
@@ -125,15 +126,26 @@ const services = [
     items: ["Life Cover", "Critical Illness Cover", "Disability Protection", "Death Benefits for Family Security"],
   },
   {
-    id: "pension-fund",
+    id: "pension-fund-individuals",
     icon: PiggyBank,
-    title: "Group Pension",
-    subtitle: "Secure Your Retirement",
+    title: "Pension Fund for Individuals",
+    subtitle: "Secure Your Personal Retirement",
     image: "/images/retirement.png",
     color: "from-indigo-500 to-indigo-700",
     iconColor: "text-indigo-600",
     bg: "bg-indigo-100",
-    items: ["Retirement Savings Solutions", "Tax-Efficient Wealth Building"],
+    items: ["Flexible Contribution Options", "Tax-Efficient Retirement Savings", "Guaranteed Income in Retirement", "Easy Access to Your Funds When Needed"],
+  },
+  {
+    id: "pension-fund-groups",
+    icon: Briefcase,
+    title: "Pension Fund for Groups",
+    subtitle: "Employee Pension Fund Solutions",
+    image: "/images/why-quantz.png",
+    color: "from-violet-500 to-violet-700",
+    iconColor: "text-violet-600",
+    bg: "bg-violet-100",
+    items: ["Group Pension Fund Administration", "Customised Fund Rules for Your Company", "Competitive Investment Options", "Full Compliance and Regulatory Support"],
   },
   {
     id: "medical-aid",
@@ -155,7 +167,7 @@ const services = [
     color: "from-cyan-500 to-cyan-700",
     iconColor: "text-cyan-600",
     bg: "bg-cyan-100",
-    items: ["Cover for Business Assets and Property", "Cover for Vehicles, Gadgets & Household Items"],
+    items: ["Cover for Business Assets and Property", "Cover for Vehicles, Gadgets and Household Items"],
   },
   {
     id: "retirement-annuity",
@@ -178,6 +190,17 @@ const services = [
     iconColor: "text-teal-600",
     bg: "bg-teal-100",
     items: ["Structured Savings Plans", "Guaranteed Growth Opportunities"],
+  },
+  {
+    id: "wills-estates",
+    icon: Scroll,
+    title: "Wills & Estates",
+    subtitle: "Secure Your Legacy",
+    image: "/images/why-quantz.png",
+    color: "from-amber-500 to-orange-600",
+    iconColor: "text-amber-600",
+    bg: "bg-amber-100",
+    items: ["Drafting and Updating of Wills", "Estate Planning and Administration", "Trust Formation", "Inheritance and Succession Planning"],
   },
 ];
 
@@ -380,6 +403,162 @@ function HowItWorksSection() {
   );
 }
 
+function FormsSection() {
+  const forms = [
+    { name: "Life Insurance Application Form", icon: Shield, color: "text-blue-600", bg: "bg-blue-50" },
+    { name: "Short-Term Insurance Claim Form", icon: Car, color: "text-cyan-600", bg: "bg-cyan-50" },
+    { name: "Pension Fund Membership Application", icon: PiggyBank, color: "text-indigo-600", bg: "bg-indigo-50" },
+    { name: "Beneficiary Nomination Form", icon: Users, color: "text-violet-600", bg: "bg-violet-50" },
+    { name: "Will Questionnaire", icon: Scroll, color: "text-amber-600", bg: "bg-amber-50" },
+    { name: "Medical Aid Gap Cover Application", icon: HeartPulse, color: "text-sky-600", bg: "bg-sky-50" },
+    { name: "Retirement Annuity Application", icon: TrendingUp, color: "text-blue-700", bg: "bg-blue-50" },
+  ];
+  return (
+    <section className="py-20 md:py-24 bg-white border-t border-gray-100" data-testid="forms-section">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Quick Access</div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="forms-title">Downloadable Forms &amp; Documents</h2>
+          <p className="text-gray-500 max-w-xl mx-auto text-base">Access all the forms you need in one place — quickly and securely.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {forms.map((form, i) => (
+            <div key={i} className="flex items-center gap-4 p-5 rounded-2xl border border-gray-100 bg-gray-50 hover:border-blue-200 hover:shadow-md transition-all group" data-testid={`form-card-${i + 1}`}>
+              <div className={`w-11 h-11 rounded-xl ${form.bg} flex items-center justify-center flex-shrink-0`}>
+                <form.icon className={`w-5 h-5 ${form.color}`} aria-hidden="true"/>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-800 leading-tight">{form.name}</p>
+              </div>
+              <a
+                href="#contact"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white flex-shrink-0 hover:opacity-90 transition-all"
+                style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}
+                data-testid={`button-form-${i + 1}`}
+                title="Contact us to receive this form"
+              >
+                <FileDown className="w-3.5 h-3.5" aria-hidden="true"/> Request
+              </a>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-xs text-gray-400 mt-6">Contact us at <a href="mailto:info@quantz.com.na" className="text-blue-500 hover:underline">info@quantz.com.na</a> or call <a href="tel:+264818201522" className="text-blue-500 hover:underline">+264 81 820 1522</a> to receive any form directly.</p>
+      </div>
+    </section>
+  );
+}
+
+function MarketWatchSection() {
+  return (
+    <section className="py-16 md:py-20 bg-white border-t border-gray-100" data-testid="market-watch-section">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="text-center mb-10">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Live Data</div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="market-watch-title">Market Watch – Live Indices</h2>
+          <p className="text-gray-500 max-w-lg mx-auto text-base">Stay informed with live market data from the Namibian and South African stock exchanges.</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-sm" data-testid="market-nsx">
+            <div className="px-5 py-3 border-b border-gray-100 flex items-center gap-2" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}>
+              <BarChart2 className="w-4 h-4 text-white" aria-hidden="true"/>
+              <span className="text-white font-semibold text-sm">Namibian Stock Exchange (NSX)</span>
+            </div>
+            <div className="bg-white p-2">
+              <iframe
+                src="https://sslefp.tradingview.com/embed-widget/single-quote/?locale=en#%7B%22symbol%22%3A%22XNAM%3AFNB%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22120%22%2C%22colorTheme%22%3A%22light%22%2C%22isTransparent%22%3Afalse%7D"
+                title="NSX Market Data"
+                className="w-full"
+                style={{ height: 160, border: "none" }}
+                loading="lazy"
+              />
+              <div className="px-3 pb-3">
+                <iframe
+                  src="https://www.investing.com/instruments/Widgets/investingWidgetPanel/?widgetType=investingTicker&investingId=11271&theme=light&showSymbol=true"
+                  title="FTSE NSX Overall Index"
+                  className="w-full"
+                  style={{ height: 80, border: "none" }}
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-sm" data-testid="market-jse">
+            <div className="px-5 py-3 border-b border-gray-100 flex items-center gap-2" style={{ background: `linear-gradient(135deg, #1a6830, #0f4020)` }}>
+              <BarChart2 className="w-4 h-4 text-white" aria-hidden="true"/>
+              <span className="text-white font-semibold text-sm">Johannesburg Stock Exchange (JSE)</span>
+            </div>
+            <div className="bg-white p-3">
+              <iframe
+                src="https://sslefp.tradingview.com/embed-widget/single-quote/?locale=en#%7B%22symbol%22%3A%22JSEJ15%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22120%22%2C%22colorTheme%22%3A%22light%22%2C%22isTransparent%22%3Afalse%7D"
+                title="JSE All Share Index"
+                className="w-full"
+                style={{ height: 160, border: "none" }}
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+        <p className="text-center text-xs text-gray-400 mt-4">Market data provided for informational purposes only. Not financial advice.</p>
+      </div>
+    </section>
+  );
+}
+
+function AdvisorSection() {
+  return (
+    <section className="py-20 md:py-24 bg-gray-50 border-t border-gray-100" data-testid="advisor-section">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Meet Your Advisor</div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="advisor-title">Know Your Financial Advisor</h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+          <div className="relative rounded-3xl overflow-hidden shadow-xl h-96">
+            <img src="/images/why-quantz.png" alt="Quantz Managing Director" className="w-full h-full object-cover object-center"/>
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,37,64,0.6) 0%, transparent 60%)" }}/>
+          </div>
+          <div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}>
+                <UserCircle className="w-7 h-7 text-white" aria-hidden="true"/>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900" data-testid="advisor-name">Managing Director</h3>
+                <p className="text-blue-600 text-sm font-medium">Principal Financial Advisor</p>
+              </div>
+            </div>
+            <div className="space-y-4 mb-6">
+              {[
+                { label: "Position", value: "Managing Director / Principal Financial Advisor" },
+                { label: "Experience", value: "18+ Years in Financial Services" },
+                { label: "Specialisation", value: "Life, Retirement and Short-Term Insurance" },
+              ].map((item) => (
+                <div key={item.label} className="flex gap-3 p-4 rounded-xl bg-white border border-gray-100">
+                  <div className="w-1.5 rounded-full flex-shrink-0" style={{ background: `linear-gradient(to bottom, ${BLUE}, ${DARK})` }}/>
+                  <div>
+                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{item.label}</p>
+                    <p className="text-gray-800 font-semibold text-sm">{item.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-gray-500 text-sm leading-relaxed mb-6">
+              With nearly two decades of experience in the Namibian financial services industry, our advisor is committed to providing independent, honest guidance that puts clients first. Every recommendation is made with your long-term wellbeing in mind.
+            </p>
+            <a href="/#contact"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm shadow-md hover:opacity-90 transition-all"
+              style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}
+              data-testid="button-advisor-contact"
+            >
+              Book a Consultation <ArrowRight className="w-4 h-4" aria-hidden="true"/>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function TestimonialsSection() {
   const testimonials = [
     { name: "Maria S.", location: "Windhoek", quote: "Quantz helped me find the perfect life insurance for my family at a price I could afford. Their advice was independent and honest — I felt truly looked after.", stars: 5 },
@@ -508,11 +687,13 @@ function ContactSection() {
                 <select className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-gray-700 bg-white" data-testid="select-insurance-type">
                   <option value="">Select an insurance type</option>
                   <option>Life Insurance</option>
-                  <option>Group Pension</option>
+                  <option>Pension Fund for Individuals</option>
+                  <option>Pension Fund for Groups (Corporate)</option>
                   <option>Medical Aid Gap Cover</option>
                   <option>Short-term Insurance</option>
                   <option>Retirement Annuity</option>
                   <option>Savings &amp; Investment</option>
+                  <option>Wills &amp; Estates</option>
                 </select>
               </div>
               <div>
@@ -560,7 +741,7 @@ function Footer() {
           <div>
             <h4 className="text-white font-semibold text-sm mb-5 uppercase tracking-widest">Services</h4>
             <ul className="space-y-3 text-sm">
-              {["Life Insurance", "Group Pension", "Medical Aid Gap Cover", "Short-term Insurance", "Retirement Annuity", "Savings & Investment"].map((s) => (
+              {["Life Insurance", "Pension Fund for Individuals", "Pension Fund for Groups", "Medical Aid Gap Cover", "Short-term Insurance", "Retirement Annuity", "Savings & Investment", "Wills & Estates"].map((s) => (
                 <li key={s}><a href="#services" className="hover:text-white transition-colors">{s}</a></li>
               ))}
             </ul>
@@ -598,10 +779,13 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <ServicesSection />
+      <FormsSection />
       <WhyUsSection />
       <PartnersSection />
+      <MarketWatchSection />
       <HowItWorksSection />
       <TestimonialsSection />
+      <AdvisorSection />
       <ContactSection />
       <Footer />
     </div>
