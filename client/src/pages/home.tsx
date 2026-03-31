@@ -8,9 +8,9 @@ import {
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
 
 const SOCIAL_LINKS = [
-  { Icon: SiFacebook, label: "Facebook", href: "https://www.facebook.com/profile.php?id=61583774184552", color: "hover:bg-[#1877F2]" },
-  { Icon: SiInstagram, label: "Instagram", href: "https://www.instagram.com/quantz_financial_/", color: "hover:bg-[#E1306C]" },
-  { Icon: SiWhatsapp, label: "WhatsApp", href: "https://whatsapp.com/channel/0029VbCRTzjB4hdVbtBM1V3s", color: "hover:bg-[#25D366]" },
+  { Icon: SiFacebook, label: "Facebook", href: "https://www.facebook.com/profile.php?id=61583774184552", bg: "#1877F2" },
+  { Icon: SiInstagram, label: "Instagram", href: "https://www.instagram.com/quantz_financial_/", bg: "#E1306C" },
+  { Icon: SiWhatsapp, label: "WhatsApp", href: "https://whatsapp.com/channel/0029VbCRTzjB4hdVbtBM1V3s", bg: "#25D366" },
 ];
 
 const BLUE = "#1e7bc4";
@@ -46,9 +46,10 @@ function Navbar() {
         </nav>
         <div className="hidden md:flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            {SOCIAL_LINKS.map(({ Icon, label, href, color }) => (
+            {SOCIAL_LINKS.map(({ Icon, label, href, bg }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                className={`w-7 h-7 rounded-lg bg-gray-100 ${color} text-gray-600 hover:text-white flex items-center justify-center transition-all`}
+                className="w-7 h-7 rounded-lg text-white flex items-center justify-center transition-all hover:opacity-80 hover:shadow-md"
+                style={{ backgroundColor: bg }}
                 data-testid={`link-social-${label.toLowerCase()}`}
               >
                 <Icon className="w-3.5 h-3.5" aria-hidden="true"/>
@@ -76,9 +77,10 @@ function Navbar() {
             <a key={l.href} href={l.href} className="block text-sm font-medium text-gray-700 hover:text-blue-600 py-2" onClick={() => setOpen(false)}>{l.label}</a>
           ))}
           <div className="flex items-center gap-2 pt-1">
-            {SOCIAL_LINKS.map(({ Icon, label, href, color }) => (
+            {SOCIAL_LINKS.map(({ Icon, label, href, bg }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                className={`w-9 h-9 rounded-lg bg-gray-100 ${color} text-gray-600 hover:text-white flex items-center justify-center transition-all`}
+                className="w-9 h-9 rounded-lg text-white flex items-center justify-center transition-all hover:opacity-80"
+                style={{ backgroundColor: bg }}
                 data-testid={`link-social-mobile-${label.toLowerCase()}`}
               >
                 <Icon className="w-4 h-4" aria-hidden="true"/>
@@ -752,9 +754,10 @@ function Footer() {
               Providing tailored insurance and financial protection solutions to safeguard your life, assets, and future.
             </p>
             <div className="flex gap-3 mt-5">
-              {SOCIAL_LINKS.map(({ Icon, label, href, color }) => (
+              {SOCIAL_LINKS.map(({ Icon, label, href, bg }) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                  className={`w-9 h-9 rounded-lg bg-gray-800 ${color} flex items-center justify-center transition-colors`}
+                  className="w-9 h-9 rounded-lg text-white flex items-center justify-center transition-all hover:opacity-80 hover:shadow-lg"
+                  style={{ backgroundColor: bg }}
                   data-testid={`link-footer-${label.toLowerCase()}`}
                 >
                   <Icon className="w-4 h-4" aria-hidden="true"/>
