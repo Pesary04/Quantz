@@ -334,7 +334,7 @@ const partners = [
   { name: "Sanlam | Allianz", logo: "/images/partners/sanlam.svg", bg: "bg-white", pad: "p-3" },
   { name: "Santam", logo: "/images/partners/santam.svg", bg: "bg-white", pad: "p-3" },
   { name: "Old Mutual", logo: "/images/partners/old-mutual.svg", bg: "bg-white", pad: "p-3" },
-  { name: "Hollard", logo: "/images/partners/hollard.svg", bg: "bg-[#f7941d]", pad: "p-3" },
+  { name: "Hollard", logo: "/images/partners/hollard.png", bg: "bg-white", pad: "p-0" },
   { name: "PPS", logo: "/images/partners/pps.png", bg: "bg-[#003478]", pad: "p-2" },
   { name: "SISEDI", logo: "/images/partners/sisedi.png", bg: "bg-white", pad: "p-2" },
   { name: "Capricorn Asset Management", logo: "/images/partners/capricorn.png", bg: "bg-white", pad: "p-2" },
