@@ -342,7 +342,7 @@ const serviceData: Record<string, {
     title: "Pension Fund for Groups",
     subtitle: "Employee Pension Fund Solutions",
     tagline: "Comprehensive group retirement benefits for companies and organisations — attracting talent, retaining staff and meeting regulatory obligations.",
-    image: "/images/why-quantz.png",
+    image: "/images/pension-fund-groups.png",
     color: "from-violet-500 to-violet-700",
     gradientFrom: "#7c3aed",
     gradientTo: "#4c1d95",

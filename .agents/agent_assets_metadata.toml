@@ -12,6 +12,12 @@ uri = "file://client/public/images/partners/capricorn.png"
 type = "image"
 title = "capricorn asset management logo"
 
+[[generated]]
+id = "r_BjmSNg-j4XxT7PN_M7D"
+uri = "file://client/public/images/pension-fund-groups.png"
+type = "image"
+title = "group pension fund corporate team"
+
 [[outputs]]
 id = "lA5pRpgnXuRkrp3h6lflt"
 uri = "file://attached_assets/stock_images/sanlam-logo.jpg"

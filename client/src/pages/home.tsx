@@ -170,7 +170,7 @@ const services = [
     icon: Briefcase,
     title: "Pension Fund for Groups",
     subtitle: "Employee Pension Fund Solutions",
-    image: "/images/why-quantz.png",
+    image: "/images/pension-fund-groups.png",
     color: "from-violet-500 to-violet-700",
     iconColor: "text-violet-600",
     bg: "bg-violet-100",
