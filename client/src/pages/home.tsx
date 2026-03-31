@@ -331,13 +331,13 @@ function WhyUsSection() {
 }
 
 const partners = [
-  { name: "Sanlam | Allianz", abbr: "S|A", color: "#e60000" },
-  { name: "Santam", abbr: "ST", color: "#005baa" },
-  { name: "Old Mutual", abbr: "OM", color: "#006b3f" },
-  { name: "Hollard", abbr: "HO", color: "#f7941d" },
-  { name: "PPS", abbr: "PPS", color: "#003478" },
-  { name: "SISEDI", abbr: "SI", color: "#3a3a3a" },
-  { name: "Capricorn Asset Management", abbr: "CAM", color: "#0073a8" },
+  { name: "Sanlam | Allianz", logo: "/images/partners/sanlam.svg", bg: "bg-white", pad: "p-3" },
+  { name: "Santam", logo: "/images/partners/santam.svg", bg: "bg-white", pad: "p-3" },
+  { name: "Old Mutual", logo: "/images/partners/old-mutual.svg", bg: "bg-white", pad: "p-3" },
+  { name: "Hollard", logo: "/images/partners/hollard.svg", bg: "bg-[#f7941d]", pad: "p-3" },
+  { name: "PPS", logo: "/images/partners/pps.png", bg: "bg-[#003478]", pad: "p-2" },
+  { name: "SISEDI", logo: "/images/partners/sisedi.png", bg: "bg-white", pad: "p-2" },
+  { name: "Capricorn Asset Management", logo: "/images/partners/capricorn.png", bg: "bg-white", pad: "p-2" },
 ];
 
 function PartnersSection() {
@@ -348,15 +348,17 @@ function PartnersSection() {
           <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-2">In Partnership With</p>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800" data-testid="partners-title">Namibia's Leading Insurers</h2>
         </div>
-        <div className="flex flex-wrap justify-center gap-4 md:gap-5">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
           {partners.map((p) => (
             <div
               key={p.name}
-              className="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 bg-white hover:shadow-md hover:border-blue-100 transition-all cursor-default"
+              className="flex flex-col items-center gap-3 group cursor-default"
               data-testid={`partner-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}
             >
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0" style={{ backgroundColor: p.color }}>{p.abbr}</div>
-              <span className="text-sm font-semibold text-gray-700">{p.name}</span>
+              <div className={`w-32 h-16 rounded-xl border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm group-hover:shadow-md group-hover:border-blue-100 transition-all ${p.bg} ${p.pad}`}>
+                <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
+              </div>
+              <span className="text-xs font-semibold text-gray-500 text-center max-w-[8rem] leading-tight">{p.name}</span>
             </div>
           ))}
         </div>

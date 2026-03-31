@@ -1,8 +1,19 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "7E0EMczyQ0WkGy_zWxpEy"
 uri = "file://client/public/images/advisor-portrait.png"
 type = "image"
 title = "black woman financial advisor portrait"
+
+[[generated]]
+id = "-Y_Zakjc4bvdevEIaAW7z"
+uri = "file://client/public/images/partners/capricorn.png"
+type = "image"
+title = "capricorn asset management logo"
+
+[[outputs]]
+id = "lA5pRpgnXuRkrp3h6lflt"
+uri = "file://attached_assets/stock_images/sanlam-logo.jpg"
+type = "image"
+title = "Sanlam financial services logo white background clean"
