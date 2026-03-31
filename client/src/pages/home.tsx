@@ -28,7 +28,7 @@ function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/97 backdrop-blur-sm shadow-sm border-b border-gray-100" data-testid="navbar">
+    <header className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-200" data-testid="navbar">
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-20">
         <a href="#home" className="flex-shrink-0" data-testid="logo">
           <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-14 w-auto" />
