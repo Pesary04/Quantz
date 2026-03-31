@@ -514,7 +514,7 @@ function AdvisorSection() {
         </div>
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
           <div className="relative rounded-3xl overflow-hidden shadow-xl h-96">
-            <img src="/images/why-quantz.png" alt="Quantz Managing Director" className="w-full h-full object-cover object-center"/>
+            <img src="/images/advisor-portrait.png" alt="Quantz Managing Director" className="w-full h-full object-cover object-center"/>
             <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,37,64,0.6) 0%, transparent 60%)" }}/>
           </div>
           <div>
