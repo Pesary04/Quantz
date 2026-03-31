@@ -336,7 +336,7 @@ const partners = [
   { name: "Old Mutual", abbr: "OM", color: "#006b3f" },
   { name: "Hollard", abbr: "HO", color: "#f7941d" },
   { name: "PPS", abbr: "PPS", color: "#003478" },
-  { name: "NISEDI", abbr: "NS", color: "#3a3a3a" },
+  { name: "SISEDI", abbr: "SI", color: "#3a3a3a" },
   { name: "Capricorn Asset Management", abbr: "CAM", color: "#0073a8" },
 ];
 
