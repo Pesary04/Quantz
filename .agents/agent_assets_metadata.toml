@@ -30,6 +30,12 @@ uri = "file://client/public/images/car-insurance-ad.png"
 type = "image"
 title = "car insurance ad banner"
 
+[[generated]]
+id = "p7-SVNpEuMJE7QEm6acks"
+uri = "file://client/public/images/wills-estates.png"
+type = "image"
+title = "diverse boardroom for Wills and Estates"
+
 [[outputs]]
 id = "lA5pRpgnXuRkrp3h6lflt"
 uri = "file://attached_assets/stock_images/sanlam-logo.jpg"

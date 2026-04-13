@@ -387,7 +387,7 @@ const serviceData: Record<string, {
     title: "Wills & Estates",
     subtitle: "Secure Your Legacy",
     tagline: "Protect what matters most for the people you love. We help you create clear, legally sound wills and estate plans so your assets are distributed exactly as you wish.",
-    image: "/images/pension-fund-groups.png",
+    image: "/images/wills-estates.png",
     color: "from-[#003087] to-[#00A896]",
     gradientFrom: "#003087",
     gradientTo: "#00A896",
