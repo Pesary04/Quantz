@@ -36,6 +36,12 @@ uri = "file://client/public/images/wills-estates.png"
 type = "image"
 title = "diverse boardroom for Wills and Estates"
 
+[[generated]]
+id = "lawHJj7W6Vq6dtpIZZQGe"
+uri = "file://client/public/images/medical-aid.png"
+type = "image"
+title = "medical aid image with diverse doctor and patient"
+
 [[outputs]]
 id = "lA5pRpgnXuRkrp3h6lflt"
 uri = "file://attached_assets/stock_images/sanlam-logo.jpg"
