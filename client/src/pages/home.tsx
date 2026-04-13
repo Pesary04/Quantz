@@ -225,7 +225,7 @@ const services = [
     icon: Scroll,
     title: "Wills & Estates",
     subtitle: "Secure Your Legacy",
-    image: "/images/wills-estates.png",
+    image: "/images/pension-fund-groups.png",
     color: "from-[#003087] to-[#00A896]",
     iconColor: "text-[#003087]",
     bg: "bg-teal-50",
