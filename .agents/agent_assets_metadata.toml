@@ -18,6 +18,18 @@ uri = "file://client/public/images/pension-fund-groups.png"
 type = "image"
 title = "group pension fund corporate team"
 
+[[generated]]
+id = "gWWaYpihWfQWcJS_rUbxP"
+uri = "file://client/public/images/hero-light.png"
+type = "image"
+title = "soft hero family"
+
+[[generated]]
+id = "dieiQNxFsN4YGi9-83r6e"
+uri = "file://client/public/images/car-insurance-ad.png"
+type = "image"
+title = "car insurance ad banner"
+
 [[outputs]]
 id = "lA5pRpgnXuRkrp3h6lflt"
 uri = "file://attached_assets/stock_images/sanlam-logo.jpg"

@@ -388,9 +388,9 @@ const serviceData: Record<string, {
     subtitle: "Secure Your Legacy",
     tagline: "Protect what matters most for the people you love. We help you create clear, legally sound wills and estate plans so your assets are distributed exactly as you wish.",
     image: "/images/pension-fund-groups.png",
-    color: "from-amber-500 to-orange-600",
-    gradientFrom: "#d97706",
-    gradientTo: "#c2410c",
+    color: "from-[#003087] to-[#00A896]",
+    gradientFrom: "#003087",
+    gradientTo: "#00A896",
     what: "Wills and Estate Planning ensures that when you are no longer here, your assets go to the right people — quickly, clearly and without unnecessary stress or family disputes. Quantz helps you create legally sound wills, set up trusts, and put comprehensive estate plans in place that reflect your exact wishes.",
     whatInside: [
       "Drafting and updating of Wills",

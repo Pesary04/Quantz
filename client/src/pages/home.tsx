@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote,
   CheckCircle2, Phone, Mail, MapPin, Menu, X, ArrowRight, Star,
@@ -98,8 +98,8 @@ function HeroSection() {
   return (
     <section id="home" className="relative overflow-hidden min-h-[600px] flex items-center" data-testid="hero-section">
       <div className="absolute inset-0">
-        <img src="/images/hero-family.png" alt="Happy Namibian family" className="w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(10,37,64,0.92) 0%, rgba(13,46,82,0.88) 45%, rgba(13,46,82,0.55) 70%, rgba(13,46,82,0.25) 100%)" }}/>
+        <img src="/images/hero-light.png" alt="Happy Namibian family" className="w-full h-full object-cover object-center" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(0,48,135,0.82) 0%, rgba(0,48,135,0.70) 45%, rgba(0,48,135,0.35) 70%, rgba(0,48,135,0.10) 100%)" }}/>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-24 md:py-32 w-full">
@@ -226,9 +226,9 @@ const services = [
     title: "Wills & Estates",
     subtitle: "Secure Your Legacy",
     image: "/images/pension-fund-groups.png",
-    color: "from-amber-500 to-orange-600",
-    iconColor: "text-amber-600",
-    bg: "bg-amber-100",
+    color: "from-[#003087] to-[#00A896]",
+    iconColor: "text-[#003087]",
+    bg: "bg-teal-50",
     items: ["Drafting and Updating of Wills", "Estate Planning and Administration", "Trust Formation", "Inheritance and Succession Planning"],
   },
 ];
@@ -290,11 +290,12 @@ function ServicesSection() {
           ))}
         </div>
         <div className="text-center mt-12">
-          <a href="#contact"
+          <button
+            onClick={() => document.dispatchEvent(new CustomEvent("openAdvisorModal"))}
             className="inline-flex items-center gap-2 px-8 py-4 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all text-sm"
-            style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}
+            style={{ background: `linear-gradient(135deg, #003087, #00A896)` }}
             data-testid="button-services-cta"
-          >Speak to an Advisor <ArrowRight className="w-4 h-4" aria-hidden="true"/></a>
+          >Speak to an Advisor <ArrowRight className="w-4 h-4" aria-hidden="true"/></button>
         </div>
       </div>
     </section>
@@ -576,13 +577,14 @@ function AdvisorSection() {
             <p className="text-gray-500 text-sm leading-relaxed mb-6">
               With nearly two decades of experience in the Namibian financial services industry, our advisor is committed to providing independent, honest guidance that puts clients first. Every recommendation is made with your long-term wellbeing in mind.
             </p>
-            <a href="/#contact"
+            <button
+              onClick={() => document.dispatchEvent(new CustomEvent("openAdvisorModal"))}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm shadow-md hover:opacity-90 transition-all"
-              style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}
+              style={{ background: `linear-gradient(135deg, #003087, #00A896)` }}
               data-testid="button-advisor-contact"
             >
               Book a Consultation <ArrowRight className="w-4 h-4" aria-hidden="true"/>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -800,6 +802,144 @@ function Footer() {
   );
 }
 
+function AdvisorModal() {
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    const handler = () => { setOpen(true); setSent(false); setMessage(""); };
+    document.addEventListener("openAdvisorModal", handler);
+    return () => document.removeEventListener("openAdvisorModal", handler);
+  }, []);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" role="dialog" aria-modal="true" data-testid="advisor-modal">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}/>
+      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="px-6 py-5 flex items-center justify-between border-b border-gray-100" style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}>
+          <h2 className="text-white font-bold text-lg">Speak Directly to an Advisor</h2>
+          <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white transition-colors" aria-label="Close" data-testid="button-close-modal">
+            <X className="w-5 h-5"/>
+          </button>
+        </div>
+        <div className="p-6">
+          <div className="flex items-center gap-4 mb-6 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+            <img src="/images/advisor-portrait.png" alt="Financial Advisor" className="w-16 h-16 rounded-xl object-cover flex-shrink-0"/>
+            <div>
+              <p className="font-bold text-gray-900">Managing Director</p>
+              <p className="text-sm font-medium" style={{ color: "#00A896" }}>Principal Financial Advisor</p>
+              <p className="text-xs text-gray-500 mt-0.5">18+ Years in Financial Services</p>
+            </div>
+          </div>
+          <div className="space-y-3 mb-5">
+            <a href="tel:+264818201522" className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-teal-200 hover:bg-teal-50 transition-all group" data-testid="modal-phone">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}>
+                <Phone className="w-4 h-4 text-white"/>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 font-medium">Call us directly</p>
+                <p className="text-sm font-semibold text-gray-800 group-hover:text-[#003087]">+264 81 820 1522</p>
+              </div>
+            </a>
+            <a href="mailto:info@quantz.com.na" className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-teal-200 hover:bg-teal-50 transition-all group" data-testid="modal-email">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}>
+                <Mail className="w-4 h-4 text-white"/>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 font-medium">Send an email</p>
+                <p className="text-sm font-semibold text-gray-800 group-hover:text-[#003087]">info@quantz.com.na</p>
+              </div>
+            </a>
+          </div>
+          {!sent ? (
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Or leave a message</p>
+              <textarea
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent resize-none"
+                rows={3}
+                placeholder="What would you like to discuss?"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                data-testid="input-advisor-message"
+              />
+              <button
+                onClick={() => { if (message.trim()) { setSent(true); } }}
+                className="w-full py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-all"
+                style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}
+                data-testid="button-send-message"
+              >Send Message</button>
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-3">
+                <CheckCircle2 className="w-6 h-6 text-teal-600"/>
+              </div>
+              <p className="font-semibold text-gray-900">Message sent!</p>
+              <p className="text-sm text-gray-500 mt-1">Our advisor will be in touch with you shortly.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CarInsuranceAdSection() {
+  return (
+    <section className="py-16 md:py-20 bg-white border-t border-gray-100" data-testid="car-insurance-ad-section">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="text-center mb-8">
+          <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide mb-4" style={{ background: "#e8f5f3", color: "#00A896" }}>Featured Coverage</div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Protect Your Vehicle</h2>
+          <p className="text-gray-500 max-w-xl mx-auto text-base">Comprehensive car insurance tailored for Namibian roads — get covered today.</p>
+        </div>
+        <div className="relative rounded-3xl overflow-hidden shadow-xl" style={{ minHeight: 340 }}>
+          <img src="/images/car-insurance-ad.png" alt="Car Insurance" className="w-full h-full object-cover absolute inset-0"/>
+          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(0,48,135,0.88) 0%, rgba(0,48,135,0.65) 50%, rgba(0,48,135,0.10) 100%)" }}/>
+          <div className="relative px-8 md:px-14 py-14 md:py-16 max-w-lg">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 text-white text-xs font-semibold mb-4">
+              <Car className="w-3.5 h-3.5"/> Short-Term Insurance
+            </div>
+            <h3 className="text-white text-2xl md:text-3xl font-bold leading-snug mb-3">
+              Drive with <span style={{ color: "#7de8df" }}>Confidence</span>
+            </h3>
+            <p className="text-white/85 text-sm leading-relaxed mb-6 max-w-xs">
+              From comprehensive cover to third-party liability — we compare the best car insurance options from Namibia's top insurers so you pay less and get more.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href="#contact"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all"
+                style={{ background: "#00A896", color: "white" }}
+                data-testid="button-car-insurance-quote"
+              >Get a Quote <ArrowRight className="w-4 h-4"/></a>
+              <a href="tel:+264818201522"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-white/60 text-white font-semibold text-sm hover:bg-white/10 transition-all"
+                data-testid="button-car-insurance-call"
+              >Call for a Quote <Phone className="w-4 h-4"/></a>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          {[
+            { label: "Comprehensive Cover", desc: "Full protection for your vehicle" },
+            { label: "Third-Party Liability", desc: "Cover damage to others" },
+            { label: "Windscreen & Accessories", desc: "Including extras and add-ons" },
+            { label: "Roadside Assistance", desc: "Help when you need it most" },
+          ].map((f, i) => (
+            <div key={i} className="p-4 rounded-xl bg-gray-50 border border-gray-100 text-center">
+              <p className="text-sm font-semibold text-gray-800 mb-1">{f.label}</p>
+              <p className="text-xs text-gray-500">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-white" data-testid="home-page">
@@ -809,12 +949,13 @@ export default function Home() {
       <FormsSection />
       <WhyUsSection />
       <PartnersSection />
-      <MarketWatchSection />
+      <CarInsuranceAdSection />
       <HowItWorksSection />
       <TestimonialsSection />
       <AdvisorSection />
       <ContactSection />
       <Footer />
+      <AdvisorModal />
     </div>
   );
 }
