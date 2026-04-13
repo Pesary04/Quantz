@@ -771,7 +771,7 @@ function Footer() {
             <h4 className="text-white font-semibold text-sm mb-5 uppercase tracking-widest">Services</h4>
             <ul className="space-y-3 text-sm">
               {["Life Insurance", "Pension Fund for Individuals", "Pension Fund for Groups", "Medical Aid Gap Cover", "Short-term Insurance", "Retirement Annuity", "Savings & Investment", "Wills & Estates"].map((s) => (
-                <li key={s}><a href="#services" className="hover:text-white transition-colors">{s}</a></li>
+                <li key={s}><a href="#services" className="font-semibold hover:text-white transition-colors">{s}</a></li>
               ))}
             </ul>
           </div>
@@ -780,15 +780,15 @@ function Footer() {
             <ul className="space-y-4 text-sm">
               <li className="flex gap-3">
                 <Phone className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
-                <a href="tel:+264818201522" className="hover:text-white transition-colors" data-testid="footer-phone">+264 81 820 1522</a>
+                <a href="tel:+264818201522" className="font-semibold hover:text-white transition-colors" data-testid="footer-phone">+264 81 820 1522</a>
               </li>
               <li className="flex gap-3">
                 <Mail className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
-                <a href="mailto:info@quantz.com.na" className="hover:text-white transition-colors" data-testid="footer-email">info@quantz.com.na</a>
+                <a href="mailto:info@quantz.com.na" className="font-semibold hover:text-white transition-colors" data-testid="footer-email">info@quantz.com.na</a>
               </li>
               <li className="flex gap-3">
                 <MapPin className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
-                <span>Windhoek, Namibia</span>
+                <span className="font-semibold">Windhoek, Namibia</span>
               </li>
             </ul>
           </div>
