@@ -1,0 +1,12 @@
+No.,Section / Page,Current Problem,Requested Change,Suggested Solution / Notes
+1,Speak to an Advisor button,"Button currently leads to ""Get a Quote"" page",Change destination to show advisor contact details + optional message box,"Create a simple contact form or pop-up with:
+• Advisor name & photo
+• Phone number
+• Email
+• Optional message box (""What would you like to discuss?"")"
+2,Book a Consultation button,"Button currently leads to ""Get a Quote"" page",Same as above – must show advisor contact + message field,Same form as point 1. Add clear heading: “Speak Directly to an Advisor”
+3,Wills & Estates section,Colour is showing orange,Change colour to Quantz branding (navy blue #003087 and teal #00A896),Update background / accent colour to match Quantz brand guide
+4,Homepage – Main Hero Image,"Too much blue, feels overwhelming","Replace with a more subtle, professional image","Use a softer, lighter image (less heavy blue tones). Keep Quantz logo and tagline visible"
+5,Homepage – Overall Colour,Blue is too dominant,Tone down the blue and use more white / light grey space,Reduce blue saturation. Use Quantz navy and teal only as accents
+6,Homepage – Car Insurance Ad,Not featured prominently,Add the latest Car Insurance advert prominently on the homepage,Add as a slideshow / carousel or a dedicated banner section. Place strong CTA button (“Get a Quote” or “Call for a Quote”) directly below or beside the advert
+7,Live Market Watch,Not working properly,Remove it completely for now,Delete the widget / section entirely
