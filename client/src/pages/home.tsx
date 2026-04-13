@@ -889,51 +889,36 @@ function AdvisorModal() {
 
 function CarInsuranceAdSection() {
   return (
-    <section className="py-16 md:py-20 bg-white border-t border-gray-100" data-testid="car-insurance-ad-section">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <section className="py-16 md:py-20 bg-gray-50 border-t border-gray-100" data-testid="car-insurance-ad-section">
+      <div className="max-w-5xl mx-auto px-4 md:px-8">
         <div className="text-center mb-8">
           <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide mb-4" style={{ background: "#e8f5f3", color: "#00A896" }}>Featured Coverage</div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Protect Your Vehicle</h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-base">Comprehensive car insurance tailored for Namibian roads — get covered today.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Car Insurance</h2>
+          <p className="text-gray-500 max-w-xl mx-auto text-base">We compare quotes from all major insurers in Namibia to get you the best cover at a competitive price.</p>
         </div>
-        <div className="relative rounded-3xl overflow-hidden shadow-xl" style={{ minHeight: 340 }}>
-          <img src="/images/car-insurance-ad.png" alt="Car Insurance" className="w-full h-full object-cover absolute inset-0"/>
-          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(0,48,135,0.88) 0%, rgba(0,48,135,0.65) 50%, rgba(0,48,135,0.10) 100%)" }}/>
-          <div className="relative px-8 md:px-14 py-14 md:py-16 max-w-lg">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 text-white text-xs font-semibold mb-4">
-              <Car className="w-3.5 h-3.5"/> Short-Term Insurance
-            </div>
-            <h3 className="text-white text-2xl md:text-3xl font-bold leading-snug mb-3">
-              Drive with <span style={{ color: "#7de8df" }}>Confidence</span>
-            </h3>
-            <p className="text-white/85 text-sm leading-relaxed mb-6 max-w-xs">
-              From comprehensive cover to third-party liability — we compare the best car insurance options from Namibia's top insurers so you pay less and get more.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a href="#contact"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all"
-                style={{ background: "#00A896", color: "white" }}
-                data-testid="button-car-insurance-quote"
-              >Get a Quote <ArrowRight className="w-4 h-4"/></a>
-              <a href="tel:+264818201522"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-white/60 text-white font-semibold text-sm hover:bg-white/10 transition-all"
-                data-testid="button-car-insurance-call"
-              >Call for a Quote <Phone className="w-4 h-4"/></a>
-            </div>
-          </div>
+
+        <div className="rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
+          <img
+            src="/images/car-insurance-ad.jpg"
+            alt="Quantz Car Insurance — Do You Need Car Insurance? We compare quotes from all major insurers in Namibia."
+            className="w-full h-auto block"
+            data-testid="img-car-insurance-ad"
+          />
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          {[
-            { label: "Comprehensive Cover", desc: "Full protection for your vehicle" },
-            { label: "Third-Party Liability", desc: "Cover damage to others" },
-            { label: "Windscreen & Accessories", desc: "Including extras and add-ons" },
-            { label: "Roadside Assistance", desc: "Help when you need it most" },
-          ].map((f, i) => (
-            <div key={i} className="p-4 rounded-xl bg-gray-50 border border-gray-100 text-center">
-              <p className="text-sm font-semibold text-gray-800 mb-1">{f.label}</p>
-              <p className="text-xs text-gray-500">{f.desc}</p>
-            </div>
-          ))}
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all"
+            style={{ background: "linear-gradient(135deg, #003087, #00A896)", color: "white" }}
+            data-testid="button-car-insurance-quote"
+          >Get Your Free Quote Today <ArrowRight className="w-4 h-4"/></a>
+          <a
+            href="tel:+264818201522"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 font-semibold text-sm hover:bg-blue-50 transition-all"
+            style={{ borderColor: "#003087", color: "#003087" }}
+            data-testid="button-car-insurance-call"
+          ><Phone className="w-4 h-4"/> +264 81 820 1522</a>
         </div>
       </div>
     </section>
