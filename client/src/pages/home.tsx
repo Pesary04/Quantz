@@ -235,7 +235,7 @@ const services = [
 
 function ServicesSection() {
   return (
-    <section id="services" className="py-20 md:py-28 bg-gray-50" data-testid="services-section">
+    <section id="services" className="py-20 md:py-28 bg-white" data-testid="services-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-14">
           <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">What We Offer</div>
@@ -310,7 +310,7 @@ const whyPoints = [
 
 function WhyUsSection() {
   return (
-    <section id="why-us" className="py-20 md:py-28 bg-white overflow-hidden" data-testid="why-us-section">
+    <section id="why-us" className="py-20 md:py-28 bg-[#f2f2f2] overflow-hidden" data-testid="why-us-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="relative">
@@ -372,7 +372,7 @@ const partners = [
 
 function PartnersSection() {
   return (
-    <section id="partners" className="py-16 md:py-20 bg-gray-50 border-y border-gray-100" data-testid="partners-section">
+    <section id="partners" className="py-16 md:py-20 bg-white border-y border-gray-200" data-testid="partners-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-10">
           <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-2">In Partnership With</p>
@@ -404,7 +404,7 @@ function HowItWorksSection() {
     { n: "03", title: "You Choose", desc: "Review your tailored options and select the plan that gives you complete peace of mind.", img: "/images/hero-family.png" },
   ];
   return (
-    <section className="py-20 md:py-28 bg-white" data-testid="how-it-works-section">
+    <section className="py-20 md:py-28 bg-[#f2f2f2]" data-testid="how-it-works-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-14">
           <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Simple Process</div>
@@ -446,7 +446,7 @@ function FormsSection() {
     { name: "Retirement Annuity Application", icon: TrendingUp, color: "text-blue-700", bg: "bg-blue-50" },
   ];
   return (
-    <section className="py-20 md:py-24 bg-white border-t border-gray-100" data-testid="forms-section">
+    <section className="py-20 md:py-24 bg-white border-t border-gray-200" data-testid="forms-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Quick Access</div>
@@ -538,7 +538,7 @@ function MarketWatchSection() {
 
 function AdvisorSection() {
   return (
-    <section className="py-20 md:py-24 bg-gray-50 border-t border-gray-100" data-testid="advisor-section">
+    <section className="py-20 md:py-24 bg-[#f2f2f2] border-t border-gray-200" data-testid="advisor-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Meet Your Advisor</div>
@@ -599,7 +599,7 @@ function TestimonialsSection() {
     { name: "Annelise P.", location: "Oshakati", quote: "Their retirement annuity advice was clear and straightforward. I now have peace of mind knowing my future is secured. Highly recommend Quantz Financial Services.", stars: 5 },
   ];
   return (
-    <section className="py-20 md:py-28 bg-gray-50" data-testid="testimonials-section">
+    <section className="py-20 md:py-28 bg-white" data-testid="testimonials-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-14">
           <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Client Stories</div>
@@ -889,7 +889,7 @@ function AdvisorModal() {
 
 function CarInsuranceAdSection() {
   return (
-    <section className="py-16 md:py-20 bg-gray-50 border-t border-gray-100" data-testid="car-insurance-ad-section">
+    <section className="py-16 md:py-20 bg-[#f2f2f2] border-t border-gray-200" data-testid="car-insurance-ad-section">
       <div className="max-w-5xl mx-auto px-4 md:px-8">
         <div className="text-center mb-8">
           <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide mb-4" style={{ background: "#e8f5f3", color: "#00A896" }}>Featured Coverage</div>
@@ -927,7 +927,7 @@ function CarInsuranceAdSection() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white" data-testid="home-page">
+    <div className="min-h-screen bg-[#f2f2f2]" data-testid="home-page">
       <Navbar />
       <HeroSection />
       <ServicesSection />
