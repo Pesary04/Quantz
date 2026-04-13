@@ -310,7 +310,7 @@ const whyPoints = [
 
 function WhyUsSection() {
   return (
-    <section id="why-us" className="py-20 md:py-28 bg-[#404040] overflow-hidden" data-testid="why-us-section">
+    <section id="why-us" className="py-20 md:py-28 bg-[#f2f2f2] overflow-hidden" data-testid="why-us-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="relative">
@@ -332,23 +332,23 @@ function WhyUsSection() {
           </div>
 
           <div>
-            <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-200 text-xs font-semibold uppercase tracking-wide mb-5">Our Promise</div>
-            <p className="text-gray-300 text-base leading-relaxed mb-6" data-testid="about-description">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-5">Our Promise</div>
+            <p className="text-gray-600 text-base leading-relaxed mb-6" data-testid="about-description">
               Quantz Financial Services provides tailored insurance and financial protection solutions
               designed to safeguard your life, assets, and future.
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8" data-testid="why-us-title">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8" data-testid="why-us-title">
               Why Choose Quantz?
             </h2>
             <div className="space-y-6">
               {whyPoints.map((p, i) => (
-                <div key={i} className="flex gap-4 p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all" data-testid={`why-point-${i + 1}`}>
+                <div key={i} className="flex gap-4 p-5 rounded-2xl bg-gray-50 hover:bg-blue-50 hover:border-blue-100 border border-transparent transition-all" data-testid={`why-point-${i + 1}`}>
                   <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}>
                     <p.icon className="w-6 h-6 text-white" aria-hidden="true"/>
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold text-base mb-1">{p.title}</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{p.desc}</p>
+                    <h3 className="text-gray-900 font-semibold text-base mb-1">{p.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">{p.desc}</p>
                   </div>
                 </div>
               ))}
@@ -404,16 +404,16 @@ function HowItWorksSection() {
     { n: "03", title: "You Choose", desc: "Review your tailored options and select the plan that gives you complete peace of mind.", img: "/images/hero-family.png" },
   ];
   return (
-    <section className="py-20 md:py-28 bg-[#404040]" data-testid="how-it-works-section">
+    <section className="py-20 md:py-28 bg-[#f2f2f2]" data-testid="how-it-works-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-14">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-200 text-xs font-semibold uppercase tracking-wide mb-4">Simple Process</div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" data-testid="how-it-works-title">How It Works</h2>
-          <p className="text-gray-300 text-base max-w-md mx-auto">Getting the right cover is simple — we guide you every step of the way.</p>
+          <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Simple Process</div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="how-it-works-title">How It Works</h2>
+          <p className="text-gray-500 text-base max-w-md mx-auto">Getting the right cover is simple — we guide you every step of the way.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, i) => (
-            <div key={i} className="group rounded-2xl overflow-hidden border border-white/10 hover:shadow-xl transition-all" data-testid={`step-${i + 1}`}>
+            <div key={i} className="group rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all" data-testid={`step-${i + 1}`}>
               <div className="relative h-48 overflow-hidden">
                 <img src={step.img} alt={step.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
                 <div className="absolute inset-0 bg-black/40"/>
@@ -538,11 +538,11 @@ function MarketWatchSection() {
 
 function AdvisorSection() {
   return (
-    <section className="py-20 md:py-24 bg-[#404040] border-t border-white/10" data-testid="advisor-section">
+    <section className="py-20 md:py-24 bg-[#f2f2f2] border-t border-gray-200" data-testid="advisor-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-200 text-xs font-semibold uppercase tracking-wide mb-4">Meet Your Advisor</div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" data-testid="advisor-title">Know Your Financial Advisor</h2>
+          <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Meet Your Advisor</div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="advisor-title">Know Your Financial Advisor</h2>
         </div>
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
           <div className="relative rounded-3xl overflow-hidden shadow-xl h-96">
@@ -555,7 +555,7 @@ function AdvisorSection() {
                 <UserCircle className="w-7 h-7 text-white" aria-hidden="true"/>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white" data-testid="advisor-name">Managing Director</h3>
+                <h3 className="text-xl font-bold text-gray-900" data-testid="advisor-name">Managing Director</h3>
                 <p className="text-blue-600 text-sm font-medium">Principal Financial Advisor</p>
               </div>
             </div>
@@ -574,7 +574,7 @@ function AdvisorSection() {
                 </div>
               ))}
             </div>
-            <p className="text-gray-300 text-sm leading-relaxed mb-6">
+            <p className="text-gray-500 text-sm leading-relaxed mb-6">
               With nearly two decades of experience in the Namibian financial services industry, our advisor is committed to providing independent, honest guidance that puts clients first. Every recommendation is made with your long-term wellbeing in mind.
             </p>
             <button
@@ -889,15 +889,15 @@ function AdvisorModal() {
 
 function CarInsuranceAdSection() {
   return (
-    <section className="py-16 md:py-20 bg-[#404040] border-t border-white/10" data-testid="car-insurance-ad-section">
+    <section className="py-16 md:py-20 bg-[#f2f2f2] border-t border-gray-200" data-testid="car-insurance-ad-section">
       <div className="max-w-5xl mx-auto px-4 md:px-8">
         <div className="text-center mb-8">
           <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide mb-4" style={{ background: "#e8f5f3", color: "#00A896" }}>Featured Coverage</div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Car Insurance</h2>
-          <p className="text-gray-300 max-w-xl mx-auto text-base">We compare quotes from all major insurers in Namibia to get you the best cover at a competitive price.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Car Insurance</h2>
+          <p className="text-gray-500 max-w-xl mx-auto text-base">We compare quotes from all major insurers in Namibia to get you the best cover at a competitive price.</p>
         </div>
 
-        <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+        <div className="rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
           <img
             src="/images/car-insurance-ad.jpg"
             alt="Quantz Car Insurance — Do You Need Car Insurance? We compare quotes from all major insurers in Namibia."
@@ -915,8 +915,8 @@ function CarInsuranceAdSection() {
           >Get Your Free Quote Today <ArrowRight className="w-4 h-4"/></a>
           <a
             href="tel:+264818201522"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 font-semibold text-sm hover:bg-white/10 transition-all"
-            style={{ borderColor: "rgba(255,255,255,0.6)", color: "white" }}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 font-semibold text-sm hover:bg-blue-50 transition-all"
+            style={{ borderColor: "#003087", color: "#003087" }}
             data-testid="button-car-insurance-call"
           ><Phone className="w-4 h-4"/> +264 81 820 1522</a>
         </div>
@@ -927,7 +927,7 @@ function CarInsuranceAdSection() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#404040]" data-testid="home-page">
+    <div className="min-h-screen bg-[#f2f2f2]" data-testid="home-page">
       <Navbar />
       <HeroSection />
       <ServicesSection />
