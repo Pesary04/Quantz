@@ -747,7 +747,7 @@ function ContactSection() {
 
 function Footer() {
   return (
-    <footer className="bg-[#060f1e] text-gray-400" data-testid="footer">
+    <footer className="bg-[#404040] text-gray-400" data-testid="footer">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-800">
           <div>
