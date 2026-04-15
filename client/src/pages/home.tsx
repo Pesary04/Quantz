@@ -365,30 +365,33 @@ const partners = [
   { name: "Santam", logo: "/images/partners/santam.svg", bg: "bg-white", pad: "p-3" },
   { name: "Old Mutual", logo: "/images/partners/old-mutual.svg", bg: "bg-white", pad: "p-3" },
   { name: "Hollard", logo: "/images/partners/hollard.png", bg: "bg-white", pad: "p-0" },
-  { name: "PPS", logo: "/images/partners/pps.png", bg: "bg-[#003478]", pad: "p-2" },
+  { name: "PPS", logo: "/images/partners/pps.png", bg: "bg-[#0d2447]", pad: "p-0" },
   { name: "SISEDI", logo: "/images/partners/sisedi.png", bg: "bg-white", pad: "p-2" },
   { name: "Capricorn Asset Management", logo: "/images/partners/capricorn.png", bg: "bg-white", pad: "p-2" },
 ];
 
 function PartnersSection() {
+  const doubled = [...partners, ...partners];
   return (
     <section id="partners" className="py-16 md:py-20 bg-white border-y border-gray-200" data-testid="partners-section">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="text-center mb-10">
-          <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-2">In Partnership With</p>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800" data-testid="partners-title">Namibia's Leading Insurers</h2>
-        </div>
-        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-          {partners.map((p) => (
+      <div className="text-center mb-10 px-4">
+        <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-2">In Partnership With</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800" data-testid="partners-title">Namibia's Leading Insurers</h2>
+      </div>
+      <div className="overflow-hidden relative">
+        <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, white, transparent)" }}/>
+        <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, white, transparent)" }}/>
+        <div className="flex animate-marquee gap-8 w-max px-8">
+          {doubled.map((p, i) => (
             <div
-              key={p.name}
-              className="flex flex-col items-center gap-3 group cursor-default"
-              data-testid={`partner-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}
+              key={i}
+              className="flex flex-col items-center gap-3 flex-shrink-0 group cursor-default"
+              data-testid={i < partners.length ? `partner-${p.name.toLowerCase().replace(/[\s|]/g, "-")}` : undefined}
             >
-              <div className={`w-32 h-16 rounded-xl border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm group-hover:shadow-md group-hover:border-blue-100 transition-all ${p.bg} ${p.pad}`}>
+              <div className={`w-36 h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
                 <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
               </div>
-              <span className="text-xs font-semibold text-gray-500 text-center max-w-[8rem] leading-tight">{p.name}</span>
+              <span className="text-xs font-semibold text-gray-500 text-center max-w-[9rem] leading-tight">{p.name}</span>
             </div>
           ))}
         </div>
