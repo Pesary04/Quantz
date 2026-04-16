@@ -28,19 +28,19 @@ function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-200" data-testid="navbar">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-20">
+    <header className="sticky top-0 z-50 shadow-lg" style={{ background: "#003087" }} data-testid="navbar">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-24">
         <a href="#home" className="flex-shrink-0" data-testid="logo">
-          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-14 w-auto" />
+          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-20 w-auto drop-shadow-lg" />
         </a>
         <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation" data-testid="nav-links">
           {links.map((l) => (
             <a key={l.href} href={l.href}
-              className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors relative group"
+              className="text-sm font-semibold text-white/90 hover:text-white transition-colors relative group"
               data-testid={`link-${l.label.toLowerCase().replace(" ", "-")}`}
             >
               {l.label}
-              <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"/>
+              <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"/>
             </a>
           ))}
         </nav>
@@ -56,25 +56,25 @@ function Navbar() {
               </a>
             ))}
           </div>
-          <div className="w-px h-5 bg-gray-200"/>
-          <a href="tel:+264818201522" className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-blue-600 transition-colors" data-testid="link-phone">
+          <div className="w-px h-5 bg-white/30"/>
+          <a href="tel:+264818201522" className="flex items-center gap-1.5 text-sm text-white/90 hover:text-white transition-colors" data-testid="link-phone">
             <Phone className="w-3.5 h-3.5" aria-hidden="true"/>
             <span>+264 81 820 1522</span>
           </a>
           <a href="#contact"
-            className="px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-md"
-            style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}
+            className="px-5 py-2 rounded-lg text-sm font-bold transition-all hover:shadow-lg hover:scale-105"
+            style={{ background: "white", color: "#003087" }}
             data-testid="button-nav-cta"
           >Get a Quote</a>
         </div>
-        <button className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100" onClick={() => setOpen(!open)} aria-label="Toggle menu" data-testid="button-mobile-menu">
+        <button className="md:hidden p-2 rounded-lg text-white hover:bg-white/10" onClick={() => setOpen(!open)} aria-label="Toggle menu" data-testid="button-mobile-menu">
           {open ? <X className="w-5 h-5"/> : <Menu className="w-5 h-5"/>}
         </button>
       </div>
       {open && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
+        <div className="md:hidden border-t border-white/20 px-4 py-4 space-y-3" style={{ background: "#002070" }}>
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="block text-sm font-medium text-gray-700 hover:text-blue-600 py-2" onClick={() => setOpen(false)}>{l.label}</a>
+            <a key={l.href} href={l.href} className="block text-sm font-semibold text-white/90 hover:text-white py-2" onClick={() => setOpen(false)}>{l.label}</a>
           ))}
           <div className="flex items-center gap-2 pt-1">
             {SOCIAL_LINKS.map(({ Icon, label, href, bgStyle }) => (
@@ -87,7 +87,7 @@ function Navbar() {
               </a>
             ))}
           </div>
-          <a href="#contact" className="block w-full text-center px-5 py-2.5 rounded-lg text-sm font-semibold text-white" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}>Get a Quote</a>
+          <a href="#contact" className="block w-full text-center px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "white", color: "#003087" }}>Get a Quote</a>
         </div>
       )}
     </header>
