@@ -42,6 +42,12 @@ uri = "file://client/public/images/medical-aid.png"
 type = "image"
 title = "original medical aid image restored"
 
+[[generated]]
+id = "rbiV0d0gvIa6FR34CF7aW"
+uri = "file://client/public/images/hero-diverse.png"
+type = "image"
+title = "diverse-namibian-hero"
+
 [[outputs]]
 id = "lA5pRpgnXuRkrp3h6lflt"
 uri = "file://attached_assets/stock_images/sanlam-logo.jpg"
