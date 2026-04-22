@@ -929,44 +929,38 @@ function CarInsuranceAdSection() {
 }
 
 const BANNERS = [
-  { src: "/images/banners/life-cover.jpg",        alt: "Life Insurance — Protects You Today and Your Family Tomorrow" },
-  { src: "/images/banners/car-insurance.jpg",     alt: "Car Insurance — Compare Quotes from All Major Insurers in Namibia" },
-  { src: "/images/banners/funeral-cover.jpg",     alt: "Funeral Cover — Give Your Family Dignity When It Matters Most" },
-  { src: "/images/banners/gap-cover.jpg",         alt: "Medical Aid Gap Cover — Your Medical Aid Does Not Cover Everything" },
-  { src: "/images/banners/insurance-review.jpg",  alt: "Insurance Review — Protect What Matters Most" },
-  { src: "/images/banners/bundle-and-save.jpg",   alt: "Bundle and Save — Insure Your Home, Car, Gadgets & Electronics Together" },
-  { src: "/images/banners/wills-estates.jpg",     alt: "Wills & Estates — Love Your Family Enough to Plan Ahead" },
+  { src: "/images/banners/life-cover.jpg",        label: "Life Insurance",         alt: "Life Insurance — Protects You Today and Your Family Tomorrow" },
+  { src: "/images/banners/car-insurance.jpg",     label: "Car Insurance",          alt: "Car Insurance — Compare Quotes from All Major Insurers in Namibia" },
+  { src: "/images/banners/funeral-cover.jpg",     label: "Funeral Cover",          alt: "Funeral Cover — Give Your Family Dignity When It Matters Most" },
+  { src: "/images/banners/gap-cover.jpg",         label: "Medical Aid Gap Cover",  alt: "Medical Aid Gap Cover — Your Medical Aid Does Not Cover Everything" },
+  { src: "/images/banners/insurance-review.jpg",  label: "Insurance Review",       alt: "Insurance Review — Protect What Matters Most" },
+  { src: "/images/banners/bundle-and-save.jpg",   label: "Bundle & Save",          alt: "Bundle and Save — Insure Your Home, Car, Gadgets & Electronics Together" },
+  { src: "/images/banners/wills-estates.jpg",     label: "Wills & Estates",        alt: "Wills & Estates — Love Your Family Enough to Plan Ahead" },
 ];
 
 function BannerSlideshow() {
   const [current, setCurrent] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartX = useRef<number | null>(null);
 
   const goTo = useCallback((idx: number) => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
     setCurrent((idx + BANNERS.length) % BANNERS.length);
-    setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning]);
+  }, []);
 
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
 
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(next, 5500);
-  }, [next]);
+    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % BANNERS.length), 5500);
+  }, []);
 
   useEffect(() => {
-    timerRef.current = setInterval(next, 5500);
+    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % BANNERS.length), 5500);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [next]);
+  }, []);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
+  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
@@ -975,51 +969,62 @@ function BannerSlideshow() {
   };
 
   return (
-    <section className="w-full bg-black" data-testid="banner-slideshow">
-      <div
-        className="relative w-full overflow-hidden"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${current * 100}%)` }}
-        >
-          {BANNERS.map((b, i) => (
-            <div key={i} className="w-full flex-shrink-0">
-              <img
-                src={b.src}
-                alt={b.alt}
-                className="w-full h-auto block max-h-[520px] object-cover object-center"
-                loading={i === 0 ? "eager" : "lazy"}
-              />
-            </div>
-          ))}
+    <section className="w-full" style={{ background: "#003087" }} data-testid="banner-slideshow">
+      <div className="max-w-6xl mx-auto px-4 py-3">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span className="text-white/50 text-xs font-semibold uppercase tracking-widest">Featured Solutions</span>
+            <span className="text-white/30 text-xs">—</span>
+            <span className="text-white text-xs font-bold tracking-wide">{BANNERS[current].label}</span>
+          </div>
+          <span className="text-white/40 text-xs font-mono">{current + 1} / {BANNERS.length}</span>
         </div>
 
-        <button
-          onClick={() => { prev(); resetTimer(); }}
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/65 text-white flex items-center justify-center transition-all z-10"
-          aria-label="Previous banner"
-          data-testid="banner-prev"
+        <div
+          className="relative rounded-xl overflow-hidden shadow-2xl"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={() => { next(); resetTimer(); }}
-          className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/65 text-white flex items-center justify-center transition-all z-10"
-          aria-label="Next banner"
-          data-testid="banner-next"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${current * 100}%)` }}
+          >
+            {BANNERS.map((b, i) => (
+              <div key={i} className="w-full flex-shrink-0 bg-[#002270]">
+                <img
+                  src={b.src}
+                  alt={b.alt}
+                  className="w-full h-auto block"
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+              </div>
+            ))}
+          </div>
 
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          <button
+            onClick={() => { prev(); resetTimer(); }}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center transition-all z-10"
+            aria-label="Previous banner"
+            data-testid="banner-prev"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => { next(); resetTimer(); }}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center transition-all z-10"
+            aria-label="Next banner"
+            data-testid="banner-next"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-center gap-1.5 mt-2.5">
           {BANNERS.map((_, i) => (
             <button
               key={i}
               onClick={() => { goTo(i); resetTimer(); }}
-              className={`rounded-full transition-all duration-300 ${i === current ? "w-6 h-2.5 bg-white" : "w-2.5 h-2.5 bg-white/50 hover:bg-white/75"}`}
+              className={`rounded-full transition-all duration-300 ${i === current ? "w-5 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/35 hover:bg-white/60"}`}
               aria-label={`Go to banner ${i + 1}`}
               data-testid={`banner-dot-${i}`}
             />
