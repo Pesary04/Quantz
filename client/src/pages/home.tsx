@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote,
   CheckCircle2, Phone, Mail, MapPin, Menu, X, ArrowRight, Star,
-  Users, Award, Globe, ChevronRight, ShieldCheck,
+  Users, Award, Globe, ChevronRight, ChevronLeft, ShieldCheck,
   Scroll, FileDown, UserCircle, BarChart2, Briefcase
 } from "lucide-react";
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
@@ -928,10 +928,113 @@ function CarInsuranceAdSection() {
   );
 }
 
+const BANNERS = [
+  { src: "/images/banners/life-cover.jpg",        alt: "Life Insurance — Protects You Today and Your Family Tomorrow" },
+  { src: "/images/banners/car-insurance.jpg",     alt: "Car Insurance — Compare Quotes from All Major Insurers in Namibia" },
+  { src: "/images/banners/funeral-cover.jpg",     alt: "Funeral Cover — Give Your Family Dignity When It Matters Most" },
+  { src: "/images/banners/gap-cover.jpg",         alt: "Medical Aid Gap Cover — Your Medical Aid Does Not Cover Everything" },
+  { src: "/images/banners/insurance-review.jpg",  alt: "Insurance Review — Protect What Matters Most" },
+  { src: "/images/banners/bundle-and-save.jpg",   alt: "Bundle and Save — Insure Your Home, Car, Gadgets & Electronics Together" },
+  { src: "/images/banners/wills-estates.jpg",     alt: "Wills & Estates — Love Your Family Enough to Plan Ahead" },
+];
+
+function BannerSlideshow() {
+  const [current, setCurrent] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  const goTo = useCallback((idx: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrent((idx + BANNERS.length) % BANNERS.length);
+    setTimeout(() => setIsTransitioning(false), 500);
+  }, [isTransitioning]);
+
+  const next = useCallback(() => goTo(current + 1), [current, goTo]);
+  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(next, 5500);
+  }, [next]);
+
+  useEffect(() => {
+    timerRef.current = setInterval(next, 5500);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [next]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); resetTimer(); }
+    touchStartX.current = null;
+  };
+
+  return (
+    <section className="w-full bg-black" data-testid="banner-slideshow">
+      <div
+        className="relative w-full overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {BANNERS.map((b, i) => (
+            <div key={i} className="w-full flex-shrink-0">
+              <img
+                src={b.src}
+                alt={b.alt}
+                className="w-full h-auto block max-h-[520px] object-cover object-center"
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => { prev(); resetTimer(); }}
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/65 text-white flex items-center justify-center transition-all z-10"
+          aria-label="Previous banner"
+          data-testid="banner-prev"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={() => { next(); resetTimer(); }}
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/65 text-white flex items-center justify-center transition-all z-10"
+          aria-label="Next banner"
+          data-testid="banner-next"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {BANNERS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => { goTo(i); resetTimer(); }}
+              className={`rounded-full transition-all duration-300 ${i === current ? "w-6 h-2.5 bg-white" : "w-2.5 h-2.5 bg-white/50 hover:bg-white/75"}`}
+              aria-label={`Go to banner ${i + 1}`}
+              data-testid={`banner-dot-${i}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#f2f2f2]" data-testid="home-page">
       <Navbar />
+      <BannerSlideshow />
       <HeroSection />
       <ServicesSection />
       <FormsSection />
