@@ -1039,13 +1039,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#f2f2f2]" data-testid="home-page">
       <Navbar />
-      <BannerSlideshow />
       <HeroSection />
       <ServicesSection />
       <FormsSection />
       <WhyUsSection />
       <PartnersSection />
-      <CarInsuranceAdSection />
+      <BannerSlideshow />
       <HowItWorksSection />
       <TestimonialsSection />
       <AdvisorSection />
