@@ -13,8 +13,8 @@ const SOCIAL_LINKS = [
   { Icon: SiWhatsapp, label: "WhatsApp", href: "https://whatsapp.com/channel/0029VbCRTzjB4hdVbtBM1V3s", bgStyle: { backgroundColor: "#25D366" } },
 ];
 
-const BLUE = "#1e7bc4";
-const DARK = "#0d2e52";
+const BLUE = "#2D6FA3";
+const DARK = "#1C3F6E";
 
 
 function Navbar() {
@@ -28,7 +28,7 @@ function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 shadow-lg" style={{ background: "#003087" }} data-testid="navbar">
+    <header className="sticky top-0 z-50 shadow-lg" style={{ background: "#1E3F72" }} data-testid="navbar">
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-24">
         <a href="#home" className="flex-shrink-0" data-testid="logo">
           <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-20 w-auto drop-shadow-lg" />
@@ -63,7 +63,7 @@ function Navbar() {
           </a>
           <a href="#contact"
             className="px-5 py-2 rounded-lg text-sm font-bold transition-all hover:shadow-lg hover:scale-105"
-            style={{ background: "white", color: "#003087" }}
+            style={{ background: "white", color: "#1E3F72" }}
             data-testid="button-nav-cta"
           >Get a Quote</a>
         </div>
@@ -72,7 +72,7 @@ function Navbar() {
         </button>
       </div>
       {open && (
-        <div className="md:hidden border-t border-white/20 px-4 py-4 space-y-3" style={{ background: "#002070" }}>
+        <div className="md:hidden border-t border-white/20 px-4 py-4 space-y-3" style={{ background: "#162D55" }}>
           {links.map((l) => (
             <a key={l.href} href={l.href} className="block text-sm font-semibold text-white/90 hover:text-white py-2" onClick={() => setOpen(false)}>{l.label}</a>
           ))}
@@ -87,7 +87,7 @@ function Navbar() {
               </a>
             ))}
           </div>
-          <a href="#contact" className="block w-full text-center px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "white", color: "#003087" }}>Get a Quote</a>
+          <a href="#contact" className="block w-full text-center px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "white", color: "#1E3F72" }}>Get a Quote</a>
         </div>
       )}
     </header>
@@ -226,8 +226,8 @@ const services = [
     title: "Wills & Estates",
     subtitle: "Secure Your Legacy",
     image: "/images/pension-fund-groups.png",
-    color: "from-[#003087] to-[#00A896]",
-    iconColor: "text-[#003087]",
+    color: "from-[#1E3F72] to-[#00A896]",
+    iconColor: "text-[#1E3F72]",
     bg: "bg-teal-50",
     items: ["Drafting and Updating of Wills", "Estate Planning and Administration", "Trust Formation", "Inheritance and Succession Planning"],
   },
@@ -293,7 +293,7 @@ function ServicesSection() {
           <button
             onClick={() => document.dispatchEvent(new CustomEvent("openAdvisorModal"))}
             className="inline-flex items-center gap-2 px-8 py-4 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all text-sm"
-            style={{ background: `linear-gradient(135deg, #003087, #00A896)` }}
+            style={{ background: `linear-gradient(135deg, #1E3F72, #00A896)` }}
             data-testid="button-services-cta"
           >Speak to an Advisor <ArrowRight className="w-4 h-4" aria-hidden="true"/></button>
         </div>
@@ -583,7 +583,7 @@ function AdvisorSection() {
             <button
               onClick={() => document.dispatchEvent(new CustomEvent("openAdvisorModal"))}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm shadow-md hover:opacity-90 transition-all"
-              style={{ background: `linear-gradient(135deg, #003087, #00A896)` }}
+              style={{ background: `linear-gradient(135deg, #1E3F72, #00A896)` }}
               data-testid="button-advisor-contact"
             >
               Book a Consultation <ArrowRight className="w-4 h-4" aria-hidden="true"/>
@@ -822,7 +822,7 @@ function AdvisorModal() {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" role="dialog" aria-modal="true" data-testid="advisor-modal">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}/>
       <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
-        <div className="px-6 py-5 flex items-center justify-between border-b border-gray-100" style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}>
+        <div className="px-6 py-5 flex items-center justify-between border-b border-gray-100" style={{ background: "linear-gradient(135deg, #1E3F72, #00A896)" }}>
           <h2 className="text-white font-bold text-lg">Speak Directly to an Advisor</h2>
           <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white transition-colors" aria-label="Close" data-testid="button-close-modal">
             <X className="w-5 h-5"/>
@@ -839,21 +839,21 @@ function AdvisorModal() {
           </div>
           <div className="space-y-3 mb-5">
             <a href="tel:+264818201522" className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-teal-200 hover:bg-teal-50 transition-all group" data-testid="modal-phone">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}>
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #1E3F72, #00A896)" }}>
                 <Phone className="w-4 h-4 text-white"/>
               </div>
               <div>
                 <p className="text-xs text-gray-400 font-medium">Call us directly</p>
-                <p className="text-sm font-semibold text-gray-800 group-hover:text-[#003087]">+264 81 820 1522</p>
+                <p className="text-sm font-semibold text-gray-800 group-hover:text-[#1E3F72]">+264 81 820 1522</p>
               </div>
             </a>
             <a href="mailto:info@quantz.com.na" className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-teal-200 hover:bg-teal-50 transition-all group" data-testid="modal-email">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}>
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #1E3F72, #00A896)" }}>
                 <Mail className="w-4 h-4 text-white"/>
               </div>
               <div>
                 <p className="text-xs text-gray-400 font-medium">Send an email</p>
-                <p className="text-sm font-semibold text-gray-800 group-hover:text-[#003087]">info@quantz.com.na</p>
+                <p className="text-sm font-semibold text-gray-800 group-hover:text-[#1E3F72]">info@quantz.com.na</p>
               </div>
             </a>
           </div>
@@ -871,7 +871,7 @@ function AdvisorModal() {
               <button
                 onClick={() => { if (message.trim()) { setSent(true); } }}
                 className="w-full py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-all"
-                style={{ background: "linear-gradient(135deg, #003087, #00A896)" }}
+                style={{ background: "linear-gradient(135deg, #1E3F72, #00A896)" }}
                 data-testid="button-send-message"
               >Send Message</button>
             </div>
@@ -913,13 +913,13 @@ function CarInsuranceAdSection() {
           <a
             href="#contact"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all"
-            style={{ background: "linear-gradient(135deg, #003087, #00A896)", color: "white" }}
+            style={{ background: "linear-gradient(135deg, #1E3F72, #00A896)", color: "white" }}
             data-testid="button-car-insurance-quote"
           >Get Your Free Quote Today <ArrowRight className="w-4 h-4"/></a>
           <a
             href="tel:+264818201522"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 font-semibold text-sm hover:bg-blue-50 transition-all"
-            style={{ borderColor: "#003087", color: "#003087" }}
+            style={{ borderColor: "#1E3F72", color: "#1E3F72" }}
             data-testid="button-car-insurance-call"
           ><Phone className="w-4 h-4"/> +264 81 820 1522</a>
         </div>
@@ -969,7 +969,7 @@ function BannerSlideshow() {
   };
 
   return (
-    <section className="w-full" style={{ background: "#003087" }} data-testid="banner-slideshow">
+    <section className="w-full" style={{ background: "#1E3F72" }} data-testid="banner-slideshow">
       <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
