@@ -98,7 +98,7 @@ function HeroSection() {
   return (
     <section id="home" className="relative overflow-hidden min-h-[600px] flex items-center" data-testid="hero-section">
       <div className="absolute inset-0">
-        <img src="/images/hero-diverse.png" alt="Diverse Namibian clients at Quantz Financial Services" className="w-full h-full object-cover object-top" />
+        <img src="/images/hero-light.png" alt="Happy Namibian family" className="w-full h-full object-cover object-center" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(0,48,135,0.82) 0%, rgba(0,48,135,0.70) 45%, rgba(0,48,135,0.35) 70%, rgba(0,48,135,0.10) 100%)" }}/>
       </div>
 
