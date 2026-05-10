@@ -31,7 +31,7 @@ function Navbar() {
     <header className="sticky top-0 z-50 shadow-lg" style={{ background: "#1E3F72" }} data-testid="navbar">
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-24">
         <a href="#home" className="flex-shrink-0" data-testid="logo">
-          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-24 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
+          <img src="/quantz-logo-white-text.png" alt="Quantz Financial Services" className="h-24 w-auto" />
         </a>
         <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation" data-testid="nav-links">
           {links.map((l) => (
@@ -819,7 +819,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-800">
           <div>
-            <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-32 w-auto mb-4" style={{ filter: "brightness(0) invert(1)" }} />
+            <img src="/quantz-logo-white-text.png" alt="Quantz Financial Services" className="h-32 w-auto mb-4" />
             <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
               Providing tailored insurance and financial protection solutions to safeguard your life, assets, and future.
             </p>
