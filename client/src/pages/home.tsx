@@ -375,20 +375,20 @@ const assetManagers = [
 
 function PartnersSection() {
   return (
-    <section id="partners" className="py-16 md:py-20 bg-[#1E3F72] border-y border-[#162D55]" data-testid="partners-section">
+    <section id="partners" className="py-16 md:py-20 bg-white border-y border-gray-200" data-testid="partners-section">
       <div className="max-w-4xl mx-auto px-4">
-        <div className="rounded-2xl border border-white/10 bg-white/5 px-8 py-8 mb-6">
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 px-8 py-8 mb-6">
           <div className="text-center mb-8">
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">In Partnership With</p>
-            <h2 className="text-xl md:text-2xl font-bold text-white" data-testid="partners-title">Namibia's Leading Insurers</h2>
+            <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">In Partnership With</p>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800" data-testid="partners-title">Namibia's Leading Insurers</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 justify-items-center">
             {insurers.map((p, i) => (
               <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group" data-testid={`insurer-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
-                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-white/20 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
-                <span className="text-xs font-semibold text-blue-100 group-hover:text-white text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
+                <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
               </a>
             ))}
           </div>
@@ -396,18 +396,18 @@ function PartnersSection() {
       </div>
 
       <div className="mx-auto max-w-4xl px-4">
-        <div className="rounded-2xl border border-white/10 bg-white/5 px-8 py-8">
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 px-8 py-8">
           <div className="text-center mb-8">
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">Also Partnering With</p>
-            <h2 className="text-xl md:text-2xl font-bold text-white" data-testid="asset-managers-title">Asset Management Partners</h2>
+            <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">Also Partnering With</p>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800" data-testid="asset-managers-title">Asset Management Partners</h2>
           </div>
           <div className="grid grid-cols-2 gap-6 justify-items-center max-w-xs mx-auto">
             {assetManagers.map((p, i) => (
               <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group" data-testid={`asset-manager-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
-                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-white/20 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
-                <span className="text-xs font-semibold text-blue-100 group-hover:text-white text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
+                <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
               </a>
             ))}
           </div>
