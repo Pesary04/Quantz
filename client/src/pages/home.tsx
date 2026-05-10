@@ -360,42 +360,57 @@ function WhyUsSection() {
   );
 }
 
-const partners = [
+const insurers = [
   { name: "Sanlam | Allianz", logo: "/images/partners/sanlam.svg", bg: "bg-white", pad: "p-3" },
   { name: "Santam", logo: "/images/partners/santam.svg", bg: "bg-white", pad: "p-3" },
   { name: "Old Mutual", logo: "/images/partners/old-mutual.svg", bg: "bg-white", pad: "p-3" },
   { name: "Hollard", logo: "/images/partners/hollard.png", bg: "bg-white", pad: "p-0" },
   { name: "PPS", logo: "/images/partners/pps.png", bg: "bg-[#0d2447]", pad: "p-0" },
+];
+
+const assetManagers = [
   { name: "SISEDI", logo: "/images/partners/sisedi.png", bg: "bg-white", pad: "p-2" },
   { name: "Capricorn Asset Management", logo: "/images/partners/capricorn.png", bg: "bg-white", pad: "p-2" },
 ];
 
+function PartnerRow({ items, testPrefix }: { items: typeof insurers; testPrefix: string }) {
+  const doubled = [...items, ...items];
+  return (
+    <div className="overflow-hidden relative">
+      <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, white, transparent)" }} />
+      <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, white, transparent)" }} />
+      <div className="flex animate-marquee gap-8 w-max px-8">
+        {doubled.map((p, i) => (
+          <div
+            key={i}
+            className="flex flex-col items-center gap-3 flex-shrink-0 group cursor-default"
+            data-testid={i < items.length ? `${testPrefix}-${p.name.toLowerCase().replace(/[\s|]/g, "-")}` : undefined}
+          >
+            <div className={`w-36 h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+              <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
+            </div>
+            <span className="text-xs font-semibold text-gray-500 text-center max-w-[9rem] leading-tight">{p.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PartnersSection() {
-  const doubled = [...partners, ...partners];
   return (
     <section id="partners" className="py-16 md:py-20 bg-white border-y border-gray-200" data-testid="partners-section">
       <div className="text-center mb-10 px-4">
         <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-2">In Partnership With</p>
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800" data-testid="partners-title">Namibia's Leading Insurers</h2>
       </div>
-      <div className="overflow-hidden relative">
-        <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, white, transparent)" }}/>
-        <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, white, transparent)" }}/>
-        <div className="flex animate-marquee gap-8 w-max px-8">
-          {doubled.map((p, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center gap-3 flex-shrink-0 group cursor-default"
-              data-testid={i < partners.length ? `partner-${p.name.toLowerCase().replace(/[\s|]/g, "-")}` : undefined}
-            >
-              <div className={`w-36 h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
-                <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
-              </div>
-              <span className="text-xs font-semibold text-gray-500 text-center max-w-[9rem] leading-tight">{p.name}</span>
-            </div>
-          ))}
-        </div>
+      <PartnerRow items={insurers} testPrefix="insurer" />
+
+      <div className="text-center mt-14 mb-10 px-4">
+        <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-2">Also Partnering With</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800" data-testid="asset-managers-title">Asset Management Partners</h2>
       </div>
+      <PartnerRow items={assetManagers} testPrefix="asset-manager" />
     </section>
   );
 }
