@@ -382,13 +382,13 @@ function PartnersSection() {
             <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">In Partnership With</p>
             <h2 className="text-xl md:text-2xl font-bold text-gray-800" data-testid="partners-title">Namibia's Leading Insurers</h2>
           </div>
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 justify-items-center">
             {insurers.map((p, i) => (
               <div key={i} className="flex flex-col items-center gap-3 group cursor-default" data-testid={`insurer-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
-                <div className={`w-36 h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
-                <span className="text-xs font-semibold text-gray-500 text-center max-w-[9rem] leading-tight">{p.name}</span>
+                <span className="text-xs font-semibold text-gray-500 text-center max-w-[8rem] leading-tight">{p.name}</span>
               </div>
             ))}
           </div>
