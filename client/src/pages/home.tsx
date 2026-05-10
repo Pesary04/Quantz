@@ -361,16 +361,16 @@ function WhyUsSection() {
 }
 
 const insurers = [
-  { name: "Sanlam | Allianz", logo: "/images/partners/sanlam.svg", bg: "bg-white", pad: "p-3" },
-  { name: "Santam", logo: "/images/partners/santam.svg", bg: "bg-white", pad: "p-3" },
-  { name: "Old Mutual", logo: "/images/partners/old-mutual.svg", bg: "bg-white", pad: "p-3" },
-  { name: "Hollard", logo: "/images/partners/hollard.png", bg: "bg-white", pad: "p-0" },
-  { name: "PPS", logo: "/images/partners/pps.png", bg: "bg-[#0d2447]", pad: "p-0" },
+  { name: "Sanlam | Allianz", logo: "/images/partners/sanlam.svg", bg: "bg-white", pad: "p-3", url: "https://www.sanlamallianz.com/en" },
+  { name: "Santam", logo: "/images/partners/santam.svg", bg: "bg-white", pad: "p-3", url: "https://www.santam.na/" },
+  { name: "Old Mutual", logo: "/images/partners/old-mutual.svg", bg: "bg-white", pad: "p-3", url: "https://www.oldmutual.com.na/" },
+  { name: "Hollard", logo: "/images/partners/hollard.png", bg: "bg-white", pad: "p-0", url: "https://www.hollard.com.na/" },
+  { name: "PPS", logo: "/images/partners/pps.png", bg: "bg-[#0d2447]", pad: "p-0", url: "https://www.pps.com.na/" },
 ];
 
 const assetManagers = [
-  { name: "SISEDI", logo: "/images/partners/sisedi.png", bg: "bg-white", pad: "p-2" },
-  { name: "Capricorn Asset Management", logo: "/images/partners/capricorn.png", bg: "bg-white", pad: "p-2" },
+  { name: "SISEDI", logo: "/images/partners/sisedi.png", bg: "bg-white", pad: "p-2", url: "https://sisedi.com.na/" },
+  { name: "Capricorn Asset Management", logo: "/images/partners/capricorn.png", bg: "bg-white", pad: "p-2", url: "https://www.cam.com.na/Pages/default.aspx" },
 ];
 
 function PartnersSection() {
@@ -384,12 +384,12 @@ function PartnersSection() {
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 justify-items-center">
             {insurers.map((p, i) => (
-              <div key={i} className="flex flex-col items-center gap-3 group cursor-default" data-testid={`insurer-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
+              <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group" data-testid={`insurer-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
                 <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
-                <span className="text-xs font-semibold text-gray-500 text-center max-w-[8rem] leading-tight">{p.name}</span>
-              </div>
+                <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
+              </a>
             ))}
           </div>
         </div>
@@ -403,12 +403,12 @@ function PartnersSection() {
           </div>
           <div className="flex justify-center gap-12">
             {assetManagers.map((p, i) => (
-              <div key={i} className="flex flex-col items-center gap-3 group cursor-default" data-testid={`asset-manager-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
+              <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group" data-testid={`asset-manager-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
                 <div className={`w-36 h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
-                <span className="text-xs font-semibold text-gray-500 text-center max-w-[9rem] leading-tight">{p.name}</span>
-              </div>
+                <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[9rem] leading-tight transition-colors duration-200">{p.name}</span>
+              </a>
             ))}
           </div>
         </div>
