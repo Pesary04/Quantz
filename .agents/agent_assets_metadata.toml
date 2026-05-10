@@ -71,3 +71,27 @@ id = "MjjNnVZ-dX-djgkaT4UlJ"
 uri = "file://attached_assets/image_search/pension_option_4.jpg"
 type = "image"
 title = "Option 3 — Diverse handshake partnership in office"
+
+[[outputs]]
+id = "_shMe58zh364Vp59NrKT9"
+uri = "file://attached_assets/image_search/wills_option_1.jpg"
+type = "image"
+title = "Option 1 — Senior couple signing retirement plan with advisor"
+
+[[outputs]]
+id = "04XGuPRZLZonyi3pJTda_"
+uri = "file://attached_assets/image_search/wills_option_2.jpg"
+type = "image"
+title = "Option 2 — Professional signing legal contract"
+
+[[outputs]]
+id = "lQxoGEcFBWf7yuezkcaJ6"
+uri = "file://attached_assets/image_search/wills_option_3.jpg"
+type = "image"
+title = "Option 3 — Family estate planning document"
+
+[[outputs]]
+id = "e6tsVZlGjaEyjRHLz90hd"
+uri = "file://attached_assets/image_search/wills_option_4.jpg"
+type = "image"
+title = "Option 4 — Trust and estate planning concept"
