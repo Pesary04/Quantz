@@ -406,11 +406,24 @@ function PartnersSection() {
       </div>
       <PartnerRow items={insurers} testPrefix="insurer" />
 
-      <div className="text-center mt-14 mb-10 px-4">
-        <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-2">Also Partnering With</p>
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800" data-testid="asset-managers-title">Asset Management Partners</h2>
+      <div className="mt-14 mx-auto max-w-2xl px-4">
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 px-8 py-8">
+          <div className="text-center mb-8">
+            <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">Also Partnering With</p>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800" data-testid="asset-managers-title">Asset Management Partners</h2>
+          </div>
+          <div className="flex justify-center gap-12">
+            {assetManagers.map((p, i) => (
+              <div key={i} className="flex flex-col items-center gap-3 group cursor-default" data-testid={`asset-manager-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
+                <div className={`w-36 h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+                  <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
+                </div>
+                <span className="text-xs font-semibold text-gray-500 text-center max-w-[9rem] leading-tight">{p.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <PartnerRow items={assetManagers} testPrefix="asset-manager" />
     </section>
   );
 }
