@@ -635,6 +635,39 @@ function TestimonialsSection() {
 }
 
 function ContactSection() {
+  const [form, setForm] = useState({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [feedback, setFeedback] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+    setFeedback("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus("success");
+        setFeedback(data.message);
+        setForm({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
+      } else {
+        setStatus("error");
+        setFeedback(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatus("error");
+      setFeedback("Could not send your request. Please call us on +264 81 820 1522.");
+    }
+  };
+
   return (
     <section id="contact" className="relative overflow-hidden" data-testid="contact-section">
       <div className="absolute inset-0">
@@ -703,44 +736,59 @@ function ContactSection() {
                 <p className="text-gray-400 text-xs">We will get back to you within 24 hours</p>
               </div>
             </div>
-            <form className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">First Name</label>
-                  <input type="text" placeholder="John" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="input-first-name"/>
+
+            {status === "success" ? (
+              <div className="py-10 text-center">
+                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="w-8 h-8 text-green-500"/>
+                </div>
+                <h4 className="text-gray-900 font-bold text-lg mb-2">Request Sent!</h4>
+                <p className="text-gray-500 text-sm mb-6">{feedback}</p>
+                <button onClick={() => setStatus("idle")} className="text-sm font-semibold text-blue-600 hover:underline">Send another request</button>
+              </div>
+            ) : (
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">First Name</label>
+                    <input name="firstName" value={form.firstName} onChange={handleChange} type="text" placeholder="John" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="input-first-name"/>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Last Name</label>
+                    <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder="Smith" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="input-last-name"/>
+                  </div>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Last Name</label>
-                  <input type="text" placeholder="Smith" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="input-last-name"/>
+                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Phone Number</label>
+                  <input name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder="+264 XX XXX XXXX" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="input-phone"/>
                 </div>
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Phone Number</label>
-                <input type="tel" placeholder="+264 XX XXX XXXX" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="input-phone"/>
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Insurance Type</label>
-                <select className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-gray-700 bg-white" data-testid="select-insurance-type">
-                  <option value="">Select an insurance type</option>
-                  <option>Life Insurance</option>
-                  <option>Pension Fund for Individuals</option>
-                  <option>Pension Fund for Groups (Corporate)</option>
-                  <option>Medical Aid Gap Cover</option>
-                  <option>Short-term Insurance</option>
-                  <option>Retirement Annuity</option>
-                  <option>Savings &amp; Investment</option>
-                  <option>Wills &amp; Estates</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Message (Optional)</label>
-                <textarea placeholder="Tell us more about what you are looking for…" rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="input-message"/>
-              </div>
-              <button type="submit" className="w-full py-4 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:opacity-95" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }} data-testid="button-submit-quote">
-                Request My Free Quote
-              </button>
-              <p className="text-center text-xs text-gray-400">By submitting, you agree to be contacted by Quantz Financial Services.</p>
-            </form>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Insurance Type</label>
+                  <select name="insuranceType" value={form.insuranceType} onChange={handleChange} required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-gray-700 bg-white" data-testid="select-insurance-type">
+                    <option value="">Select an insurance type</option>
+                    <option>Life Insurance</option>
+                    <option>Pension Fund for Individuals</option>
+                    <option>Pension Fund for Groups (Corporate)</option>
+                    <option>Medical Aid Gap Cover</option>
+                    <option>Short-term Insurance</option>
+                    <option>Retirement Annuity</option>
+                    <option>Savings &amp; Investment</option>
+                    <option>Wills &amp; Estates</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Message (Optional)</label>
+                  <textarea name="message" value={form.message} onChange={handleChange} placeholder="Tell us more about what you are looking for…" rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="input-message"/>
+                </div>
+                {status === "error" && (
+                  <p className="text-red-500 text-xs font-medium bg-red-50 border border-red-100 rounded-lg px-4 py-3">{feedback}</p>
+                )}
+                <button type="submit" disabled={status === "loading"} className="w-full py-4 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:opacity-95 disabled:opacity-70 disabled:cursor-not-allowed" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }} data-testid="button-submit-quote">
+                  {status === "loading" ? "Sending…" : "Request My Free Quote"}
+                </button>
+                <p className="text-center text-xs text-gray-400">By submitting, you agree to be contacted by Quantz Financial Services.</p>
+              </form>
+            )}
           </div>
         </div>
       </div>
