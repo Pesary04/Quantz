@@ -53,3 +53,21 @@ id = "lA5pRpgnXuRkrp3h6lflt"
 uri = "file://attached_assets/stock_images/sanlam-logo.jpg"
 type = "image"
 title = "Sanlam financial services logo white background clean"
+
+[[outputs]]
+id = "Jn8zSPmKGjYvEqaxV5faB"
+uri = "file://attached_assets/image_search/pension_option_1.jpg"
+type = "image"
+title = "Option 1 — Wide banner, diverse colleagues brainstorming"
+
+[[outputs]]
+id = "rSdsJ3v1dF2D7x158zmb1"
+uri = "file://attached_assets/image_search/pension_option_2.jpg"
+type = "image"
+title = "Option 2 — Multiracial partners in coworking space"
+
+[[outputs]]
+id = "MjjNnVZ-dX-djgkaT4UlJ"
+uri = "file://attached_assets/image_search/pension_option_4.jpg"
+type = "image"
+title = "Option 3 — Diverse handshake partnership in office"
