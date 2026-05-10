@@ -401,13 +401,13 @@ function PartnersSection() {
             <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">Also Partnering With</p>
             <h2 className="text-xl md:text-2xl font-bold text-gray-800" data-testid="asset-managers-title">Asset Management Partners</h2>
           </div>
-          <div className="flex justify-center gap-12">
+          <div className="grid grid-cols-2 gap-6 justify-items-center max-w-xs mx-auto">
             {assetManagers.map((p, i) => (
               <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group" data-testid={`asset-manager-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
-                <div className={`w-36 h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
-                <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[9rem] leading-tight transition-colors duration-200">{p.name}</span>
+                <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
               </a>
             ))}
           </div>
