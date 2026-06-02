@@ -565,8 +565,8 @@ function AdvisorSection() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="advisor-title">Know Your Financial Advisor</h2>
         </div>
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-          <div className="relative rounded-3xl overflow-hidden shadow-xl h-96">
-            <img src="/images/advisor-portrait.png" alt="Quantz Managing Director" className="w-full h-full object-cover object-center"/>
+          <div className="relative rounded-3xl overflow-hidden shadow-xl bg-gray-100">
+            <img src="/images/advisor-portrait.png" alt="Quantz Managing Director" className="w-full h-auto object-contain block"/>
             <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,37,64,0.6) 0%, transparent 60%)" }}/>
           </div>
           <div>
@@ -895,7 +895,7 @@ function AdvisorModal() {
         </div>
         <div className="p-6">
           <div className="flex items-center gap-4 mb-6 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-            <img src="/images/advisor-portrait.png" alt="Financial Advisor" className="w-16 h-16 rounded-xl object-cover flex-shrink-0"/>
+            <img src="/images/advisor-portrait.png" alt="Financial Advisor" className="w-16 h-16 rounded-xl object-cover object-top flex-shrink-0"/>
             <div>
               <p className="font-bold text-gray-900">Managing Director</p>
               <p className="text-sm font-medium" style={{ color: "#00A896" }}>Principal Financial Advisor</p>
