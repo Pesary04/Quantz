@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation"
 import ServiceDetail from "@/components/service-detail-page"
 
 const SERVICE_IDS = [
@@ -16,5 +17,8 @@ export function generateStaticParams() {
 }
 
 export default function ServicePage({ params }: { params: { id: string } }) {
+  if (!SERVICE_IDS.includes(params.id)) {
+    notFound()
+  }
   return <ServiceDetail id={params.id} />
 }
