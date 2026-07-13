@@ -1,4 +1,3 @@
-import { useParams, useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Phone, Mail, Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote, HelpCircle, Users, Star, Scroll, Briefcase } from "lucide-react";
 
 const BLUE = "#1e7bc4";
@@ -455,9 +454,7 @@ function Navbar({ currentService }: { currentService: string }) {
   );
 }
 
-export default function ServiceDetail() {
-  const { id } = useParams<{ id: string }>();
-  const [, setLocation] = useLocation();
+export default function ServiceDetail({ id }: { id: string }) {
   const svc = id ? serviceData[id] : null;
 
   if (!svc) {
