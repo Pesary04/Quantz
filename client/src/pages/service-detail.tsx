@@ -585,7 +585,7 @@ export default function ServiceDetail() {
           <div className="space-y-6">
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm sticky top-24">
               <div className="p-6" style={{ background: `linear-gradient(135deg, ${svc.gradientFrom}, ${svc.gradientTo})` }}>
-                <img src="/quantz-logo.png" alt="Quantz" className="h-12 w-auto mb-4"/>
+                <img src="/quantz-logo-white-text.png" alt="Quantz" className="h-12 w-auto mb-4"/>
                 <p className="text-white font-bold text-lg leading-tight mb-1">Ready to get covered?</p>
                 <p className="text-blue-100 text-sm">Get a free, no-obligation quote today.</p>
               </div>
@@ -697,7 +697,7 @@ export default function ServiceDetail() {
 
       <footer className="bg-[#060f1e] text-gray-400 py-6">
         <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-3">
-          <img src="/quantz-logo.png" alt="Quantz Financial Services" className="h-8 w-auto"/>
+          <img src="/quantz-logo-white-text.png" alt="Quantz Financial Services" className="h-8 w-auto"/>
           <p className="text-xs text-gray-600" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
           <div className="flex gap-4 text-xs">
             <a href="tel:+264818201522" className="hover:text-white transition-colors">+264 81 820 1522</a>
