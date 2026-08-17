@@ -78,5 +78,69 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/advisor-message", async (req, res) => {
+    const { message, contact } = req.body;
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({ error: "Please enter a message before sending." });
+    }
+
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      console.error("SMTP credentials not configured.");
+      return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
+    }
+
+    try {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpPort === 465,
+        auth: { user: smtpUser, pass: smtpPass },
+      });
+
+      const safeContact = (contact || "").toString().trim();
+
+      await transporter.sendMail({
+        from: `"Quantz Website" <${smtpUser}>`,
+        to: "info@quantz.com.na",
+        replyTo: safeContact && safeContact.includes("@") ? safeContact : smtpUser,
+        subject: `New Advisor Message${safeContact ? ` — ${safeContact}` : ""}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #1E3F72, #00A896); padding: 28px 32px;">
+              <h2 style="color: white; margin: 0; font-size: 20px;">Speak to an Advisor — New Message</h2>
+              <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Submitted via quantz.com.na</p>
+            </div>
+            <div style="padding: 28px 32px; background: #ffffff;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px; width: 40%; vertical-align: top;">Contact Details</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #111827; font-size: 14px; font-weight: 600;">${safeContact || "<em style='color:#9ca3af; font-weight:400'>Not provided</em>"}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; color: #6b7280; font-size: 13px; vertical-align: top;">Message</td>
+                  <td style="padding: 10px 0; color: #111827; font-size: 14px; white-space: pre-wrap;">${message}</td>
+                </tr>
+              </table>
+            </div>
+            <div style="padding: 16px 32px; background: #f9fafb; border-top: 1px solid #f3f4f6;">
+              <p style="margin: 0; color: #9ca3af; font-size: 12px;">This message was submitted from the "Speak Directly to an Advisor" form on the Quantz Financial Services website.</p>
+            </div>
+          </div>
+        `,
+      });
+
+      return res.json({ success: true, message: "Your message has been sent! Our advisor will be in touch shortly." });
+    } catch (err) {
+      console.error("Advisor message send error:", err);
+      return res.status(500).json({ error: "Failed to send your message. Please call us directly on +264 81 820 1522." });
+    }
+  });
+
   return httpServer;
 }

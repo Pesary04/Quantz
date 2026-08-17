@@ -873,13 +873,47 @@ function Footer() {
 function AdvisorModal() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [contact, setContact] = useState("");
   const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
-    const handler = () => { setOpen(true); setSent(false); setMessage(""); };
+    const handler = () => {
+      setOpen(true);
+      setSent(false);
+      setMessage("");
+      setContact("");
+      setStatus("idle");
+      setFeedback("");
+    };
     document.addEventListener("openAdvisorModal", handler);
     return () => document.removeEventListener("openAdvisorModal", handler);
   }, []);
+
+  const handleSend = async () => {
+    if (!message.trim() || status === "loading") return;
+    setStatus("loading");
+    setFeedback("");
+    try {
+      const res = await fetch("/api/advisor-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, contact }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSent(true);
+        setStatus("idle");
+      } else {
+        setStatus("error");
+        setFeedback(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatus("error");
+      setFeedback("Could not send your message. Please call us on +264 81 820 1522.");
+    }
+  };
 
   if (!open) return null;
 
@@ -933,12 +967,24 @@ function AdvisorModal() {
                 onChange={(e) => setMessage(e.target.value)}
                 data-testid="input-advisor-message"
               />
+              <input
+                type="text"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                placeholder="Your email or phone (so we can reply)"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                data-testid="input-advisor-contact"
+              />
+              {status === "error" && (
+                <p className="text-xs text-red-600" data-testid="text-advisor-error">{feedback}</p>
+              )}
               <button
-                onClick={() => { if (message.trim()) { setSent(true); } }}
-                className="w-full py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-all"
+                onClick={handleSend}
+                disabled={!message.trim() || status === "loading"}
+                className="w-full py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ background: "linear-gradient(135deg, #1E3F72, #00A896)" }}
                 data-testid="button-send-message"
-              >Send Message</button>
+              >{status === "loading" ? "Sending..." : "Send Message"}</button>
             </div>
           ) : (
             <div className="text-center py-4">
