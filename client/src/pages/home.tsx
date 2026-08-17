@@ -872,14 +872,50 @@ function Footer() {
 
 function AdvisorModal() {
   const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
-    const handler = () => { setOpen(true); setSent(false); setMessage(""); };
+    const handler = () => {
+      setOpen(true);
+      setSent(false);
+      setName("");
+      setEmail("");
+      setMessage("");
+      setStatus("idle");
+      setError("");
+    };
     document.addEventListener("openAdvisorModal", handler);
     return () => document.removeEventListener("openAdvisorModal", handler);
   }, []);
+
+  const handleSend = async () => {
+    if (!message.trim() || status === "loading") return;
+    setStatus("loading");
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source: "advisor", name, email, message }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSent(true);
+        setStatus("idle");
+      } else {
+        setStatus("error");
+        setError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatus("error");
+      setError("Could not send your message. Please call us on +264 81 820 1522.");
+    }
+  };
 
   if (!open) return null;
 
@@ -925,6 +961,24 @@ function AdvisorModal() {
           {!sent ? (
             <div className="space-y-3">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Or leave a message</p>
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  data-testid="input-advisor-name"
+                />
+                <input
+                  type="email"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                  placeholder="Your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  data-testid="input-advisor-email"
+                />
+              </div>
               <textarea
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent resize-none"
                 rows={3}
@@ -933,12 +987,16 @@ function AdvisorModal() {
                 onChange={(e) => setMessage(e.target.value)}
                 data-testid="input-advisor-message"
               />
+              {status === "error" && (
+                <p className="text-xs text-red-500" data-testid="advisor-error">{error}</p>
+              )}
               <button
-                onClick={() => { if (message.trim()) { setSent(true); } }}
-                className="w-full py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-all"
+                onClick={handleSend}
+                disabled={status === "loading" || !message.trim()}
+                className="w-full py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ background: "linear-gradient(135deg, #1E3F72, #00A896)" }}
                 data-testid="button-send-message"
-              >Send Message</button>
+              >{status === "loading" ? "Sending..." : "Send Message"}</button>
             </div>
           ) : (
             <div className="text-center py-4">
