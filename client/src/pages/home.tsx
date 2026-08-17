@@ -660,29 +660,23 @@ function ContactSection() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("loading");
-    setFeedback("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setStatus("success");
-        setFeedback(data.message);
-        setForm({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
-      } else {
-        setStatus("error");
-        setFeedback(data.error || "Something went wrong. Please try again.");
-      }
-    } catch {
-      setStatus("error");
-      setFeedback("Could not send your request. Please call us on +264 81 820 1522.");
-    }
+    const fullName = `${form.firstName} ${form.lastName}`.trim();
+    const subject = `Quote Request${form.insuranceType ? ` – ${form.insuranceType}` : ""}`;
+    const body = [
+      `Name: ${fullName}`,
+      `Phone: ${form.phone}`,
+      `Insurance Type: ${form.insuranceType || "Not specified"}`,
+      "",
+      "Message:",
+      form.message || "(No additional message)",
+    ].join("\n");
+    const mailto = `mailto:info@quantz.com.na?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
+    setStatus("success");
+    setFeedback("Your email app should now be open with your quote request ready to send to info@quantz.com.na.");
+    setForm({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
   };
 
   return (
@@ -893,28 +887,20 @@ function AdvisorModal() {
     return () => document.removeEventListener("openAdvisorModal", handler);
   }, []);
 
-  const handleSend = async () => {
-    if (!message.trim() || status === "loading") return;
-    setStatus("loading");
-    setError("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ source: "advisor", name, email, message }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setSent(true);
-        setStatus("idle");
-      } else {
-        setStatus("error");
-        setError(data.error || "Something went wrong. Please try again.");
-      }
-    } catch {
-      setStatus("error");
-      setError("Could not send your message. Please call us on +264 81 820 1522.");
-    }
+  const handleSend = () => {
+    if (!message.trim()) return;
+    const subject = "Advisor Enquiry – Quantz Financial Services";
+    const body = [
+      `Name: ${name || "Not provided"}`,
+      `Email: ${email || "Not provided"}`,
+      "",
+      "Message:",
+      message,
+    ].join("\n");
+    const mailto = `mailto:info@quantz.com.na?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
+    setSent(true);
+    setStatus("idle");
   };
 
   if (!open) return null;
