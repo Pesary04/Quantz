@@ -6,6 +6,7 @@ import {
   Scroll, FileDown, UserCircle, BarChart2, Briefcase
 } from "lucide-react";
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
+import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
 
 const SOCIAL_LINKS = [
   { Icon: SiFacebook, label: "Facebook", href: "https://www.facebook.com/profile.php?id=61583774184552", bgStyle: { backgroundColor: "#1877F2" } },
@@ -566,7 +567,7 @@ function AdvisorSection() {
         </div>
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
           <div className="relative rounded-3xl overflow-hidden shadow-xl bg-gray-100">
-            <img src="/images/advisor-portrait.png" alt="Quantz Managing Director" className="w-full h-auto object-contain block"/>
+            <img src="/images/advisor-portrait.png" alt="Selma Hiskia Mwatotele, Managing Director of Quantz Financial Services" className="w-full h-auto object-contain block"/>
             <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,37,64,0.6) 0%, transparent 60%)" }}/>
           </div>
           <div>
@@ -575,8 +576,8 @@ function AdvisorSection() {
                 <UserCircle className="w-7 h-7 text-white" aria-hidden="true"/>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900" data-testid="advisor-name">Managing Director</h3>
-                <p className="text-blue-600 text-sm font-medium">Principal Financial Advisor</p>
+                <h3 className="text-xl font-bold text-gray-900" data-testid="advisor-name">Selma Hiskia Mwatotele</h3>
+                <p className="text-blue-600 text-sm font-medium">Managing Director / Principal Financial Advisor</p>
               </div>
             </div>
             <div className="space-y-4 mb-6">
@@ -595,7 +596,7 @@ function AdvisorSection() {
               ))}
             </div>
             <p className="text-gray-500 text-sm leading-relaxed mb-6">
-              With nearly two decades of experience in the Namibian financial services industry, our advisor is committed to providing independent, honest guidance that puts clients first. Every recommendation is made with your long-term wellbeing in mind.
+              With nearly two decades of experience in the Namibian financial services industry, Selma is committed to providing independent, honest guidance that puts clients first. Every recommendation is made with your long-term wellbeing in mind.
             </p>
             <button
               onClick={() => document.dispatchEvent(new CustomEvent("openAdvisorModal"))}
@@ -651,13 +652,64 @@ function TestimonialsSection() {
   );
 }
 
+const EMPTY_VEHICLE = {
+  dateOfBirth: "", idNumber: "", nationality: "", gender: "", maritalStatus: "",
+  licenceYear: "", licenceCode: "", occupation: "", postalAddress: "", residentialAddress: "",
+  email: "", makeModel: "", vehicleYear: "", vehicleDescription: "", engineCapacity: "",
+  mmCode: "", vehicleValue: "", carHire: "", insuranceHistory: "", claimHistory: "",
+};
+
+type VehicleField = {
+  name: keyof typeof EMPTY_VEHICLE;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  options?: string[];
+  textarea?: boolean;
+  full?: boolean;
+  required?: boolean;
+};
+
+const VEHICLE_CLIENT_FIELDS: VehicleField[] = [
+  { name: "dateOfBirth", label: "Date of Birth", type: "date" },
+  { name: "idNumber", label: "ID Number", placeholder: "ID / Passport number", required: true },
+  { name: "nationality", label: "Nationality", placeholder: "Namibian" },
+  { name: "gender", label: "Gender", options: ["Male", "Female", "Other", "Prefer not to say"] },
+  { name: "maritalStatus", label: "Marital Status", options: ["Single", "Married", "Divorced", "Widowed"] },
+  { name: "licenceYear", label: "Licence Obtained (Year)", placeholder: "e.g. 2014" },
+  { name: "licenceCode", label: "Licence Code", options: ["A", "A1", "B", "BE", "C", "C1", "CE", "C1E", "EB", "EC"] },
+  { name: "occupation", label: "Occupation", placeholder: "e.g. Teacher" },
+  { name: "email", label: "Email Address", type: "email", placeholder: "you@example.com", full: true },
+  { name: "postalAddress", label: "Postal Address", placeholder: "P.O. Box 1234, Windhoek", full: true },
+  { name: "residentialAddress", label: "Residential Address", placeholder: "Street, suburb, town", full: true },
+];
+
+const VEHICLE_DETAIL_FIELDS: VehicleField[] = [
+  { name: "makeModel", label: "Make & Model", placeholder: "e.g. Toyota Hilux 2.4 GD-6", full: true, required: true },
+  { name: "vehicleYear", label: "Year", placeholder: "e.g. 2019" },
+  { name: "engineCapacity", label: "Engine Capacity", placeholder: "e.g. 2400cc" },
+  { name: "mmCode", label: "MM Code (if known)", placeholder: "Optional" },
+  { name: "vehicleValue", label: "Value (Approximate)", placeholder: "e.g. N$ 350 000" },
+  { name: "carHire", label: "Car Hire (if required)", options: ["Yes", "No"] },
+  { name: "vehicleDescription", label: "Vehicle Description", placeholder: "Colour, condition, modifications, usage", textarea: true, full: true },
+  { name: "insuranceHistory", label: "Insurance History", placeholder: "Current or previous insurer, years insured", textarea: true, full: true },
+  { name: "claimHistory", label: "Claim History", placeholder: "Any claims in the last 5 years (or state 'None')", textarea: true, full: true },
+];
+
 function ContactSection() {
   const [form, setForm] = useState({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
+  const [vehicle, setVehicle] = useState(EMPTY_VEHICLE);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [feedback, setFeedback] = useState("");
 
+  const isVehicle = form.insuranceType === "Vehicle Insurance";
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleVehicleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setVehicle(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -665,16 +717,22 @@ function ContactSection() {
     setStatus("loading");
     setFeedback("");
     try {
-      const res = await fetch("/api/contact", {
+      const endpoint = isVehicle ? "/api/vehicle-quote" : "/api/contact";
+      const payload = isVehicle
+        ? { ...vehicle, fullName: `${form.firstName} ${form.lastName}`.trim(), phone: form.phone, insuranceType: form.insuranceType, message: form.message }
+        : form;
+
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
         setStatus("success");
         setFeedback(data.message);
         setForm({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
+        setVehicle(EMPTY_VEHICLE);
       } else {
         setStatus("error");
         setFeedback(data.error || "Something went wrong. Please try again.");
@@ -787,12 +845,103 @@ function ContactSection() {
                     <option>Pension Fund for Individuals</option>
                     <option>Pension Fund for Groups (Corporate)</option>
                     <option>Medical Aid Gap Cover</option>
+                    <option>Vehicle Insurance</option>
                     <option>Short-term Insurance</option>
                     <option>Retirement Annuity</option>
                     <option>Savings &amp; Investment</option>
                     <option>Wills &amp; Estates</option>
                   </select>
                 </div>
+                {isVehicle && (
+                  <div className="space-y-5 pt-2" data-testid="vehicle-insurance-form">
+                    <div className="rounded-xl px-4 py-3 flex items-start gap-3" style={{ background: "#eef6fc", border: "1px solid #cfe6f7" }}>
+                      <Car className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: BLUE }} aria-hidden="true"/>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        Please complete the vehicle insurance application below. Your details go straight to our vehicle
+                        insurance team for an accurate quotation.
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest mb-3 pb-2 border-b border-gray-100" style={{ color: DARK }}>Client Information</p>
+                      <div className="grid grid-cols-2 gap-3">
+                        {VEHICLE_CLIENT_FIELDS.map((f) => (
+                          <div key={f.name} className={f.full ? "col-span-2" : ""}>
+                            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">{f.label}</label>
+                            {f.options ? (
+                              <select
+                                name={f.name}
+                                value={vehicle[f.name as keyof typeof EMPTY_VEHICLE]}
+                                onChange={handleVehicleChange}
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                                data-testid={`input-${f.name}`}
+                              >
+                                <option value="">Select…</option>
+                                {f.options.map((o) => <option key={o}>{o}</option>)}
+                              </select>
+                            ) : (
+                              <input
+                                name={f.name}
+                                type={f.type || "text"}
+                                value={vehicle[f.name as keyof typeof EMPTY_VEHICLE]}
+                                onChange={handleVehicleChange}
+                                placeholder={f.placeholder}
+                                required={f.required}
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                                data-testid={`input-${f.name}`}
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest mb-3 pb-2 border-b border-gray-100" style={{ color: DARK }}>Vehicle Details</p>
+                      <div className="grid grid-cols-2 gap-3">
+                        {VEHICLE_DETAIL_FIELDS.map((f) => (
+                          <div key={f.name} className={f.full ? "col-span-2" : ""}>
+                            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">{f.label}</label>
+                            {f.options ? (
+                              <select
+                                name={f.name}
+                                value={vehicle[f.name as keyof typeof EMPTY_VEHICLE]}
+                                onChange={handleVehicleChange}
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                                data-testid={`input-${f.name}`}
+                              >
+                                <option value="">Select…</option>
+                                {f.options.map((o) => <option key={o}>{o}</option>)}
+                              </select>
+                            ) : f.textarea ? (
+                              <textarea
+                                name={f.name}
+                                value={vehicle[f.name as keyof typeof EMPTY_VEHICLE]}
+                                onChange={handleVehicleChange}
+                                placeholder={f.placeholder}
+                                rows={2}
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                                data-testid={`input-${f.name}`}
+                              />
+                            ) : (
+                              <input
+                                name={f.name}
+                                type={f.type || "text"}
+                                value={vehicle[f.name as keyof typeof EMPTY_VEHICLE]}
+                                onChange={handleVehicleChange}
+                                placeholder={f.placeholder}
+                                required={f.required}
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                                data-testid={`input-${f.name}`}
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">Message (Optional)</label>
                   <textarea name="message" value={form.message} onChange={handleChange} placeholder="Tell us more about what you are looking for…" rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="input-message"/>
@@ -800,8 +949,9 @@ function ContactSection() {
                 {status === "error" && (
                   <p className="text-red-500 text-xs font-medium bg-red-50 border border-red-100 rounded-lg px-4 py-3">{feedback}</p>
                 )}
+                <FormDisclaimer />
                 <button type="submit" disabled={status === "loading"} className="w-full py-4 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:opacity-95 disabled:opacity-70 disabled:cursor-not-allowed" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }} data-testid="button-submit-quote">
-                  {status === "loading" ? "Sending…" : "Request My Free Quote"}
+                  {status === "loading" ? "Sending…" : isVehicle ? "Submit Vehicle Insurance Application" : "Request My Free Quote"}
                 </button>
                 <p className="text-center text-xs text-gray-400">By submitting, you agree to be contacted by Quantz Financial Services.</p>
               </form>
@@ -861,9 +1011,10 @@ function Footer() {
             </ul>
           </div>
         </div>
-        <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3">
+        <FooterDisclaimer />
+        <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10">
           <p className="text-xs text-gray-600" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
-          <p className="text-xs text-gray-600">Regulated insurance broker in Namibia</p>
+          <p className="text-xs text-gray-600">Authorised financial services provider — regulated by NAMFISA</p>
         </div>
       </div>
     </footer>
@@ -929,10 +1080,10 @@ function AdvisorModal() {
         </div>
         <div className="p-6">
           <div className="flex items-center gap-4 mb-6 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-            <img src="/images/advisor-portrait.png" alt="Financial Advisor" className="w-16 h-16 rounded-xl object-cover object-top flex-shrink-0"/>
+            <img src="/images/advisor-portrait.png" alt="Selma Hiskia Mwatotele, Managing Director" className="w-16 h-16 rounded-xl object-cover object-top flex-shrink-0"/>
             <div>
-              <p className="font-bold text-gray-900">Managing Director</p>
-              <p className="text-sm font-medium" style={{ color: "#00A896" }}>Principal Financial Advisor</p>
+              <p className="font-bold text-gray-900">Selma Hiskia Mwatotele</p>
+              <p className="text-sm font-medium" style={{ color: "#00A896" }}>Managing Director / Principal Financial Advisor</p>
               <p className="text-xs text-gray-500 mt-0.5">18+ Years in Financial Services</p>
             </div>
           </div>

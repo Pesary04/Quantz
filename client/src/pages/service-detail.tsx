@@ -1,5 +1,6 @@
 import { useParams, useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Phone, Mail, Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote, HelpCircle, Users, Star, Scroll, Briefcase } from "lucide-react";
+import { FooterDisclaimer } from "@/components/legal-disclaimer";
 
 const BLUE = "#1e7bc4";
 const DARK = "#0d2e52";
@@ -20,6 +21,7 @@ const serviceData: Record<string, {
   whoFor: string[];
   steps: { title: string; desc: string }[];
   faq: { q: string; a: string }[];
+  schemes?: { title: string; note?: string; items: string[] };
 }> = {
   "life-insurance": {
     id: "life-insurance",
@@ -155,6 +157,11 @@ const serviceData: Record<string, {
       { q: "Can I join medical aid if I have a chronic condition?", a: "Yes. Most medical aid schemes accept members with chronic conditions, though waiting periods and exclusions may apply. We find the best fit for your health profile." },
       { q: "How is the monthly premium calculated?", a: "Premiums are based on your age, chosen plan level, number of dependants, and any applicable late-joiner penalties." },
     ],
+    schemes: {
+      title: "Accepted Medical Aid Schemes",
+      note: "The following medical aid schemes qualify for Gap Cover through Quantz Financial Services.",
+      items: ["NHP", "NMC", "RMA", "NAPOTEL", "Nammed", "GemHealth"],
+    },
   },
   "short-term-insurance": {
     id: "short-term-insurance",
@@ -546,6 +553,32 @@ export default function ServiceDetail() {
               </div>
             </div>
 
+            {svc.schemes && (
+              <div data-testid="section-schemes">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{svc.schemes.title}</h2>
+                {svc.schemes.note && (
+                  <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-2xl">{svc.schemes.note}</p>
+                )}
+                <div className="flex flex-wrap gap-3">
+                  {svc.schemes.items.map((scheme) => (
+                    <div
+                      key={scheme}
+                      className="flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-xl bg-white border border-gray-200 shadow-sm"
+                      data-testid={`scheme-${scheme.toLowerCase()}`}
+                    >
+                      <div
+                        className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
+                        style={{ background: `linear-gradient(135deg, ${svc.gradientFrom}, ${svc.gradientTo})` }}
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-white" aria-hidden="true"/>
+                      </div>
+                      <span className="text-sm font-semibold text-gray-800">{scheme}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div data-testid="section-how-it-works">
               <h2 className="text-2xl font-bold text-gray-900 mb-8">How It Works</h2>
               <div className="relative">
@@ -695,13 +728,16 @@ export default function ServiceDetail() {
         )}
       </div>
 
-      <footer className="bg-[#060f1e] text-gray-400 py-6">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-3">
-          <img src="/quantz-logo-white-text.png" alt="Quantz Financial Services" className="h-8 w-auto"/>
-          <p className="text-xs text-gray-600" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
-          <div className="flex gap-4 text-xs">
-            <a href="tel:+264818201522" className="hover:text-white transition-colors">+264 81 820 1522</a>
-            <a href="mailto:info@quantz.com.na" className="hover:text-white transition-colors">info@quantz.com.na</a>
+      <footer className="bg-[#060f1e] text-gray-400">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <FooterDisclaimer />
+          <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10">
+            <img src="/quantz-logo-white-text.png" alt="Quantz Financial Services" className="h-8 w-auto"/>
+            <p className="text-xs text-gray-600" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
+            <div className="flex gap-4 text-xs">
+              <a href="tel:+264818201522" className="hover:text-white transition-colors">+264 81 820 1522</a>
+              <a href="mailto:info@quantz.com.na" className="hover:text-white transition-colors">info@quantz.com.na</a>
+            </div>
           </div>
         </div>
       </footer>
