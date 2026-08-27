@@ -1191,13 +1191,13 @@ function CarInsuranceAdSection() {
 }
 
 const BANNERS = [
-  { src: "/images/banners/life-cover.jpg",        label: "Life Insurance",         alt: "Life Insurance — Protects You Today and Your Family Tomorrow" },
-  { src: "/images/banners/car-insurance.jpg",     label: "Car Insurance",          alt: "Car Insurance — Compare Quotes from All Major Insurers in Namibia" },
-  { src: "/images/banners/funeral-cover.jpg",     label: "Funeral Cover",          alt: "Funeral Cover — Give Your Family Dignity When It Matters Most" },
-  { src: "/images/banners/gap-cover.jpg",         label: "Medical Aid Gap Cover",  alt: "Medical Aid Gap Cover — Your Medical Aid Does Not Cover Everything" },
-  { src: "/images/banners/insurance-review.jpg",  label: "Insurance Review",       alt: "Insurance Review — Protect What Matters Most" },
-  { src: "/images/banners/bundle-and-save.jpg",   label: "Bundle & Save",          alt: "Bundle and Save — Insure Your Home, Car, Gadgets & Electronics Together" },
-  { src: "/images/banners/wills-estates.jpg",     label: "Wills & Estates",        alt: "Wills & Estates — Love Your Family Enough to Plan Ahead" },
+  { src: "/images/banners/life.jpg",        label: "Life Insurance",        alt: "Life Cover That Helps Protect What Matters Most — from N$303 per month, up to N$3 million in cover" },
+  { src: "/images/banners/car.jpg",         label: "Car Insurance",         alt: "Car Insurance That Keeps You Moving — affordable premiums, 24/7 support and fast claims processing" },
+  { src: "/images/banners/funeral.jpg",     label: "Funeral Cover",         alt: "Protect Your Family When It Matters Most — funeral cover eases financial pressure for your loved ones" },
+  { src: "/images/banners/gap.jpg",         label: "Medical Aid Gap Cover", alt: "Your Medical Aid Does Not Cover Everything — Gap Cover helps pay hospital and specialist shortfalls" },
+  { src: "/images/banners/investments.jpg", label: "Savings & Investments", alt: "Make Your Money Work — smart savings and thoughtful investments designed for long-term goals" },
+  { src: "/images/banners/bundle.jpg",      label: "Bundle & Save",         alt: "Bundle Your Cover and Save More — insure your home, car, gadgets and electronics together" },
+  { src: "/images/banners/wills.jpg",       label: "Wills & Estates",       alt: "Plan Ahead for the People You Love — a well-prepared Will and estate plan protects your family" },
 ];
 
 function BannerSlideshow() {
