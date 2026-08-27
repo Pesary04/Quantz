@@ -8,6 +8,21 @@ import { nanoid } from "nanoid";
 
 const viteLogger = createLogger();
 
+// Tailwind CSS v3 parses its own `preflight.css` (and arbitrary-value rules)
+// with `postcss.parse()` without a `from` option, which makes PostCSS 8.5+
+// print "A PostCSS plugin did not pass the `from` option to postcss.parse".
+// It is an upstream warning we cannot pass options into, and it is harmless for
+// our setup (we never import assets from inside Tailwind's own stylesheets), so
+// filter out just that one message instead of leaving it in every dev log.
+const POSTCSS_FROM_WARNING = "did not pass the `from` option to `postcss.parse`";
+const originalWarn = console.warn.bind(console);
+console.warn = (...args: unknown[]) => {
+  if (typeof args[0] === "string" && args[0].includes(POSTCSS_FROM_WARNING)) {
+    return;
+  }
+  originalWarn(...args);
+};
+
 export async function setupVite(server: Server, app: Express) {
   const serverOptions = {
     middlewareMode: true,
@@ -20,9 +35,11 @@ export async function setupVite(server: Server, app: Express) {
     configFile: false,
     customLogger: {
       ...viteLogger,
+      // Log build/transform errors instead of killing the dev server. A single
+      // bad import or CSS error should surface in the console and the error
+      // overlay, not take the whole process down and drop the preview.
       error: (msg, options) => {
         viteLogger.error(msg, options);
-        process.exit(1);
       },
     },
     server: serverOptions,
