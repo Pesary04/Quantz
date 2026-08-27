@@ -90,14 +90,34 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
-  const host = process.env.HOST || "127.0.0.1";
-  httpServer.listen(
-    {
-      port,
-      host,
-    },
-    () => {
+  const host = process.env.HOST || "0.0.0.0";
+
+  // Retry binding: a previous dev server instance may still hold the
+  // port. Retry instead of crashing with an unhandled EADDRINUSE error.
+  const maxAttempts = 15;
+  let attempts = 0;
+
+  const startListening = () => {
+    attempts += 1;
+    httpServer.listen({ port, host }, () => {
       log(`serving on http://${host}:${port}`);
-    },
-  );
+    });
+  };
+
+  httpServer.on("error", (err: NodeJS.ErrnoException) => {
+    if (err.code === "EADDRINUSE") {
+      if (attempts < maxAttempts) {
+        log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
+        setTimeout(startListening, 1000);
+        return;
+      }
+      log(
+        `port ${port} is still in use after ${maxAttempts} attempts. Another dev server instance is likely running.`,
+      );
+      return;
+    }
+    console.error("Server error:", err);
+  });
+
+  startListening();
 })();
