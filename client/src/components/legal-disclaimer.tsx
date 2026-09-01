@@ -77,7 +77,7 @@ export function FormDisclaimer() {
         purposes without your consent.
       </p>
       <p className="text-[11px] leading-relaxed text-gray-500">
-        Quantz Financial Services CC is an authorised financial services provider, regulated by NAMFISA — Tel{" "}
+        Quantz Financial Services CC is an authorised financial services provider, regulated by NAMFISA Tel{" "}
         {NAMFISA.tel},{" "}
         <a href={`mailto:${NAMFISA.email}`} className="underline hover:text-gray-700">
           {NAMFISA.email}

@@ -29,12 +29,12 @@ const serviceData: Record<string, {
     icon: Shield,
     title: "Life Insurance",
     subtitle: "Protect Your Family's Future",
-    tagline: "Insurance that pays a lump sum if you pass away or become seriously ill — so your family is never left without.",
+    tagline: "Insurance that pays a lump sum if you pass away or become seriously ill so your family is never left without.",
     image: "/images/life-insurance.png",
     color: "from-blue-500 to-blue-700",
     gradientFrom: "#1e7bc4",
     gradientTo: "#0d2e52",
-    what: "Life Insurance is a policy that pays out a tax-free lump sum to your beneficiaries if you pass away, or to you if you become critically ill or disabled. It ensures that even when the worst happens, your family's financial future remains secure — covering debts, education, living costs and more.",
+    what: "Life Insurance is a policy that pays out a tax-free lump sum to your beneficiaries if you pass away, or to you if you become critically ill or disabled. It ensures that even when the worst happens, your family's financial future remains secure covering debts, education, living costs and more.",
     whatInside: [
       "Life Cover – a lump sum paid to your family on death",
       "Disability Cover – income or lump sum if you can no longer work",
@@ -60,7 +60,7 @@ const serviceData: Record<string, {
     steps: [
       { title: "Tell Us Your Needs", desc: "Share your family structure, income, debts and goals with our advisor." },
       { title: "We Compare Insurers", desc: "We search Sanlam, Old Mutual, Hollard and more to find your best match." },
-      { title: "Choose Your Plan", desc: "We present your options clearly — no jargon, no pressure." },
+      { title: "Choose Your Plan", desc: "We present your options clearly no jargon, no pressure." },
       { title: "You Are Covered", desc: "Policy is activated, and we support you through every claim." },
     ],
     faq: [
@@ -79,7 +79,7 @@ const serviceData: Record<string, {
     color: "from-indigo-500 to-indigo-700",
     gradientFrom: "#4f46e5",
     gradientTo: "#312e81",
-    what: "A Group Pension is a structured, tax-efficient retirement savings plan — often provided through an employer — that builds wealth over your working life so you have a steady, reliable income when you retire. Quantz helps you navigate, join or supplement your group pension effectively.",
+    what: "A Group Pension is a structured, tax-efficient retirement savings plan often provided through an employer that builds wealth over your working life so you have a steady, reliable income when you retire. Quantz helps you navigate, join or supplement your group pension effectively.",
     whatInside: [
       "Employer-linked pension fund membership and advice",
       "Preservation funds when you change jobs",
@@ -119,12 +119,12 @@ const serviceData: Record<string, {
     icon: HeartPulse,
     title: "Medical Aid Gap Cover",
     subtitle: "Comprehensive Health Cover",
-    tagline: "Fill the gaps in your existing medical cover and ensure you are protected for every healthcare event — without the financial shock.",
+    tagline: "Fill the gaps in your existing medical cover and ensure you are protected for every healthcare event without the financial shock.",
     image: "/images/medical-aid.png",
     color: "from-sky-500 to-sky-700",
     gradientFrom: "#0ea5e9",
     gradientTo: "#0369a1",
-    what: "Medical Aid Gap Cover ensures that when you need healthcare, you are not left with unexpected bills. Quantz helps you find the right gap cover product to fill shortfalls between what your medical aid pays and what providers actually charge — covering doctor visits, hospitalisations, chronic medication and specialist consultations.",
+    what: "Medical Aid Gap Cover ensures that when you need healthcare, you are not left with unexpected bills. Quantz helps you find the right gap cover product to fill shortfalls between what your medical aid pays and what providers actually charge covering doctor visits, hospitalisations, chronic medication and specialist consultations.",
     whatInside: [
       "Medical aid plan comparison and selection",
       "Gap cover to top up shortfalls from your medical aid",
@@ -174,7 +174,7 @@ const serviceData: Record<string, {
     color: "from-cyan-500 to-cyan-700",
     gradientFrom: "#06b6d4",
     gradientTo: "#0e7490",
-    what: "Short-term Insurance provides cover for physical assets — your car, home, household contents, business equipment and property — against damage, theft, fire and natural disasters. Unlike life insurance which pays out on life events, short-term policies are renewed annually and protect you against everyday risks.",
+    what: "Short-term Insurance provides cover for physical assets your car, home, household contents, business equipment and property against damage, theft, fire and natural disasters. Unlike life insurance which pays out on life events, short-term policies are renewed annually and protect you against everyday risks.",
     whatInside: [
       "Vehicle Insurance – comprehensive, third party and fire/theft cover",
       "Home & Contents Insurance – structure and possessions cover",
@@ -198,7 +198,7 @@ const serviceData: Record<string, {
       "Business owners with commercial property",
     ],
     steps: [
-      { title: "List Your Assets", desc: "Tell us what you need to cover — vehicle, home, contents, or business." },
+      { title: "List Your Assets", desc: "Tell us what you need to cover vehicle, home, contents, or business." },
       { title: "We Source Quotes", desc: "We compare rates from Santam, Sanlam, Hollard and more." },
       { title: "Choose Your Cover", desc: "Select the right policy and excess levels for your needs." },
       { title: "You Are Protected", desc: "Your assets are covered and we handle your claims when needed." },
@@ -214,12 +214,12 @@ const serviceData: Record<string, {
     icon: TrendingUp,
     title: "Retirement Annuity",
     subtitle: "Plan for the Long Term",
-    tagline: "A personal, flexible and tax-efficient savings vehicle that builds your retirement income — independent of your employer.",
+    tagline: "A personal, flexible and tax-efficient savings vehicle that builds your retirement income independent of your employer.",
     image: "/images/retirement.png",
     color: "from-blue-600 to-indigo-700",
     gradientFrom: "#2563eb",
     gradientTo: "#4338ca",
-    what: "A Retirement Annuity (RA) is an individual retirement savings plan that allows you to save for retirement in a tax-efficient way, outside of your employer's pension fund. It gives you control over how much you save, where your money is invested, and when you retire — while reducing your taxable income.",
+    what: "A Retirement Annuity (RA) is an individual retirement savings plan that allows you to save for retirement in a tax-efficient way, outside of your employer's pension fund. It gives you control over how much you save, where your money is invested, and when you retire while reducing your taxable income.",
     whatInside: [
       "Retirement Annuity (RA) plans from top insurers",
       "Preservation Fund solutions when leaving employment",
@@ -229,7 +229,7 @@ const serviceData: Record<string, {
     ],
     benefits: [
       "Contributions are tax-deductible (up to 27.5% of income)",
-      "Flexible contributions — increase, decrease or pause anytime",
+      "Flexible contributions increase, decrease or pause anytime",
       "Investment growth is tax-free inside the fund",
       "Protects savings from creditors",
       "Can be used alongside employer pension fund",
@@ -259,7 +259,7 @@ const serviceData: Record<string, {
     icon: Banknote,
     title: "Savings & Investment",
     subtitle: "Grow Your Wealth",
-    tagline: "Structured savings and investment solutions that help your money grow — safely, strategically and with meaningful returns.",
+    tagline: "Structured savings and investment solutions that help your money grow safely, strategically and with meaningful returns.",
     image: "/images/savings-investment.png",
     color: "from-teal-500 to-blue-600",
     gradientFrom: "#14b8a6",
@@ -278,7 +278,7 @@ const serviceData: Record<string, {
       "Goal-based planning (education, property, emergency fund)",
       "Low minimum investment amounts available",
       "Professional fund management by top asset managers",
-      "Flexible access — from locked-in to liquid products",
+      "Flexible access from locked-in to liquid products",
     ],
     whoFor: [
       "Individuals saving for a specific goal",
@@ -295,7 +295,7 @@ const serviceData: Record<string, {
     ],
     faq: [
       { q: "What is the difference between saving and investing?", a: "Saving is putting money aside safely with low risk and low return. Investing puts money into assets that can grow significantly over time but carry some risk." },
-      { q: "How much do I need to start investing?", a: "Many unit trusts and savings products start from as little as N$500/month. There is no perfect amount — starting early matters more than starting big." },
+      { q: "How much do I need to start investing?", a: "Many unit trusts and savings products start from as little as N$500/month. There is no perfect amount starting early matters more than starting big." },
       { q: "Are my investments safe?", a: "Investments are managed by regulated asset managers and protected under Namibian financial law. Market investments can fluctuate, but diversification reduces risk." },
     ],
   },
@@ -304,7 +304,7 @@ const serviceData: Record<string, {
     icon: PiggyBank,
     title: "Pension Fund for Individuals",
     subtitle: "Secure Your Personal Retirement",
-    tagline: "Tailored retirement solutions for individuals and self-employed professionals who want to build their own retirement savings — with flexible contributions and tax advantages.",
+    tagline: "Tailored retirement solutions for individuals and self-employed professionals who want to build their own retirement savings with flexible contributions and tax advantages.",
     image: "/images/retirement.png",
     color: "from-indigo-500 to-indigo-700",
     gradientFrom: "#4f46e5",
@@ -318,7 +318,7 @@ const serviceData: Record<string, {
       "Preservation fund solutions when changing jobs",
     ],
     benefits: [
-      "Flexible contribution options — increase, decrease or pause anytime",
+      "Flexible contribution options increase, decrease or pause anytime",
       "Tax-efficient retirement savings (up to 27.5% deductible)",
       "Guaranteed income in retirement",
       "Easy access to your funds when needed (from age 55)",
@@ -349,7 +349,7 @@ const serviceData: Record<string, {
     icon: Briefcase,
     title: "Pension Fund for Groups",
     subtitle: "Employee Pension Fund Solutions",
-    tagline: "Comprehensive group retirement benefits for companies and organisations — attracting talent, retaining staff and meeting regulatory obligations.",
+    tagline: "Comprehensive group retirement benefits for companies and organisations attracting talent, retaining staff and meeting regulatory obligations.",
     image: "/images/why-quantz.png",
     color: "from-violet-500 to-violet-700",
     gradientFrom: "#7c3aed",
@@ -386,7 +386,7 @@ const serviceData: Record<string, {
     faq: [
       { q: "Is it compulsory to have a group pension fund?", a: "While not always legally required, group pension funds are strongly recommended and may be obligatory depending on your industry sector agreement. We will advise you on your specific obligations." },
       { q: "Who manages the fund investments?", a: "Funds are managed by regulated asset managers. Employees can often choose from a range of investment portfolios based on their risk appetite and years to retirement." },
-      { q: "What happens when an employee leaves?", a: "The employee's accumulated pension benefit can be transferred to a preservation fund, another pension fund, or paid out subject to tax — we guide both employer and employee through this process." },
+      { q: "What happens when an employee leaves?", a: "The employee's accumulated pension benefit can be transferred to a preservation fund, another pension fund, or paid out subject to tax we guide both employer and employee through this process." },
     ],
   },
   "wills-estates": {
@@ -399,7 +399,7 @@ const serviceData: Record<string, {
     color: "from-[#003087] to-[#00A896]",
     gradientFrom: "#003087",
     gradientTo: "#00A896",
-    what: "Wills and Estate Planning ensures that when you are no longer here, your assets go to the right people — smoothly, clearly and without unnecessary stress or family disputes. Quantz helps you create legally sound wills, set up trusts, and put comprehensive estate plans in place that reflect your exact wishes.",
+    what: "Wills and Estate Planning ensures that when you are no longer here, your assets go to the right people smoothly, clearly and without unnecessary stress or family disputes. Quantz helps you create legally sound wills, set up trusts, and put comprehensive estate plans in place that reflect your exact wishes.",
     whatInside: [
       "Drafting and updating of Wills",
       "Estate planning and administration",
@@ -484,7 +484,7 @@ function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceT
               Request a quote for {serviceTitle}
             </h2>
             <p className="text-blue-100/90 text-base leading-relaxed mb-8 max-w-md">
-              Leave your details and our advisor will be in touch within 24 hours with a free, no-obligation quote — no need to go back to the home page.
+              Leave your details and our advisor will be in touch within 24 hours with a free, no-obligation quote no need to go back to the home page.
             </p>
             <div className="space-y-4">
               <a href="tel:+264818201522" className="flex items-center gap-4 group" data-testid="quote-phone">
