@@ -97,11 +97,17 @@ app.use((req, res, next) => {
   const maxAttempts = 15;
   let attempts = 0;
 
+  // Register the success and error handlers once, outside the retry loop.
+  // Passing a callback to httpServer.listen() on every attempt would add a
+  // one-time "listening" listener that is never released when the bind fails
+  // with EADDRINUSE, leaking a listener per retry (MaxListenersExceededWarning).
+  httpServer.on("listening", () => {
+    log(`serving on http://${host}:${port}`);
+  });
+
   const startListening = () => {
     attempts += 1;
-    httpServer.listen({ port, host }, () => {
-      log(`serving on http://${host}:${port}`);
-    });
+    httpServer.listen({ port, host });
   };
 
   httpServer.on("error", (err: NodeJS.ErrnoException) => {
