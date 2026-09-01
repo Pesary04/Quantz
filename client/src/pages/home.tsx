@@ -6,10 +6,10 @@ import {
   Scroll, FileDown, UserCircle, BarChart2, Briefcase
 } from "lucide-react";
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
+import { Link } from "wouter";
 import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
 import {
-  EMPTY_VEHICLE, VEHICLE_CLIENT_FIELDS, VEHICLE_DETAIL_FIELDS,
-  ACTION_PAGES, WHATSAPP_URL,
+  EMPTY_VEHICLE, VEHICLE_CLIENT_FIELDS, VEHICLE_DETAIL_FIELDS, WHATSAPP_URL,
 } from "@/lib/quote-config";
 
 const SOCIAL_LINKS = [
@@ -1247,7 +1247,31 @@ function BannerSlideshow() {
           </button>
         </div>
 
-        <div className="flex items-center justify-center gap-1.5 mt-2.5">
+        <div className="mt-3 flex justify-center">
+          {BANNERS[current].external ? (
+            <a
+              href={BANNERS[current].href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#1eb954] hover:shadow-xl text-balance text-center"
+              data-testid="banner-cta"
+            >
+              <SiWhatsapp className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              {BANNERS[current].cta}
+            </a>
+          ) : (
+            <Link
+              href={BANNERS[current].href}
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-bold text-[#1E3F72] shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl text-balance text-center"
+              data-testid="banner-cta"
+            >
+              {BANNERS[current].cta}
+              <ArrowRight className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            </Link>
+          )}
+        </div>
+
+        <div className="flex items-center justify-center gap-1.5 mt-3">
           {BANNERS.map((_, i) => (
             <button
               key={i}
