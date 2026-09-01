@@ -109,9 +109,23 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || "5000", 10);
   const host = process.env.HOST || "0.0.0.0";
 
-  // Retry binding: a previous dev server instance may still hold the
-  // port. Retry instead of crashing with an unhandled EADDRINUSE error.
-  const maxAttempts = 15;
+  // Gracefully release the port when the platform restarts the dev server.
+  // Without this, the exiting process can keep port 5000 held while the new
+  // instance starts, which stalls live-port detection and triggers a timeout.
+  const shutdown = () => {
+    httpServer.close(() => process.exit(0));
+    // Fallback: force-exit if close() hangs on lingering connections.
+    setTimeout(() => process.exit(0), 1500).unref();
+  };
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
+
+  // Retry binding: a previous dev server instance may still be releasing the
+  // port. Retry quickly instead of crashing with an unhandled EADDRINUSE, and
+  // keep the total retry window short so the port is bound well within the
+  // platform's live-port-detection timeout.
+  const maxAttempts = 40;
+  const retryDelayMs = 250;
   let attempts = 0;
 
   // Register the success and error handlers once, outside the retry loop.
@@ -130,8 +144,10 @@ app.use((req, res, next) => {
   httpServer.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
       if (attempts < maxAttempts) {
-        log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
-        setTimeout(startListening, 1000);
+        if (attempts === 1 || attempts % 8 === 0) {
+          log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
+        }
+        setTimeout(startListening, retryDelayMs);
         return;
       }
       log(
