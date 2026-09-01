@@ -36,6 +36,7 @@ export async function registerRoutes(
       await transporter.sendMail({
         from: `"Quantz Website" <${smtpUser}>`,
         to: "info@quantz.com.na",
+        cc: "admin@quantz.com.na",
         replyTo: smtpUser,
         subject: `New Quote Request — ${insuranceType} — ${firstName} ${lastName}`,
         html: `
@@ -108,6 +109,7 @@ export async function registerRoutes(
       await transporter.sendMail({
         from: `"Quantz Website" <${smtpUser}>`,
         to: "info@quantz.com.na",
+        cc: "admin@quantz.com.na",
         replyTo: safeContact && safeContact.includes("@") ? safeContact : smtpUser,
         subject: `New Advisor Message${safeContact ? ` — ${safeContact}` : ""}`,
         html: `
@@ -219,7 +221,7 @@ export async function registerRoutes(
       await transporter.sendMail({
         from: `"Quantz Website" <${smtpUser}>`,
         to: "info@quantz.com.na",
-        cc: "selma@quantz.com.na",
+        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
         replyTo: clientEmail.includes("@") ? clientEmail : smtpUser,
         subject: `New Vehicle Insurance Application — ${esc(data.fullName)}`,
         html: `
