@@ -13,8 +13,8 @@ export function FooterDisclaimer() {
   return (
     <div className="py-8 border-t border-white/10 space-y-6" data-testid="footer-disclaimer">
       <div>
-        <h4 className="text-white/80 text-xs font-semibold uppercase tracking-widest mb-2">Privacy &amp; Client Information</h4>
-        <p className="text-xs leading-relaxed text-gray-500 max-w-4xl">
+        <h4 className="text-white text-xs font-semibold uppercase tracking-widest mb-2">Privacy &amp; Client Information</h4>
+        <p className="text-xs leading-relaxed text-gray-200 max-w-4xl">
           The information you provide is treated as confidential and is used solely for the purpose of assessing your
           insurance needs and providing a quotation or advice. Quantz Financial Services does not share your personal
           information with third parties for marketing purposes without your consent.
@@ -22,30 +22,30 @@ export function FooterDisclaimer() {
       </div>
 
       <div>
-        <h4 className="text-white/80 text-xs font-semibold uppercase tracking-widest mb-2">Regulation</h4>
-        <p className="text-xs leading-relaxed text-gray-500 max-w-4xl">
+        <h4 className="text-white text-xs font-semibold uppercase tracking-widest mb-2">Regulation</h4>
+        <p className="text-xs leading-relaxed text-gray-200 max-w-4xl">
           Quantz Financial Services CC is an authorised financial services provider, regulated by the Namibia Financial
           Institutions Supervisory Authority (NAMFISA).
         </p>
       </div>
 
       <div>
-        <h4 className="text-white/80 text-xs font-semibold uppercase tracking-widest mb-3">NAMFISA Contact Details</h4>
-        <ul className="flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-2 text-xs text-gray-500">
+        <h4 className="text-white text-xs font-semibold uppercase tracking-widest mb-3">NAMFISA Contact Details</h4>
+        <ul className="flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-2 text-xs text-gray-200">
           <li>
-            <span className="text-gray-600">Tel:</span>{" "}
+            <span className="text-gray-400">Tel:</span>{" "}
             <a href={`tel:${NAMFISA.tel.replace(/\s/g, "")}`} className="hover:text-white transition-colors">
               {NAMFISA.tel}
             </a>
           </li>
           <li>
-            <span className="text-gray-600">Email:</span>{" "}
+            <span className="text-gray-400">Email:</span>{" "}
             <a href={`mailto:${NAMFISA.email}`} className="hover:text-white transition-colors">
               {NAMFISA.email}
             </a>
           </li>
           <li>
-            <span className="text-gray-600">Website:</span>{" "}
+            <span className="text-gray-400">Website:</span>{" "}
             <a
               href={`https://${NAMFISA.website}`}
               target="_blank"
