@@ -244,7 +244,7 @@ function ServicesSection() {
             Comprehensive Financial Protection
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto text-base">
-            Tailored solutions for individuals and businesses — from protection to growth.
+            Tailored solutions for individuals and businesses from protection to growth.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
@@ -430,7 +430,7 @@ function HowItWorksSection() {
         <div className="text-center mb-14">
           <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Simple Process</div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="how-it-works-title">How It Works</h2>
-          <p className="text-gray-500 text-base max-w-md mx-auto">Getting the right cover is simple — we guide you every step of the way.</p>
+          <p className="text-gray-500 text-base max-w-md mx-auto">Getting the right cover is simple we guide you every step of the way.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, i) => (
@@ -472,7 +472,7 @@ function FormsSection() {
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Quick Access</div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="forms-title">Downloadable Forms &amp; Documents</h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-base">Access all the forms you need in one place — quickly and securely.</p>
+          <p className="text-gray-500 max-w-xl mx-auto text-base">Access all the forms you need in one place quickly and securely.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {forms.map((form, i) => (
@@ -615,7 +615,7 @@ function AdvisorSection() {
 
 function TestimonialsSection() {
   const testimonials = [
-    { name: "Maria S.", location: "Windhoek", quote: "Quantz helped me find the perfect life insurance for my family at a price I could afford. Their advice was independent and honest — I felt truly looked after.", stars: 5 },
+    { name: "Maria S.", location: "Windhoek", quote: "Quantz helped me find the perfect life insurance for my family at a price I could afford. Their advice was independent and honest I felt truly looked after.", stars: 5 },
     { name: "David K.", location: "Swakopmund", quote: "As a business owner, I needed comprehensive short-term insurance. Quantz compared quotes from multiple insurers and saved me significantly. Excellent service!", stars: 5 },
     { name: "Annelise P.", location: "Oshakati", quote: "Their retirement annuity advice was clear and straightforward. I now have peace of mind knowing my future is secured. Highly recommend Quantz Financial Services.", stars: 5 },
   ];
@@ -755,7 +755,7 @@ function ContactSection() {
             <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/80 text-xs font-semibold uppercase tracking-wide mb-6">Get In Touch</div>
             <h2 className="text-white text-3xl md:text-4xl font-bold mb-4" data-testid="contact-title">Ready for Proper Protection?</h2>
             <p className="text-blue-200 text-base mb-10">
-              Speak to one of our expert advisors today. We will find the right cover for you —
+              Speak to one of our expert advisors today. We will find the right cover for you
               at the right price, with complete peace of mind.
             </p>
             <div className="space-y-5">
@@ -1014,7 +1014,7 @@ function Footer() {
         <FooterDisclaimer />
         <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10">
           <p className="text-xs text-gray-600" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
-          <p className="text-xs text-gray-600">Authorised financial services provider — regulated by NAMFISA</p>
+          <p className="text-xs text-gray-600">Authorised financial services provider regulated by NAMFISA</p>
         </div>
       </div>
     </footer>
@@ -1165,7 +1165,7 @@ function CarInsuranceAdSection() {
         <div className="rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
           <img
             src="/images/car-insurance-ad.jpg"
-            alt="Quantz Car Insurance — Do You Need Car Insurance? We compare quotes from all major insurers in Namibia."
+            alt="Quantz Car Insurance Do You Need Car Insurance? We compare quotes from all major insurers in Namibia."
             className="w-full h-auto block"
             data-testid="img-car-insurance-ad"
           />
@@ -1191,13 +1191,13 @@ function CarInsuranceAdSection() {
 }
 
 const BANNERS = [
-  { src: "/images/banners/life.jpg",        label: "Life Insurance",        alt: "Life Cover That Helps Protect What Matters Most — from N$303 per month, up to N$3 million in cover" },
-  { src: "/images/banners/car.jpg",         label: "Car Insurance",         alt: "Car Insurance That Keeps You Moving — affordable premiums, 24/7 support and fast claims processing" },
-  { src: "/images/banners/funeral.jpg",     label: "Funeral Cover",         alt: "Protect Your Family When It Matters Most — funeral cover eases financial pressure for your loved ones" },
-  { src: "/images/banners/gap.jpg",         label: "Medical Aid Gap Cover", alt: "Your Medical Aid Does Not Cover Everything — Gap Cover helps pay hospital and specialist shortfalls" },
-  { src: "/images/banners/investments.jpg", label: "Savings & Investments", alt: "Make Your Money Work — smart savings and thoughtful investments designed for long-term goals" },
-  { src: "/images/banners/bundle.jpg",      label: "Bundle & Save",         alt: "Bundle Your Cover and Save More — insure your home, car, gadgets and electronics together" },
-  { src: "/images/banners/wills.jpg",       label: "Wills & Estates",       alt: "Plan Ahead for the People You Love — a well-prepared Will and estate plan protects your family" },
+  { src: "/images/banners/life.jpg",        label: "Life Insurance",        alt: "Life Cover That Helps Protect What Matters Most from N$303 per month, up to N$3 million in cover" },
+  { src: "/images/banners/car.jpg",         label: "Car Insurance",         alt: "Car Insurance That Keeps You Moving affordable premiums, 24/7 support and fast claims processing" },
+  { src: "/images/banners/funeral.jpg",     label: "Funeral Cover",         alt: "Protect Your Family When It Matters Most funeral cover eases financial pressure for your loved ones" },
+  { src: "/images/banners/gap.jpg",         label: "Medical Aid Gap Cover", alt: "Your Medical Aid Does Not Cover Everything Gap Cover helps pay hospital and specialist shortfalls" },
+  { src: "/images/banners/investments.jpg", label: "Savings & Investments", alt: "Make Your Money Work smart savings and thoughtful investments designed for long-term goals" },
+  { src: "/images/banners/bundle.jpg",      label: "Bundle & Save",         alt: "Bundle Your Cover and Save More insure your home, car, gadgets and electronics together" },
+  { src: "/images/banners/wills.jpg",       label: "Wills & Estates",       alt: "Plan Ahead for the People You Love a well-prepared Will and estate plan protects your family" },
 ];
 
 function BannerSlideshow() {
@@ -1236,7 +1236,6 @@ function BannerSlideshow() {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             <span className="text-white/50 text-xs font-semibold uppercase tracking-widest">Featured Solutions</span>
-            <span className="text-white/30 text-xs">—</span>
             <span className="text-white text-xs font-bold tracking-wide">{BANNERS[current].label}</span>
           </div>
           <span className="text-white/40 text-xs font-mono">{current + 1} / {BANNERS.length}</span>
