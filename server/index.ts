@@ -1,17 +1,33 @@
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 
 // tsx/Express do not auto-load .env files the way Next.js does. Load the
 // project env files at startup so server-only secrets (SMTP_*, etc.) are
-// available in process.env. Platform-injected vars are not overwritten.
+// available in process.env when they are not already injected by the platform.
+// Platform-injected values (already present in process.env) always take
+// precedence — file values only fill in keys that are otherwise missing.
 for (const file of [".env.development.local", ".env.local", ".env"]) {
   const path = resolve(process.cwd(), file);
-  if (existsSync(path)) {
-    try {
-      process.loadEnvFile(path);
-    } catch {
-      // ignore malformed/locked env files
+  if (!existsSync(path)) continue;
+  try {
+    for (const rawLine of readFileSync(path, "utf8").split("\n")) {
+      const line = rawLine.trim();
+      if (!line || line.startsWith("#")) continue;
+      const eq = line.indexOf("=");
+      if (eq === -1) continue;
+      const key = line.slice(0, eq).trim();
+      if (!key || process.env[key] !== undefined) continue;
+      let value = line.slice(eq + 1).trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      process.env[key] = value;
     }
+  } catch {
+    // ignore malformed/locked env files
   }
 }
 
@@ -109,9 +125,23 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || "5000", 10);
   const host = process.env.HOST || "0.0.0.0";
 
-  // Retry binding: a previous dev server instance may still hold the
-  // port. Retry instead of crashing with an unhandled EADDRINUSE error.
-  const maxAttempts = 15;
+  // Gracefully release the port when the platform restarts the dev server.
+  // Without this, the exiting process can keep port 5000 held while the new
+  // instance starts, which stalls live-port detection and triggers a timeout.
+  const shutdown = () => {
+    httpServer.close(() => process.exit(0));
+    // Fallback: force-exit if close() hangs on lingering connections.
+    setTimeout(() => process.exit(0), 1500).unref();
+  };
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
+
+  // Retry binding: a previous dev server instance may still be releasing the
+  // port. Retry quickly instead of crashing with an unhandled EADDRINUSE, and
+  // keep the total retry window short so the port is bound well within the
+  // platform's live-port-detection timeout.
+  const maxAttempts = 40;
+  const retryDelayMs = 250;
   let attempts = 0;
 
   // Register the success and error handlers once, outside the retry loop.
@@ -130,8 +160,10 @@ app.use((req, res, next) => {
   httpServer.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
       if (attempts < maxAttempts) {
-        log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
-        setTimeout(startListening, 1000);
+        if (attempts === 1 || attempts % 8 === 0) {
+          log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
+        }
+        setTimeout(startListening, retryDelayMs);
         return;
       }
       log(
