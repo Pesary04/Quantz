@@ -965,12 +965,12 @@ function ContactSection() {
 
 function Footer() {
   return (
-    <footer className="bg-[#404040] text-gray-400" data-testid="footer">
+    <footer className="bg-[#5a6474] text-gray-200" data-testid="footer">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-800">
+        <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-white/15">
           <div>
             <img src="/quantz-logo-white-text.png" alt="Quantz Financial Services" className="h-32 w-auto mb-4" />
-            <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+            <p className="text-sm text-gray-300 leading-relaxed max-w-xs">
               Providing tailored insurance and financial protection solutions to safeguard your life, assets, and future.
             </p>
             <div className="flex gap-3 mt-5">
@@ -1013,8 +1013,8 @@ function Footer() {
         </div>
         <FooterDisclaimer />
         <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10">
-          <p className="text-xs text-gray-600" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
-          <p className="text-xs text-gray-600">Authorised financial services provider regulated by NAMFISA</p>
+          <p className="text-xs text-gray-300" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
+          <p className="text-xs text-gray-300">Authorised financial services provider regulated by NAMFISA</p>
         </div>
       </div>
     </footer>
