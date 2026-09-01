@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Phone, Mail, Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote, HelpCircle, Users, Star, Scroll, Briefcase } from "lucide-react";
 import { FooterDisclaimer } from "@/components/legal-disclaimer";
@@ -398,7 +399,7 @@ const serviceData: Record<string, {
     color: "from-[#003087] to-[#00A896]",
     gradientFrom: "#003087",
     gradientTo: "#00A896",
-    what: "Wills and Estate Planning ensures that when you are no longer here, your assets go to the right people — quickly, clearly and without unnecessary stress or family disputes. Quantz helps you create legally sound wills, set up trusts, and put comprehensive estate plans in place that reflect your exact wishes.",
+    what: "Wills and Estate Planning ensures that when you are no longer here, your assets go to the right people — smoothly, clearly and without unnecessary stress or family disputes. Quantz helps you create legally sound wills, set up trusts, and put comprehensive estate plans in place that reflect your exact wishes.",
     whatInside: [
       "Drafting and updating of Wills",
       "Estate planning and administration",
@@ -438,6 +439,124 @@ const serviceData: Record<string, {
 
 const serviceOrder = ["life-insurance", "pension-fund-individuals", "pension-fund-groups", "medical-aid", "short-term-insurance", "retirement-annuity", "savings-investment", "wills-estates"];
 
+function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceTitle: string; gradientFrom: string; gradientTo: string }) {
+  const [form, setForm] = useState({ firstName: "", lastName: "", phone: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [feedback, setFeedback] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+    setFeedback("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, insuranceType: serviceTitle }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus("success");
+        setFeedback(data.message);
+        setForm({ firstName: "", lastName: "", phone: "", message: "" });
+      } else {
+        setStatus("error");
+        setFeedback(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatus("error");
+      setFeedback("Could not send your request. Please call us on +264 81 820 1522.");
+    }
+  };
+
+  return (
+    <section id="quote" className="relative overflow-hidden scroll-mt-24" data-testid="service-quote-section">
+      <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, #0a2540 0%, #0d3b6e 45%, ${gradientFrom} 100%)` }} aria-hidden="true"/>
+      <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-20">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+          <div>
+            <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/80 text-xs font-semibold uppercase tracking-wide mb-6">Get a Quote</div>
+            <h2 className="text-white text-3xl md:text-4xl font-bold mb-4 text-balance" data-testid="quote-title">
+              Request a quote for {serviceTitle}
+            </h2>
+            <p className="text-blue-100/90 text-base leading-relaxed mb-8 max-w-md">
+              Leave your details and our advisor will be in touch within 24 hours with a free, no-obligation quote — no need to go back to the home page.
+            </p>
+            <div className="space-y-4">
+              <a href="tel:+264818201522" className="flex items-center gap-4 group" data-testid="quote-phone">
+                <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <Phone className="w-5 h-5 text-blue-200" aria-hidden="true"/>
+                </div>
+                <div>
+                  <p className="text-blue-300 text-xs font-medium uppercase tracking-wide">Call Us</p>
+                  <p className="text-white font-bold text-lg">+264 81 820 1522</p>
+                </div>
+              </a>
+              <a href="mailto:info@quantz.com.na" className="flex items-center gap-4 group" data-testid="quote-email">
+                <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <Mail className="w-5 h-5 text-blue-200" aria-hidden="true"/>
+                </div>
+                <div>
+                  <p className="text-blue-300 text-xs font-medium uppercase tracking-wide">Email Us</p>
+                  <p className="text-white font-bold text-lg">info@quantz.com.na</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white p-6 md:p-8 shadow-xl">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1.5" htmlFor="q-first-name">First Name</label>
+                  <input id="q-first-name" name="firstName" value={form.firstName} onChange={handleChange} type="text" placeholder="John" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="quote-input-first-name"/>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1.5" htmlFor="q-last-name">Last Name</label>
+                  <input id="q-last-name" name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder="Doe" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="quote-input-last-name"/>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5" htmlFor="q-phone">Phone Number</label>
+                <input id="q-phone" name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder="+264 81 000 0000" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all" data-testid="quote-input-phone"/>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5" htmlFor="q-service">Service</label>
+                <input id="q-service" type="text" value={serviceTitle} readOnly aria-readonly="true" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 font-medium" data-testid="quote-input-service"/>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5" htmlFor="q-message">Message <span className="font-normal text-gray-400">(optional)</span></label>
+                <textarea id="q-message" name="message" value={form.message} onChange={handleChange} rows={3} placeholder="Tell us a little about what you need…" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="quote-input-message"/>
+              </div>
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="flex items-center justify-center gap-2 w-full py-3.5 text-white font-bold rounded-xl text-sm shadow-md hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{ background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` }}
+                data-testid="quote-submit"
+              >
+                {status === "loading" ? "Sending…" : (<><span>Request My Quote</span> <ArrowRight className="w-4 h-4" aria-hidden="true"/></>)}
+              </button>
+              {feedback && (
+                <p className={`text-sm text-center ${status === "success" ? "text-green-600" : "text-red-600"}`} role="status" data-testid="quote-feedback">
+                  {feedback}
+                </p>
+              )}
+              <p className="text-[11px] text-gray-400 text-center leading-relaxed">
+                Your details are used solely to prepare your quote. Quantz Financial Services CC is regulated by NAMFISA.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Navbar({ currentService }: { currentService: string }) {
   return (
     <header className="sticky top-0 z-50 bg-white/97 backdrop-blur-sm shadow-sm border-b border-gray-100" data-testid="service-navbar">
@@ -452,7 +571,7 @@ function Navbar({ currentService }: { currentService: string }) {
           <a href="/#partners" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Partners</a>
           <a href="/#contact" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Contact</a>
         </nav>
-        <a href="/#contact"
+        <a href="#quote"
           className="px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-md"
           style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }}
           data-testid="button-nav-cta"
@@ -510,7 +629,7 @@ export default function ServiceDetail() {
           <p className="text-blue-100/90 text-base md:text-xl max-w-2xl leading-relaxed mb-8" data-testid="service-tagline">
             {svc.tagline}
           </p>
-          <a href="/#contact"
+          <a href="#quote"
             className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-blue-800 font-bold rounded-xl hover:bg-blue-50 transition-all shadow-lg text-sm"
             data-testid="button-hero-quote"
           >
@@ -623,7 +742,7 @@ export default function ServiceDetail() {
                 <p className="text-blue-100 text-sm">Get a free, no-obligation quote today.</p>
               </div>
               <div className="p-6 bg-white space-y-3">
-                <a href="/#contact"
+                <a href="#quote"
                   className="flex items-center justify-center gap-2 w-full py-3.5 text-white font-bold rounded-xl text-sm shadow-md hover:opacity-90 transition-all"
                   style={{ background: `linear-gradient(135deg, ${svc.gradientFrom}, ${svc.gradientTo})` }}
                   data-testid="sidebar-quote-button"
@@ -675,6 +794,8 @@ export default function ServiceDetail() {
           </div>
         </div>
       </div>
+
+      <ServiceQuoteForm serviceTitle={svc.title} gradientFrom={svc.gradientFrom} gradientTo={svc.gradientTo} />
 
       <div className="bg-gray-50 border-t border-gray-100 py-12" data-testid="other-services-section">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
