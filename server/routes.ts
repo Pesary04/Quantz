@@ -144,6 +144,104 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/enquiry", async (req, res) => {
+    const data = req.body || {};
+    const category = String(data.category || "General Enquiry").trim();
+    const fullName = String(data.fullName || "").trim();
+    const phone = String(data.phone || "").trim();
+    const email = String(data.email || "").trim();
+
+    if (!fullName || !phone || !email) {
+      return res.status(400).json({ error: "Please provide your name, phone number and email address." });
+    }
+
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      console.error("SMTP credentials not configured.");
+      return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
+    }
+
+    const esc = (v: unknown) =>
+      String(v ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    // Accept an ordered list of extra fields from the client so each form can
+    // send its own relevant questions (e.g. cover amount, medical aid scheme).
+    const extraFields: [string, unknown][] = Array.isArray(data.fields)
+      ? data.fields
+          .filter((f: unknown) => f && typeof f === "object")
+          .map((f: { label?: unknown; value?: unknown }) => [String(f.label ?? ""), f.value] as [string, unknown])
+      : [];
+
+    const baseFields: [string, unknown][] = [
+      ["Full Name", fullName],
+      ["Phone Number", phone],
+      ["Email Address", email],
+    ];
+
+    const rows = (fields: [string, unknown][]) =>
+      fields
+        .map(
+          ([label, value]) => `
+            <tr>
+              <td style="padding: 9px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px; width: 42%; vertical-align: top;">${esc(label)}</td>
+              <td style="padding: 9px 0; border-bottom: 1px solid #f3f4f6; color: #111827; font-size: 14px; font-weight: 600; white-space: pre-wrap;">${
+                esc(value).trim() || "<em style='color:#9ca3af; font-weight:400'>Not provided</em>"
+              }</td>
+            </tr>`
+        )
+        .join("");
+
+    try {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpPort === 465,
+        auth: { user: smtpUser, pass: smtpPass },
+      });
+
+      await transporter.sendMail({
+        from: `"Quantz Website" <${smtpUser}>`,
+        to: "info@quantz.com.na",
+        cc: "admin@quantz.com.na",
+        replyTo: email.includes("@") ? email : smtpUser,
+        subject: `New ${category} Enquiry — ${fullName}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #1E3F72, #2D6FA3); padding: 28px 32px;">
+              <h2 style="color: white; margin: 0; font-size: 20px;">New ${esc(category)} Enquiry</h2>
+              <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Submitted via quantz.com.na</p>
+            </div>
+            <div style="padding: 26px 32px; background: #ffffff;">
+              <h3 style="margin: 0 0 12px; font-size: 15px; color: #0d2e52; text-transform: uppercase; letter-spacing: 0.05em;">Contact Details</h3>
+              <table style="width: 100%; border-collapse: collapse;">${rows(baseFields)}</table>
+              ${
+                extraFields.length
+                  ? `<h3 style="margin: 26px 0 12px; font-size: 15px; color: #0d2e52; text-transform: uppercase; letter-spacing: 0.05em;">Enquiry Details</h3>
+                     <table style="width: 100%; border-collapse: collapse;">${rows(extraFields)}</table>`
+                  : ""
+              }
+            </div>
+            <div style="padding: 16px 32px; background: #f9fafb; border-top: 1px solid #f3f4f6;">
+              <p style="margin: 0; color: #9ca3af; font-size: 12px;">This enquiry was submitted from the Quantz Financial Services website. Please respond within 24 hours. Client information is confidential and used solely to assess needs and provide suitable options.</p>
+            </div>
+          </div>
+        `,
+      });
+
+      return res.json({ success: true, message: "Thank you! Your enquiry has been sent and our team will be in touch within 24 hours." });
+    } catch (err) {
+      console.error("Enquiry send error:", err);
+      return res.status(500).json({ error: "Failed to send your enquiry. Please call us directly on +264 81 820 1522." });
+    }
+  });
+
   app.post("/api/vehicle-quote", async (req, res) => {
     const data = req.body || {};
 

@@ -6,7 +6,11 @@ import {
   Scroll, FileDown, UserCircle, BarChart2, Briefcase
 } from "lucide-react";
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
+import { Link } from "wouter";
 import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
+import {
+  EMPTY_VEHICLE, VEHICLE_CLIENT_FIELDS, VEHICLE_DETAIL_FIELDS, WHATSAPP_URL,
+} from "@/lib/quote-config";
 
 const SOCIAL_LINKS = [
   { Icon: SiFacebook, label: "Facebook", href: "https://www.facebook.com/profile.php?id=61583774184552", bgStyle: { backgroundColor: "#1877F2" } },
@@ -652,49 +656,8 @@ function TestimonialsSection() {
   );
 }
 
-const EMPTY_VEHICLE = {
-  dateOfBirth: "", idNumber: "", nationality: "", gender: "", maritalStatus: "",
-  licenceYear: "", licenceCode: "", occupation: "", postalAddress: "", residentialAddress: "",
-  email: "", makeModel: "", vehicleYear: "", vehicleDescription: "", engineCapacity: "",
-  mmCode: "", vehicleValue: "", carHire: "", insuranceHistory: "", claimHistory: "",
-};
-
-type VehicleField = {
-  name: keyof typeof EMPTY_VEHICLE;
-  label: string;
-  type?: string;
-  placeholder?: string;
-  options?: string[];
-  textarea?: boolean;
-  full?: boolean;
-  required?: boolean;
-};
-
-const VEHICLE_CLIENT_FIELDS: VehicleField[] = [
-  { name: "dateOfBirth", label: "Date of Birth", type: "date" },
-  { name: "idNumber", label: "ID Number", placeholder: "ID / Passport number", required: true },
-  { name: "nationality", label: "Nationality", placeholder: "Namibian" },
-  { name: "gender", label: "Gender", options: ["Male", "Female", "Other", "Prefer not to say"] },
-  { name: "maritalStatus", label: "Marital Status", options: ["Single", "Married", "Divorced", "Widowed"] },
-  { name: "licenceYear", label: "Licence Obtained (Year)", placeholder: "e.g. 2014" },
-  { name: "licenceCode", label: "Licence Code", options: ["A", "A1", "B", "BE", "C", "C1", "CE", "C1E", "EB", "EC"] },
-  { name: "occupation", label: "Occupation", placeholder: "e.g. Teacher" },
-  { name: "email", label: "Email Address", type: "email", placeholder: "you@example.com", full: true },
-  { name: "postalAddress", label: "Postal Address", placeholder: "P.O. Box 1234, Windhoek", full: true },
-  { name: "residentialAddress", label: "Residential Address", placeholder: "Street, suburb, town", full: true },
-];
-
-const VEHICLE_DETAIL_FIELDS: VehicleField[] = [
-  { name: "makeModel", label: "Make & Model", placeholder: "e.g. Toyota Hilux 2.4 GD-6", full: true, required: true },
-  { name: "vehicleYear", label: "Year", placeholder: "e.g. 2019" },
-  { name: "engineCapacity", label: "Engine Capacity", placeholder: "e.g. 2400cc" },
-  { name: "mmCode", label: "MM Code (if known)", placeholder: "Optional" },
-  { name: "vehicleValue", label: "Value (Approximate)", placeholder: "e.g. N$ 350 000" },
-  { name: "carHire", label: "Car Hire (if required)", options: ["Yes", "No"] },
-  { name: "vehicleDescription", label: "Vehicle Description", placeholder: "Colour, condition, modifications, usage", textarea: true, full: true },
-  { name: "insuranceHistory", label: "Insurance History", placeholder: "Current or previous insurer, years insured", textarea: true, full: true },
-  { name: "claimHistory", label: "Claim History", placeholder: "Any claims in the last 5 years (or state 'None')", textarea: true, full: true },
-];
+// Vehicle form field definitions now live in @/lib/quote-config (shared with
+// the /get-a-quote/vehicle action page). Imported at the top of this file.
 
 function ContactSection() {
   const [form, setForm] = useState({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
@@ -1190,14 +1153,18 @@ function CarInsuranceAdSection() {
   );
 }
 
-const BANNERS = [
-  { src: "/images/banners/life.jpg",        label: "Life Insurance",        alt: "Life Cover That Helps Protect What Matters Most from N$303 per month, up to N$3 million in cover" },
-  { src: "/images/banners/car.jpg",         label: "Car Insurance",         alt: "Car Insurance That Keeps You Moving affordable premiums, 24/7 support and fast claims processing" },
-  { src: "/images/banners/funeral.jpg",     label: "Funeral Cover",         alt: "Protect Your Family When It Matters Most funeral cover eases financial pressure for your loved ones" },
-  { src: "/images/banners/gap.jpg",         label: "Medical Aid Gap Cover", alt: "Your Medical Aid Does Not Cover Everything Gap Cover helps pay hospital and specialist shortfalls" },
-  { src: "/images/banners/investments.jpg", label: "Savings & Investments", alt: "Make Your Money Work smart savings and thoughtful investments designed for long-term goals" },
-  { src: "/images/banners/bundle.jpg",      label: "Bundle & Save",         alt: "Bundle Your Cover and Save More insure your home, car, gadgets and electronics together" },
-  { src: "/images/banners/wills.jpg",       label: "Wills & Estates",       alt: "Plan Ahead for the People You Love a well-prepared Will and estate plan protects your family" },
+// Exact CTA text and destinations per the Quantz Live-CTA brief.
+type Banner = { src: string; label: string; alt: string; cta: string; href: string; external?: boolean };
+
+const BANNERS: Banner[] = [
+  { src: "/images/banners/life.jpg",        label: "Life Insurance",        alt: "Life Cover That Helps Protect What Matters Most from N$303 per month, up to N$3 million in cover",           cta: "GET A QUOTE TODAY.",                                          href: "/get-a-quote/life" },
+  { src: "/images/banners/car.jpg",         label: "Car Insurance",         alt: "Car Insurance That Keeps You Moving affordable premiums, 24/7 support and fast claims processing",         cta: "Get a Quote Today",                                           href: "/get-a-quote/vehicle" },
+  { src: "/images/banners/funeral.jpg",     label: "Funeral Cover",         alt: "Protect Your Family When It Matters Most funeral cover eases financial pressure for your loved ones",       cta: "GET A QUOTE TODAY",                                           href: "/get-a-quote/funeral" },
+  { src: "/images/banners/gap.jpg",         label: "Medical Aid Gap Cover", alt: "Your Medical Aid Does Not Cover Everything Gap Cover helps pay hospital and specialist shortfalls",         cta: "Find the right option for your needs. Talk to us today.",     href: "/get-a-quote/gap-cover" },
+  { src: "/images/banners/investments.jpg", label: "Savings & Investments", alt: "Make Your Money Work smart savings and thoughtful investments designed for long-term goals",                cta: "Let's Build Your Future",                                     href: "/investments-enquiry" },
+  { src: "/images/banners/bundle.jpg",      label: "Bundle & Save",         alt: "Bundle Your Cover and Save More insure your home, car, gadgets and electronics together",                    cta: "GET YOUR QUOTE TODAY",                                        href: "/get-a-quote/bundle" },
+  { src: "/images/banners/wills.jpg",       label: "Wills & Estates",       alt: "Plan Ahead for the People You Love a well-prepared Will and estate plan protects your family",              cta: "Secure Your Legacy Today | Start Your Estate Plan",           href: "/wills-estate-enquiry" },
+  { src: "/images/banners/whatsapp.jpg",    label: "WhatsApp Channel",      alt: "Smarter Insights Stronger Results stay ahead with fresh perspectives from Quantz Financial Services",       cta: "Join Our WhatsApp Group",                                     href: WHATSAPP_URL, external: true },
 ];
 
 function BannerSlideshow() {
@@ -1280,7 +1247,31 @@ function BannerSlideshow() {
           </button>
         </div>
 
-        <div className="flex items-center justify-center gap-1.5 mt-2.5">
+        <div className="mt-3 flex justify-center">
+          {BANNERS[current].external ? (
+            <a
+              href={BANNERS[current].href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#1eb954] hover:shadow-xl text-balance text-center"
+              data-testid="banner-cta"
+            >
+              <SiWhatsapp className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              {BANNERS[current].cta}
+            </a>
+          ) : (
+            <Link
+              href={BANNERS[current].href}
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-bold text-[#1E3F72] shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl text-balance text-center"
+              data-testid="banner-cta"
+            >
+              {BANNERS[current].cta}
+              <ArrowRight className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            </Link>
+          )}
+        </div>
+
+        <div className="flex items-center justify-center gap-1.5 mt-3">
           {BANNERS.map((_, i) => (
             <button
               key={i}

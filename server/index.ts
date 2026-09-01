@@ -1,3 +1,20 @@
+import { existsSync } from "fs";
+import { resolve } from "path";
+
+// tsx/Express do not auto-load .env files the way Next.js does. Load the
+// project env files at startup so server-only secrets (SMTP_*, etc.) are
+// available in process.env. Platform-injected vars are not overwritten.
+for (const file of [".env.development.local", ".env.local", ".env"]) {
+  const path = resolve(process.cwd(), file);
+  if (existsSync(path)) {
+    try {
+      process.loadEnvFile(path);
+    } catch {
+      // ignore malformed/locked env files
+    }
+  }
+}
+
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
