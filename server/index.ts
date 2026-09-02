@@ -34,6 +34,7 @@ for (const file of [".env.development.local", ".env.local", ".env"]) {
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
+import { verifyMailer } from "./mailer";
 import { createServer } from "http";
 
 const app = express();
@@ -93,6 +94,10 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Warm the SMTP connection pool at startup so the first form submission is
+  // fast, and surface any credential/connection problem in the logs early.
+  verifyMailer();
+
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
