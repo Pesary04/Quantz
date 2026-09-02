@@ -34,6 +34,7 @@ for (const file of [".env.development.local", ".env.local", ".env"]) {
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
+import { verifyMailer } from "./mailer";
 import { createServer } from "http";
 
 const app = express();
@@ -93,6 +94,10 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Warm the SMTP connection pool at startup so the first form submission is
+  // fast, and surface any credential/connection problem in the logs early.
+  verifyMailer();
+
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
@@ -136,12 +141,14 @@ app.use((req, res, next) => {
   process.on("SIGTERM", shutdown);
   process.on("SIGINT", shutdown);
 
-  // Retry binding: a previous dev server instance may still be releasing the
-  // port. Retry quickly instead of crashing with an unhandled EADDRINUSE, and
-  // keep the total retry window short so the port is bound well within the
-  // platform's live-port-detection timeout.
-  const maxAttempts = 40;
-  const retryDelayMs = 250;
+  // Retry binding indefinitely: a previous dev server instance may still be
+  // releasing the port during a restart. We must NEVER permanently give up —
+  // if we did, this process would linger as a zombie that never binds even
+  // after the port frees, which stalls live-port detection and breaks the
+  // preview. Instead we retry forever with a short, capped backoff so the
+  // server always claims the port the moment it becomes available.
+  const minRetryDelayMs = 200;
+  const maxRetryDelayMs = 1000;
   let attempts = 0;
 
   // Register the success and error handlers once, outside the retry loop.
@@ -149,6 +156,7 @@ app.use((req, res, next) => {
   // one-time "listening" listener that is never released when the bind fails
   // with EADDRINUSE, leaking a listener per retry (MaxListenersExceededWarning).
   httpServer.on("listening", () => {
+    attempts = 0;
     log(`serving on http://${host}:${port}`);
   });
 
@@ -159,16 +167,12 @@ app.use((req, res, next) => {
 
   httpServer.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
-      if (attempts < maxAttempts) {
-        if (attempts === 1 || attempts % 8 === 0) {
-          log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
-        }
-        setTimeout(startListening, retryDelayMs);
-        return;
+      // Back off gradually but keep retrying forever.
+      const delay = Math.min(minRetryDelayMs * attempts, maxRetryDelayMs);
+      if (attempts === 1 || attempts % 10 === 0) {
+        log(`port ${port} in use, retrying (attempt ${attempts})...`);
       }
-      log(
-        `port ${port} is still in use after ${maxAttempts} attempts. Another dev server instance is likely running.`,
-      );
+      setTimeout(startListening, delay);
       return;
     }
     console.error("Server error:", err);

@@ -209,12 +209,7 @@ export async function registerRoutes(
       return res.status(400).json({ error: "Please complete the required fields: full name, ID number, contact number and vehicle make & model." });
     }
 
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (!smtpHost || !smtpUser || !smtpPass) {
+    if (!isMailConfigured()) {
       console.error("SMTP credentials not configured.");
       return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
     }
@@ -267,20 +262,12 @@ export async function registerRoutes(
         .join("");
 
     try {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: { user: smtpUser, pass: smtpPass },
-      });
-
       const clientEmail = String(data.email || "").trim();
 
-      await transporter.sendMail({
-        from: `"Quantz Website" <${smtpUser}>`,
+      await sendQuantzMail({
         to: "info@quantz.com.na",
         cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
-        replyTo: clientEmail.includes("@") ? clientEmail : smtpUser,
+        replyTo: clientEmail.includes("@") ? clientEmail : process.env.SMTP_USER,
         subject: `New Vehicle Insurance Application — ${esc(data.fullName)}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
