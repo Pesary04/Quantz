@@ -1,7 +1,6 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import nodemailer from "nodemailer";
+import { type Server } from "http";
+import { sendQuantzMail, isMailConfigured } from "./mailer";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -15,29 +14,16 @@ export async function registerRoutes(
       return res.status(400).json({ error: "Please fill in all required fields." });
     }
 
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (!smtpHost || !smtpUser || !smtpPass) {
+    if (!isMailConfigured()) {
       console.error("SMTP credentials not configured.");
       return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
     }
 
     try {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: { user: smtpUser, pass: smtpPass },
-      });
-
-      await transporter.sendMail({
-        from: `"Quantz Website" <${smtpUser}>`,
+      await sendQuantzMail({
         to: "info@quantz.com.na",
         cc: "admin@quantz.com.na",
-        replyTo: smtpUser,
+        replyTo: process.env.SMTP_USER,
         subject: `New Quote Request — ${insuranceType} — ${firstName} ${lastName}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
@@ -86,31 +72,18 @@ export async function registerRoutes(
       return res.status(400).json({ error: "Please enter a message before sending." });
     }
 
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (!smtpHost || !smtpUser || !smtpPass) {
+    if (!isMailConfigured()) {
       console.error("SMTP credentials not configured.");
       return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
     }
 
     try {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: { user: smtpUser, pass: smtpPass },
-      });
-
       const safeContact = (contact || "").toString().trim();
 
-      await transporter.sendMail({
-        from: `"Quantz Website" <${smtpUser}>`,
+      await sendQuantzMail({
         to: "info@quantz.com.na",
         cc: "admin@quantz.com.na",
-        replyTo: safeContact && safeContact.includes("@") ? safeContact : smtpUser,
+        replyTo: safeContact && safeContact.includes("@") ? safeContact : process.env.SMTP_USER,
         subject: `New Advisor Message${safeContact ? ` — ${safeContact}` : ""}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
@@ -155,12 +128,7 @@ export async function registerRoutes(
       return res.status(400).json({ error: "Please provide your name, phone number and email address." });
     }
 
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (!smtpHost || !smtpUser || !smtpPass) {
+    if (!isMailConfigured()) {
       console.error("SMTP credentials not configured.");
       return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
     }
@@ -199,18 +167,10 @@ export async function registerRoutes(
         .join("");
 
     try {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: { user: smtpUser, pass: smtpPass },
-      });
-
-      await transporter.sendMail({
-        from: `"Quantz Website" <${smtpUser}>`,
+      await sendQuantzMail({
         to: "info@quantz.com.na",
         cc: "admin@quantz.com.na",
-        replyTo: email.includes("@") ? email : smtpUser,
+        replyTo: email.includes("@") ? email : process.env.SMTP_USER,
         subject: `New ${category} Enquiry — ${fullName}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
