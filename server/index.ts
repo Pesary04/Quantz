@@ -31,6 +31,9 @@ for (const file of [".env.development.local", ".env.local", ".env"]) {
   }
 }
 
+// Express dev/prod server entry. Env is loaded above; routes and the pooled
+// mailer are wired in below. The listen() logic retries binding indefinitely
+// so the platform's managed restart always reclaims the port cleanly.
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
