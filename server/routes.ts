@@ -22,7 +22,7 @@ export async function registerRoutes(
     try {
       await sendQuantzMail({
         to: "info@quantz.com.na",
-        cc: "admin@quantz.com.na",
+        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
         replyTo: process.env.SMTP_USER,
         subject: `New Quote Request — ${insuranceType} — ${firstName} ${lastName}`,
         html: `
@@ -82,7 +82,7 @@ export async function registerRoutes(
 
       await sendQuantzMail({
         to: "info@quantz.com.na",
-        cc: "admin@quantz.com.na",
+        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
         replyTo: safeContact && safeContact.includes("@") ? safeContact : process.env.SMTP_USER,
         subject: `New Advisor Message${safeContact ? ` — ${safeContact}` : ""}`,
         html: `
@@ -169,7 +169,7 @@ export async function registerRoutes(
     try {
       await sendQuantzMail({
         to: "info@quantz.com.na",
-        cc: "admin@quantz.com.na",
+        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
         replyTo: email.includes("@") ? email : process.env.SMTP_USER,
         subject: `New ${category} Enquiry — ${fullName}`,
         html: `

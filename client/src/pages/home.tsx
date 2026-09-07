@@ -324,7 +324,7 @@ function WhyUsSection() {
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,37,64,0.7) 0%, transparent 60%)" }}/>
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5">
-                  <p className="text-white font-bold text-xl italic mb-1">"Protect what matters most"</p>
+                  <p className="text-white font-bold text-xl italic mb-1">"Guided by Trust, Driven by Protection"</p>
                   <p className="text-blue-200 text-sm">Speak to a Quantz Financial Advisor today</p>
                   <a href="tel:+264818201522" className="inline-flex items-center gap-2 mt-3 text-white font-bold text-lg hover:text-blue-200 transition-colors" data-testid="button-call-hero">
                     <Phone className="w-5 h-5" aria-hidden="true"/> +264 81 820 1522
