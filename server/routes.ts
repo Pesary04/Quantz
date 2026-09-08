@@ -1,298 +1,36 @@
 import type { Express } from "express";
 import { type Server } from "http";
-import { sendQuantzMail, isMailConfigured } from "./mailer";
+import {
+  handleContact,
+  handleAdvisorMessage,
+  handleEnquiry,
+  handleVehicleQuote,
+} from "./form-handlers";
 
-export async function registerRoutes(
-  httpServer: Server,
-  app: Express
-): Promise<Server> {
-
+/**
+ * Registers the API routes on the local Express dev server. Each route calls
+ * the same framework-agnostic handler used by the Vercel serverless functions
+ * (api/*.ts), so development and production behave identically.
+ */
+export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   app.post("/api/contact", async (req, res) => {
-    const { firstName, lastName, phone, insuranceType, message } = req.body;
-
-    if (!firstName || !lastName || !phone || !insuranceType) {
-      return res.status(400).json({ error: "Please fill in all required fields." });
-    }
-
-    if (!isMailConfigured()) {
-      console.error("SMTP credentials not configured.");
-      return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
-    }
-
-    try {
-      await sendQuantzMail({
-        to: "info@quantz.com.na",
-        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
-        replyTo: process.env.SMTP_USER,
-        subject: `New Quote Request — ${insuranceType} — ${firstName} ${lastName}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #1E3F72, #2D6FA3); padding: 28px 32px;">
-              <h2 style="color: white; margin: 0; font-size: 20px;">New Quote Request Received</h2>
-              <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Submitted via quantz.com.na</p>
-            </div>
-            <div style="padding: 28px 32px; background: #ffffff;">
-              <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px; width: 40%;">Full Name</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #111827; font-size: 14px; font-weight: 600;">${firstName} ${lastName}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px;">Phone Number</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #111827; font-size: 14px; font-weight: 600;">${phone}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px;">Insurance Type</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #1E3F72; font-size: 14px; font-weight: 700;">${insuranceType}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; color: #6b7280; font-size: 13px; vertical-align: top;">Message</td>
-                  <td style="padding: 10px 0; color: #111827; font-size: 14px;">${message || "<em style='color:#9ca3af'>No message provided</em>"}</td>
-                </tr>
-              </table>
-            </div>
-            <div style="padding: 16px 32px; background: #f9fafb; border-top: 1px solid #f3f4f6;">
-              <p style="margin: 0; color: #9ca3af; font-size: 12px;">This enquiry was submitted from the Quantz Financial Services website. Please respond within 24 hours.</p>
-            </div>
-          </div>
-        `,
-      });
-
-      return res.json({ success: true, message: "Your request has been sent! We will be in touch within 24 hours." });
-    } catch (err) {
-      console.error("Email send error:", err);
-      return res.status(500).json({ error: "Failed to send your request. Please call us directly on +264 81 820 1522." });
-    }
+    const { status, body } = await handleContact(req.body);
+    res.status(status).json(body);
   });
 
   app.post("/api/advisor-message", async (req, res) => {
-    const { message, contact } = req.body;
-
-    if (!message || !message.trim()) {
-      return res.status(400).json({ error: "Please enter a message before sending." });
-    }
-
-    if (!isMailConfigured()) {
-      console.error("SMTP credentials not configured.");
-      return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
-    }
-
-    try {
-      const safeContact = (contact || "").toString().trim();
-
-      await sendQuantzMail({
-        to: "info@quantz.com.na",
-        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
-        replyTo: safeContact && safeContact.includes("@") ? safeContact : process.env.SMTP_USER,
-        subject: `New Advisor Message${safeContact ? ` — ${safeContact}` : ""}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #1E3F72, #00A896); padding: 28px 32px;">
-              <h2 style="color: white; margin: 0; font-size: 20px;">Speak to an Advisor — New Message</h2>
-              <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Submitted via quantz.com.na</p>
-            </div>
-            <div style="padding: 28px 32px; background: #ffffff;">
-              <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px; width: 40%; vertical-align: top;">Contact Details</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #111827; font-size: 14px; font-weight: 600;">${safeContact || "<em style='color:#9ca3af; font-weight:400'>Not provided</em>"}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; color: #6b7280; font-size: 13px; vertical-align: top;">Message</td>
-                  <td style="padding: 10px 0; color: #111827; font-size: 14px; white-space: pre-wrap;">${message}</td>
-                </tr>
-              </table>
-            </div>
-            <div style="padding: 16px 32px; background: #f9fafb; border-top: 1px solid #f3f4f6;">
-              <p style="margin: 0; color: #9ca3af; font-size: 12px;">This message was submitted from the "Speak Directly to an Advisor" form on the Quantz Financial Services website.</p>
-            </div>
-          </div>
-        `,
-      });
-
-      return res.json({ success: true, message: "Your message has been sent! Our advisor will be in touch shortly." });
-    } catch (err) {
-      console.error("Advisor message send error:", err);
-      return res.status(500).json({ error: "Failed to send your message. Please call us directly on +264 81 820 1522." });
-    }
+    const { status, body } = await handleAdvisorMessage(req.body);
+    res.status(status).json(body);
   });
 
   app.post("/api/enquiry", async (req, res) => {
-    const data = req.body || {};
-    const category = String(data.category || "General Enquiry").trim();
-    const fullName = String(data.fullName || "").trim();
-    const phone = String(data.phone || "").trim();
-    const email = String(data.email || "").trim();
-
-    if (!fullName || !phone || !email) {
-      return res.status(400).json({ error: "Please provide your name, phone number and email address." });
-    }
-
-    if (!isMailConfigured()) {
-      console.error("SMTP credentials not configured.");
-      return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
-    }
-
-    const esc = (v: unknown) =>
-      String(v ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-
-    // Accept an ordered list of extra fields from the client so each form can
-    // send its own relevant questions (e.g. cover amount, medical aid scheme).
-    const extraFields: [string, unknown][] = Array.isArray(data.fields)
-      ? data.fields
-          .filter((f: unknown) => f && typeof f === "object")
-          .map((f: { label?: unknown; value?: unknown }) => [String(f.label ?? ""), f.value] as [string, unknown])
-      : [];
-
-    const baseFields: [string, unknown][] = [
-      ["Full Name", fullName],
-      ["Phone Number", phone],
-      ["Email Address", email],
-    ];
-
-    const rows = (fields: [string, unknown][]) =>
-      fields
-        .map(
-          ([label, value]) => `
-            <tr>
-              <td style="padding: 9px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px; width: 42%; vertical-align: top;">${esc(label)}</td>
-              <td style="padding: 9px 0; border-bottom: 1px solid #f3f4f6; color: #111827; font-size: 14px; font-weight: 600; white-space: pre-wrap;">${
-                esc(value).trim() || "<em style='color:#9ca3af; font-weight:400'>Not provided</em>"
-              }</td>
-            </tr>`
-        )
-        .join("");
-
-    try {
-      await sendQuantzMail({
-        to: "info@quantz.com.na",
-        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
-        replyTo: email.includes("@") ? email : process.env.SMTP_USER,
-        subject: `New ${category} Enquiry — ${fullName}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #1E3F72, #2D6FA3); padding: 28px 32px;">
-              <h2 style="color: white; margin: 0; font-size: 20px;">New ${esc(category)} Enquiry</h2>
-              <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Submitted via quantz.com.na</p>
-            </div>
-            <div style="padding: 26px 32px; background: #ffffff;">
-              <h3 style="margin: 0 0 12px; font-size: 15px; color: #0d2e52; text-transform: uppercase; letter-spacing: 0.05em;">Contact Details</h3>
-              <table style="width: 100%; border-collapse: collapse;">${rows(baseFields)}</table>
-              ${
-                extraFields.length
-                  ? `<h3 style="margin: 26px 0 12px; font-size: 15px; color: #0d2e52; text-transform: uppercase; letter-spacing: 0.05em;">Enquiry Details</h3>
-                     <table style="width: 100%; border-collapse: collapse;">${rows(extraFields)}</table>`
-                  : ""
-              }
-            </div>
-            <div style="padding: 16px 32px; background: #f9fafb; border-top: 1px solid #f3f4f6;">
-              <p style="margin: 0; color: #9ca3af; font-size: 12px;">This enquiry was submitted from the Quantz Financial Services website. Please respond within 24 hours. Client information is confidential and used solely to assess needs and provide suitable options.</p>
-            </div>
-          </div>
-        `,
-      });
-
-      return res.json({ success: true, message: "Thank you! Your enquiry has been sent and our team will be in touch within 24 hours." });
-    } catch (err) {
-      console.error("Enquiry send error:", err);
-      return res.status(500).json({ error: "Failed to send your enquiry. Please call us directly on +264 81 820 1522." });
-    }
+    const { status, body } = await handleEnquiry(req.body);
+    res.status(status).json(body);
   });
 
   app.post("/api/vehicle-quote", async (req, res) => {
-    const data = req.body || {};
-
-    if (!data.fullName || !data.idNumber || !data.phone || !data.makeModel) {
-      return res.status(400).json({ error: "Please complete the required fields: full name, ID number, contact number and vehicle make & model." });
-    }
-
-    if (!isMailConfigured()) {
-      console.error("SMTP credentials not configured.");
-      return res.status(500).json({ error: "Email service is not configured yet. Please contact us directly at info@quantz.com.na." });
-    }
-
-    const esc = (v: unknown) =>
-      String(v ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-
-    const clientFields: [string, unknown][] = [
-      ["Full Name", data.fullName],
-      ["Date of Birth", data.dateOfBirth],
-      ["ID Number", data.idNumber],
-      ["Nationality", data.nationality],
-      ["Gender", data.gender],
-      ["Marital Status", data.maritalStatus],
-      ["Licence Obtained (Year)", data.licenceYear],
-      ["Licence Code", data.licenceCode],
-      ["Occupation", data.occupation],
-      ["Postal Address", data.postalAddress],
-      ["Residential Address", data.residentialAddress],
-      ["Contact Number", data.phone],
-      ["Email Address", data.email],
-    ];
-
-    const vehicleFields: [string, unknown][] = [
-      ["Make & Model", data.makeModel],
-      ["Year", data.vehicleYear],
-      ["Vehicle Description", data.vehicleDescription],
-      ["Engine Capacity", data.engineCapacity],
-      ["MM Code", data.mmCode],
-      ["Value (Approximate)", data.vehicleValue],
-      ["Car Hire Required", data.carHire],
-      ["Insurance History", data.insuranceHistory],
-      ["Claim History", data.claimHistory],
-    ];
-
-    const rows = (fields: [string, unknown][]) =>
-      fields
-        .map(
-          ([label, value]) => `
-            <tr>
-              <td style="padding: 9px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 13px; width: 42%; vertical-align: top;">${esc(label)}</td>
-              <td style="padding: 9px 0; border-bottom: 1px solid #f3f4f6; color: #111827; font-size: 14px; font-weight: 600; white-space: pre-wrap;">${
-                esc(value).trim() || "<em style='color:#9ca3af; font-weight:400'>Not provided</em>"
-              }</td>
-            </tr>`
-        )
-        .join("");
-
-    try {
-      const clientEmail = String(data.email || "").trim();
-
-      await sendQuantzMail({
-        to: "info@quantz.com.na",
-        cc: ["admin@quantz.com.na", "selma@quantz.com.na"],
-        replyTo: clientEmail.includes("@") ? clientEmail : process.env.SMTP_USER,
-        subject: `New Vehicle Insurance Application — ${esc(data.fullName)}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #1e7bc4, #0d2e52); padding: 28px 32px;">
-              <h2 style="color: white; margin: 0; font-size: 20px;">Vehicle Insurance Application</h2>
-              <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Submitted via quantz.com.na</p>
-            </div>
-            <div style="padding: 26px 32px; background: #ffffff;">
-              <h3 style="margin: 0 0 12px; font-size: 15px; color: #0d2e52; text-transform: uppercase; letter-spacing: 0.05em;">Client Information</h3>
-              <table style="width: 100%; border-collapse: collapse;">${rows(clientFields)}</table>
-              <h3 style="margin: 26px 0 12px; font-size: 15px; color: #0d2e52; text-transform: uppercase; letter-spacing: 0.05em;">Vehicle Details</h3>
-              <table style="width: 100%; border-collapse: collapse;">${rows(vehicleFields)}</table>
-            </div>
-            <div style="padding: 16px 32px; background: #f9fafb; border-top: 1px solid #f3f4f6;">
-              <p style="margin: 0; color: #9ca3af; font-size: 12px;">Client information is confidential and used solely to assess insurance needs and provide a quotation. Quantz Financial Services CC is an authorised financial services provider regulated by NAMFISA.</p>
-            </div>
-          </div>
-        `,
-      });
-
-      return res.json({ success: true, message: "Your vehicle insurance application has been sent! We will be in touch within 24 hours." });
-    } catch (err) {
-      console.error("Vehicle quote send error:", err);
-      return res.status(500).json({ error: "Failed to send your application. Please call us directly on +264 81 820 1522." });
-    }
+    const { status, body } = await handleVehicleQuote(req.body);
+    res.status(status).json(body);
   });
 
   return httpServer;
