@@ -144,14 +144,15 @@ app.use((req, res, next) => {
   process.on("SIGTERM", shutdown);
   process.on("SIGINT", shutdown);
 
-  // Retry binding indefinitely: a previous dev server instance may still be
-  // releasing the port during a restart. We must NEVER permanently give up —
-  // if we did, this process would linger as a zombie that never binds even
-  // after the port frees, which stalls live-port detection and breaks the
-  // preview. Instead we retry forever with a short, capped backoff so the
-  // server always claims the port the moment it becomes available.
-  const minRetryDelayMs = 200;
-  const maxRetryDelayMs = 1000;
+  // Retry binding for a bounded window: during a normal restart a previous
+  // instance may still be releasing the port, and that clears within a few
+  // seconds. If the port is still held after the window, another server is
+  // legitimately holding it (e.g. a duplicate instance), so we exit cleanly
+  // instead of looping forever. Retrying forever would leave orphaned zombie
+  // processes endlessly logging "port in use", which is what produced the
+  // "Server failed to start" banner.
+  const retryDelayMs = 300;
+  const maxAttempts = 40; // ~12s window, comfortably covers a restart handoff.
   let attempts = 0;
 
   // Register the success and error handlers once, outside the retry loop.
@@ -170,15 +171,20 @@ app.use((req, res, next) => {
 
   httpServer.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
-      // Back off gradually but keep retrying forever.
-      const delay = Math.min(minRetryDelayMs * attempts, maxRetryDelayMs);
-      if (attempts === 1 || attempts % 10 === 0) {
-        log(`port ${port} in use, retrying (attempt ${attempts})...`);
+      if (attempts < maxAttempts) {
+        if (attempts === 1 || attempts % 10 === 0) {
+          log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
+        }
+        setTimeout(startListening, retryDelayMs);
+        return;
       }
-      setTimeout(startListening, delay);
-      return;
+      // Give up so this process does not linger as a zombie. Another instance
+      // already owns the port; exiting lets the supervisor keep exactly one.
+      log(`port ${port} still in use after ${maxAttempts} attempts; exiting.`);
+      process.exit(1);
     }
     console.error("Server error:", err);
+    process.exit(1);
   });
 
   startListening();
