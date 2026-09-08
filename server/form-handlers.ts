@@ -1,4 +1,4 @@
-import { sendQuantzMail, isMailConfigured } from "./mailer";
+import { sendQuantzMail, isMailConfigured } from "./mailer.js";
 
 /**
  * Framework-agnostic form handlers.

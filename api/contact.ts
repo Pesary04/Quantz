@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { handleContact } from "../server/form-handlers";
-import { parseBody } from "./_body";
+import { handleContact } from "../server/form-handlers.js";
+import { parseBody } from "./_body.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
