@@ -1,3 +1,4 @@
+// Server entry: loads env, mounts the API + client, and binds port 5000.
 import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 
