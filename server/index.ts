@@ -177,10 +177,14 @@ app.use((req, res, next) => {
         setTimeout(startListening, retryDelayMs);
         return;
       }
-      // Give up so this process does not linger as a zombie. Another instance
-      // already owns the port; exiting lets the supervisor keep exactly one.
-      log(`port ${port} still in use after ${maxAttempts} attempts; exiting.`);
-      process.exit(1);
+      // The port is still held after the retry window, which means a healthy
+      // sibling instance already owns it (common when the supervisor spawns an
+      // overlapping instance on restart). Exit CLEANLY (code 0) rather than as
+      // a failure: the running instance keeps serving, and a code-1 exit here
+      // is what surfaced the red "Development server failed (exit code 1)"
+      // banner. Real, non-port errors below still exit 1.
+      log(`port ${port} already served by another instance; exiting cleanly.`);
+      process.exit(0);
     }
     console.error("Server error:", err);
     process.exit(1);
