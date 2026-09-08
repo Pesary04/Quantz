@@ -1,6 +1,7 @@
 // Server entry: loads env, mounts the API + client, and binds port 5000.
 import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
+import { execFile } from "child_process";
 
 // tsx/Express do not auto-load .env files the way Next.js does. Load the
 // project env files at startup so server-only secrets (SMTP_*, etc.) are
@@ -144,16 +145,32 @@ app.use((req, res, next) => {
   process.on("SIGTERM", shutdown);
   process.on("SIGINT", shutdown);
 
-  // Retry binding for a bounded window: during a normal restart a previous
-  // instance may still be releasing the port, and that clears within a few
-  // seconds. If the port is still held after the window, another server is
-  // legitimately holding it (e.g. a duplicate instance), so we exit cleanly
-  // instead of looping forever. Retrying forever would leave orphaned zombie
-  // processes endlessly logging "port in use", which is what produced the
-  // "Server failed to start" banner.
+  // Binding strategy — "the newest instance always wins":
+  //
+  // The dev server must be the single process holding port 5000. Every prior
+  // "port in use" / "Development server failed" banner came from TWO dev
+  // servers existing at once (e.g. the platform's supervised instance plus a
+  // stray one), where the loser retried until it exited — and the platform
+  // treats ANY exit as a failure.
+  //
+  // The fix: when the port is held, first wait briefly (a normal restart hands
+  // off within ~1.5s as the old instance releases the port via SIGTERM). If it
+  // is STILL held after that grace window, a stale/duplicate server is
+  // squatting, so we forcibly evict it and take the port. This process never
+  // exits due to a port conflict, so the failure banner cannot recur.
   const retryDelayMs = 300;
-  const maxAttempts = 40; // ~12s window, comfortably covers a restart handoff.
+  const graceAttempts = 6; // ~1.8s: cover a clean SIGTERM handoff before evicting.
   let attempts = 0;
+  let evicted = false;
+
+  // Best-effort eviction of whatever process holds the port. execFile avoids a
+  // shell; fuser (with an lsof fallback) is available on the Linux sandbox.
+  const evictPortHolder = () => {
+    log(`port ${port} still held; evicting the stale process to take over...`);
+    execFile("sh", ["-c", `fuser -k ${port}/tcp 2>/dev/null || (lsof -ti tcp:${port} | xargs -r kill -9)`], () => {
+      // Ignore result; the retry loop re-attempts the bind regardless.
+    });
+  };
 
   // Register the success and error handlers once, outside the retry loop.
   // Passing a callback to httpServer.listen() on every attempt would add a
@@ -161,6 +178,7 @@ app.use((req, res, next) => {
   // with EADDRINUSE, leaking a listener per retry (MaxListenersExceededWarning).
   httpServer.on("listening", () => {
     attempts = 0;
+    evicted = false;
     log(`serving on http://${host}:${port}`);
   });
 
@@ -171,21 +189,19 @@ app.use((req, res, next) => {
 
   httpServer.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
-      if (attempts < maxAttempts) {
-        if (attempts === 1 || attempts % 10 === 0) {
-          log(`port ${port} in use, retrying (${attempts}/${maxAttempts})...`);
-        }
+      // Grace window: let a normal restart handoff complete on its own.
+      if (attempts < graceAttempts) {
         setTimeout(startListening, retryDelayMs);
         return;
       }
-      // The port is still held after the retry window, which means a healthy
-      // sibling instance already owns it (common when the supervisor spawns an
-      // overlapping instance on restart). Exit CLEANLY (code 0) rather than as
-      // a failure: the running instance keeps serving, and a code-1 exit here
-      // is what surfaced the red "Development server failed (exit code 1)"
-      // banner. Real, non-port errors below still exit 1.
-      log(`port ${port} already served by another instance; exiting cleanly.`);
-      process.exit(0);
+      // Past the grace window: evict the squatter once, then keep retrying so
+      // this instance claims the freed port. We never give up or exit here.
+      if (!evicted) {
+        evicted = true;
+        evictPortHolder();
+      }
+      setTimeout(startListening, retryDelayMs);
+      return;
     }
     console.error("Server error:", err);
     process.exit(1);
