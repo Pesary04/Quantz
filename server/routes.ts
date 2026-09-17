@@ -21,6 +21,20 @@ import {
   type HandlerRequest,
   type HandlerResult,
 } from "./admin/handlers.js";
+import {
+  handleCreateContent,
+  handleDeleteContent,
+  handleDeleteEnquiry,
+  handleGetSettings,
+  handleListContent,
+  handleListEnquiries,
+  handlePublicContent,
+  handlePublicSettings,
+  handleReorderContent,
+  handleUpdateContent,
+  handleUpdateEnquiry,
+  handleUpdateSettings,
+} from "./admin/content-handlers.js";
 import { runBlobUpload } from "./admin/upload.js";
 import type { HandleUploadBody } from "@vercel/blob/client";
 
@@ -88,6 +102,42 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     send(res, await handleDeletePost(toHandlerRequest(req), req.params.id)),
   );
 
+  /* ---------------------- Admin site content ----------------------- */
+  app.post("/api/admin/content-reorder", async (req, res) =>
+    send(res, await handleReorderContent(toHandlerRequest(req))),
+  );
+  app.get("/api/admin/content/:collection", async (req, res) =>
+    send(res, await handleListContent(toHandlerRequest(req), req.params.collection)),
+  );
+  app.post("/api/admin/content/:collection", async (req, res) =>
+    send(res, await handleCreateContent(toHandlerRequest(req), req.params.collection)),
+  );
+  app.put("/api/admin/content/:collection/:id", async (req, res) =>
+    send(res, await handleUpdateContent(toHandlerRequest(req), req.params.collection, req.params.id)),
+  );
+  app.delete("/api/admin/content/:collection/:id", async (req, res) =>
+    send(res, await handleDeleteContent(toHandlerRequest(req), req.params.id)),
+  );
+
+  /* ------------------------- Admin enquiries ----------------------- */
+  app.get("/api/admin/enquiries", async (req, res) =>
+    send(res, await handleListEnquiries(toHandlerRequest(req))),
+  );
+  app.patch("/api/admin/enquiries/:id", async (req, res) =>
+    send(res, await handleUpdateEnquiry(toHandlerRequest(req), req.params.id)),
+  );
+  app.delete("/api/admin/enquiries/:id", async (req, res) =>
+    send(res, await handleDeleteEnquiry(toHandlerRequest(req), req.params.id)),
+  );
+
+  /* ------------------------- Admin settings ------------------------ */
+  app.get("/api/admin/settings", async (req, res) =>
+    send(res, await handleGetSettings(toHandlerRequest(req))),
+  );
+  app.put("/api/admin/settings", async (req, res) =>
+    send(res, await handleUpdateSettings(toHandlerRequest(req))),
+  );
+
   /* -------------------------- Blob upload -------------------------- */
   app.post("/api/admin/upload", async (req, res) => {
     try {
@@ -105,6 +155,8 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   /* --------------------------- Public API -------------------------- */
   app.get("/api/posts", async (_req, res) => send(res, await handlePublicList()));
   app.get("/api/posts/:slug", async (req, res) => send(res, await handlePublicGet(req.params.slug)));
+  app.get("/api/content", async (_req, res) => send(res, await handlePublicContent()));
+  app.get("/api/site-settings", async (_req, res) => send(res, await handlePublicSettings()));
 
   return httpServer;
 }

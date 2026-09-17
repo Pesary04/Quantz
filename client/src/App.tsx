@@ -14,7 +14,11 @@ import NewsPage from "@/pages/news";
 import ArticlePage from "@/pages/article";
 import AdminLogin from "@/pages/admin/login";
 import AdminDashboard from "@/pages/admin/dashboard";
+import AdminNews from "@/pages/admin/news";
 import AdminEditor from "@/pages/admin/editor";
+import AdminCollection from "@/pages/admin/collection";
+import AdminEnquiries from "@/pages/admin/enquiries";
+import AdminSettings from "@/pages/admin/settings";
 import { RequireAuth } from "@/components/admin/require-auth";
 
 function Router() {
@@ -41,6 +45,11 @@ function Router() {
           <AdminDashboard />
         </RequireAuth>
       </Route>
+      <Route path="/admin/news">
+        <RequireAuth>
+          <AdminNews />
+        </RequireAuth>
+      </Route>
       <Route path="/admin/posts/new">
         <RequireAuth>
           <AdminEditor />
@@ -49,6 +58,21 @@ function Router() {
       <Route path="/admin/posts/:id/edit">
         <RequireAuth>
           <AdminEditor />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/content/:collection">
+        <RequireAuth>
+          <AdminCollection />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/enquiries">
+        <RequireAuth>
+          <AdminEnquiries />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/settings">
+        <RequireAuth>
+          <AdminSettings />
         </RequireAuth>
       </Route>
 

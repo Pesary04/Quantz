@@ -118,3 +118,157 @@ export function useSession() {
     staleTime: 0,
   });
 }
+
+/* ----------------------------- Site content ---------------------------- */
+
+export type ContentCollection = "services" | "insurers" | "asset_managers" | "slides" | "team";
+
+export interface ContentItem {
+  id: string;
+  collection: ContentCollection;
+  sortOrder: number;
+  isActive: boolean;
+  data: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function fetchContent(collection: ContentCollection): Promise<ContentItem[]> {
+  const res = await fetch(`/api/admin/content/${collection}`, { credentials: "include" });
+  const data = await readJson(res);
+  if (!res.ok) throw new Error((data as { error?: string }).error || "Failed to load content.");
+  return (data as { items: ContentItem[] }).items;
+}
+
+export async function createContent(
+  collection: ContentCollection,
+  data: Record<string, unknown>,
+): Promise<ContentItem> {
+  const res = await fetch(`/api/admin/content/${collection}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ data }),
+  });
+  const body = await readJson(res);
+  if (!res.ok) throw new Error((body as { error?: string }).error || "Failed to create item.");
+  return (body as { item: ContentItem }).item;
+}
+
+export async function updateContent(
+  collection: ContentCollection,
+  id: string,
+  patch: { data?: Record<string, unknown>; isActive?: boolean },
+): Promise<ContentItem> {
+  const res = await fetch(`/api/admin/content/${collection}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(patch),
+  });
+  const body = await readJson(res);
+  if (!res.ok) throw new Error((body as { error?: string }).error || "Failed to update item.");
+  return (body as { item: ContentItem }).item;
+}
+
+export async function deleteContent(collection: ContentCollection, id: string): Promise<void> {
+  const res = await fetch(`/api/admin/content/${collection}/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const body = await readJson(res);
+    throw new Error((body as { error?: string }).error || "Failed to delete item.");
+  }
+}
+
+export async function reorderContent(collection: ContentCollection, ids: string[]): Promise<void> {
+  const res = await fetch(`/api/admin/content-reorder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ collection, ids }),
+  });
+  if (!res.ok) {
+    const body = await readJson(res);
+    throw new Error((body as { error?: string }).error || "Failed to reorder items.");
+  }
+}
+
+/* ------------------------------- Enquiries ------------------------------ */
+
+export interface Enquiry {
+  id: string;
+  type: string;
+  category: string;
+  name: string;
+  phone: string;
+  email: string;
+  message: string;
+  payload: Record<string, unknown>;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export async function fetchEnquiries(): Promise<Enquiry[]> {
+  const res = await fetch("/api/admin/enquiries", { credentials: "include" });
+  const data = await readJson(res);
+  if (!res.ok) throw new Error((data as { error?: string }).error || "Failed to load enquiries.");
+  return (data as { enquiries: Enquiry[] }).enquiries;
+}
+
+export async function setEnquiryRead(id: string, isRead: boolean): Promise<void> {
+  const res = await fetch(`/api/admin/enquiries/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ isRead }),
+  });
+  if (!res.ok) {
+    const data = await readJson(res);
+    throw new Error((data as { error?: string }).error || "Failed to update enquiry.");
+  }
+}
+
+export async function deleteEnquiry(id: string): Promise<void> {
+  const res = await fetch(`/api/admin/enquiries/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const data = await readJson(res);
+    throw new Error((data as { error?: string }).error || "Failed to delete enquiry.");
+  }
+}
+
+/* ------------------------------- Settings ------------------------------- */
+
+export interface SiteSettings {
+  phone?: string;
+  email?: string;
+  location?: string;
+  officeHours?: string;
+  whatsappUrl?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  linkedinUrl?: string;
+}
+
+export async function fetchSettings(): Promise<SiteSettings> {
+  const res = await fetch("/api/admin/settings", { credentials: "include" });
+  const data = await readJson(res);
+  if (!res.ok) throw new Error((data as { error?: string }).error || "Failed to load settings.");
+  return (data as { settings: SiteSettings }).settings;
+}
+
+export async function saveSettings(settings: SiteSettings): Promise<SiteSettings> {
+  const res = await fetch("/api/admin/settings", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ settings }),
+  });
+  const data = await readJson(res);
+  if (!res.ok) throw new Error((data as { error?: string }).error || "Failed to save settings.");
+  return (data as { settings: SiteSettings }).settings;
+}

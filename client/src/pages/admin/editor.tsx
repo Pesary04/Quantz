@@ -84,7 +84,7 @@ export default function AdminEditor() {
       await savePost(input, id);
       await queryClient.invalidateQueries({ queryKey: ["/api/admin/posts"] });
       toast({ title: isEditing ? "Article updated" : "Article created" });
-      navigate("/admin");
+      navigate("/admin/news");
     } catch (err) {
       toast({ variant: "destructive", title: "Save failed", description: (err as Error).message });
     } finally {
@@ -99,7 +99,7 @@ export default function AdminEditor() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate("/admin/news")}
           className="mb-4 gap-2"
           data-testid="button-back"
         >
