@@ -2,10 +2,14 @@ import { z } from "zod";
 import { postInputSchema } from "../../shared/schema.js";
 import {
   createSession,
+  deleteOtherSessions,
   deleteSession,
   findAdminByEmail,
+  findAdminById,
   getAdminBySession,
+  hashPassword,
   SESSION_TTL_SECONDS,
+  updateAdminPassword,
   verifyPassword,
 } from "./auth.js";
 import { checkLoginRate } from "./ratelimit.js";
@@ -93,6 +97,41 @@ export async function handleSession(req: HandlerRequest): Promise<HandlerResult>
 export async function handleLogout(req: HandlerRequest): Promise<HandlerResult> {
   await deleteSession(tokenFrom(req));
   return { status: 200, body: { ok: true }, setCookie: clearSessionCookie() };
+}
+
+const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Enter your current password."),
+  newPassword: z
+    .string()
+    .min(8, "New password must be at least 8 characters.")
+    .max(200, "New password is too long."),
+});
+
+export async function handleChangePassword(req: HandlerRequest): Promise<HandlerResult> {
+  const token = tokenFrom(req);
+  const admin = await getAdminBySession(token);
+  if (!admin) return { status: 401, body: { error: "Not authenticated." } };
+
+  const parsed = changePasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return { status: 400, body: { error: parsed.error.issues[0]?.message ?? "Invalid input." } };
+  }
+
+  const full = await findAdminById(admin.id);
+  if (!full) return { status: 401, body: { error: "Not authenticated." } };
+
+  const ok = await verifyPassword(parsed.data.currentPassword, full.passwordHash);
+  if (!ok) return { status: 400, body: { error: "Your current password is incorrect." } };
+
+  if (parsed.data.newPassword === parsed.data.currentPassword) {
+    return { status: 400, body: { error: "New password must be different from the current one." } };
+  }
+
+  await updateAdminPassword(admin.id, await hashPassword(parsed.data.newPassword));
+  // Sign out everywhere else; keep the current session valid.
+  if (token) await deleteOtherSessions(admin.id, token);
+
+  return { status: 200, body: { ok: true } };
 }
 
 export async function handleListPosts(req: HandlerRequest): Promise<HandlerResult> {

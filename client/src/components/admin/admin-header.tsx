@@ -3,6 +3,7 @@ import { LogOut } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { logout, useSession } from "@/lib/admin-api";
+import { ChangePasswordDialog } from "@/components/admin/change-password-dialog";
 
 export function AdminHeader() {
   const [, navigate] = useLocation();
@@ -33,6 +34,7 @@ export function AdminHeader() {
               {data.user.email}
             </span>
           )}
+          <ChangePasswordDialog />
           <Button
             variant="secondary"
             size="sm"

@@ -55,6 +55,17 @@ export async function logout(): Promise<void> {
   await fetch("/api/admin/session", { method: "DELETE", credentials: "include" });
 }
 
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  const res = await fetch("/api/admin/password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+  const data = await readJson(res);
+  if (!res.ok) throw new Error((data as { error?: string }).error || "Failed to change password.");
+}
+
 export async function fetchAdminPosts(): Promise<Post[]> {
   const res = await fetch("/api/admin/posts", { credentials: "include" });
   const data = await readJson(res);

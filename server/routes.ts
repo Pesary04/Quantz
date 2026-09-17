@@ -7,6 +7,7 @@ import {
   handleVehicleQuote,
 } from "./form-handlers.js";
 import {
+  handleChangePassword,
   handleCreatePost,
   handleDeletePost,
   handleGetPost,
@@ -72,6 +73,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.post("/api/admin/login", async (req, res) => send(res, await handleLogin(toHandlerRequest(req))));
   app.get("/api/admin/session", async (req, res) => send(res, await handleSession(toHandlerRequest(req))));
   app.delete("/api/admin/session", async (req, res) => send(res, await handleLogout(toHandlerRequest(req))));
+  app.post("/api/admin/password", async (req, res) => send(res, await handleChangePassword(toHandlerRequest(req))));
 
   /* ------------------------- Admin content ------------------------- */
   app.get("/api/admin/posts", async (req, res) => send(res, await handleListPosts(toHandlerRequest(req))));

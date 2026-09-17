@@ -1,6 +1,6 @@
 import { randomBytes, scrypt, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { and, eq, gt } from "drizzle-orm";
+import { and, eq, gt, ne } from "drizzle-orm";
 import { db } from "../db.js";
 import { adminSessions, adminUsers, type AdminUser } from "../../shared/schema.js";
 
@@ -55,4 +55,20 @@ export async function getAdminBySession(token: string | undefined | null): Promi
 export async function deleteSession(token: string | undefined | null): Promise<void> {
   if (!token) return;
   await db.delete(adminSessions).where(eq(adminSessions.token, token));
+}
+
+export async function findAdminById(id: string): Promise<AdminUser | undefined> {
+  const rows = await db.select().from(adminUsers).where(eq(adminUsers.id, id)).limit(1);
+  return rows[0];
+}
+
+export async function updateAdminPassword(id: string, passwordHash: string): Promise<void> {
+  await db.update(adminUsers).set({ passwordHash }).where(eq(adminUsers.id, id));
+}
+
+/** Revoke every session for a user except the one making the request. */
+export async function deleteOtherSessions(userId: string, keepToken: string): Promise<void> {
+  await db
+    .delete(adminSessions)
+    .where(and(eq(adminSessions.userId, userId), ne(adminSessions.token, keepToken)));
 }
