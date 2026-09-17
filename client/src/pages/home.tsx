@@ -977,7 +977,16 @@ function Footer() {
         <FooterDisclaimer />
         <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10">
           <p className="text-xs text-gray-300" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
-          <p className="text-xs text-gray-300">Authorised financial services provider regulated by NAMFISA</p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-gray-300">Authorised financial services provider regulated by NAMFISA</p>
+            <a
+              href="/admin/login"
+              className="text-xs text-gray-400 hover:text-white transition-colors"
+              data-testid="link-admin"
+            >
+              Admin
+            </a>
+          </div>
         </div>
       </div>
     </footer>
