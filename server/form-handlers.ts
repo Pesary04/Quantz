@@ -1,4 +1,5 @@
 import { sendQuantzMail, isMailConfigured } from "./mailer.js";
+import { saveEnquirySafe } from "./admin/enquiries-service.js";
 
 /**
  * Framework-agnostic form handlers.
@@ -47,6 +48,16 @@ export async function handleContact(body: any): Promise<HandlerResult> {
   if (!firstName || !lastName || !phone || !insuranceType) {
     return { status: 400, body: { error: "Please fill in all required fields." } };
   }
+
+  await saveEnquirySafe({
+    type: "contact",
+    category: String(insuranceType),
+    name: `${firstName} ${lastName}`.trim(),
+    phone: String(phone),
+    message: String(message ?? ""),
+    payload: { firstName, lastName, phone, insuranceType, message: message ?? "" },
+  });
+
   if (!isMailConfigured()) return NOT_CONFIGURED;
 
   try {
@@ -93,6 +104,17 @@ export async function handleAdvisorMessage(body: any): Promise<HandlerResult> {
   if (!message || !String(message).trim()) {
     return { status: 400, body: { error: "Please enter a message before sending." } };
   }
+
+  const contactStr = (contact || "").toString().trim();
+  await saveEnquirySafe({
+    type: "advisor",
+    category: "Advisor Message",
+    email: contactStr.includes("@") ? contactStr : "",
+    phone: contactStr.includes("@") ? "" : contactStr,
+    message: String(message),
+    payload: { contact: contactStr, message },
+  });
+
   if (!isMailConfigured()) return NOT_CONFIGURED;
 
   try {
@@ -142,6 +164,16 @@ export async function handleEnquiry(body: any): Promise<HandlerResult> {
   if (!fullName || !phone || !email) {
     return { status: 400, body: { error: "Please provide your name, phone number and email address." } };
   }
+
+  await saveEnquirySafe({
+    type: "enquiry",
+    category,
+    name: fullName,
+    phone,
+    email,
+    payload: data,
+  });
+
   if (!isMailConfigured()) return NOT_CONFIGURED;
 
   const extraFields: [string, unknown][] = Array.isArray(data.fields)
@@ -203,6 +235,16 @@ export async function handleVehicleQuote(body: any): Promise<HandlerResult> {
       body: { error: "Please complete the required fields: full name, ID number, contact number and vehicle make & model." },
     };
   }
+
+  await saveEnquirySafe({
+    type: "vehicle",
+    category: "Vehicle Insurance",
+    name: String(data.fullName),
+    phone: String(data.phone ?? ""),
+    email: String(data.email ?? ""),
+    payload: data,
+  });
+
   if (!isMailConfigured()) return NOT_CONFIGURED;
 
   const clientFields: [string, unknown][] = [

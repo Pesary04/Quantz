@@ -10,6 +10,16 @@ import {
   VehicleQuotePage, LifePage, GapCoverPage, FuneralPage,
   BundlePage, WillsEstatePage, InvestmentsPage,
 } from "@/pages/action-page";
+import NewsPage from "@/pages/news";
+import ArticlePage from "@/pages/article";
+import AdminLogin from "@/pages/admin/login";
+import AdminDashboard from "@/pages/admin/dashboard";
+import AdminNews from "@/pages/admin/news";
+import AdminEditor from "@/pages/admin/editor";
+import AdminCollection from "@/pages/admin/collection";
+import AdminEnquiries from "@/pages/admin/enquiries";
+import AdminSettings from "@/pages/admin/settings";
+import { RequireAuth } from "@/components/admin/require-auth";
 
 function Router() {
   return (
@@ -23,6 +33,49 @@ function Router() {
       <Route path="/get-a-quote/bundle" component={BundlePage} />
       <Route path="/wills-estate-enquiry" component={WillsEstatePage} />
       <Route path="/investments-enquiry" component={InvestmentsPage} />
+
+      {/* Public news */}
+      <Route path="/news" component={NewsPage} />
+      <Route path="/news/:slug" component={ArticlePage} />
+
+      {/* Admin content studio */}
+      <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin">
+        <RequireAuth>
+          <AdminDashboard />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/news">
+        <RequireAuth>
+          <AdminNews />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/posts/new">
+        <RequireAuth>
+          <AdminEditor />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/posts/:id/edit">
+        <RequireAuth>
+          <AdminEditor />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/content/:collection">
+        <RequireAuth>
+          <AdminCollection />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/enquiries">
+        <RequireAuth>
+          <AdminEnquiries />
+        </RequireAuth>
+      </Route>
+      <Route path="/admin/settings">
+        <RequireAuth>
+          <AdminSettings />
+        </RequireAuth>
+      </Route>
+
       <Route component={NotFound} />
     </Switch>
   );

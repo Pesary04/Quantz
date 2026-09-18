@@ -3,11 +3,14 @@ import {
   Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote,
   CheckCircle2, Phone, Mail, MapPin, Menu, X, ArrowRight, Star,
   Users, Award, Globe, ChevronRight, ChevronLeft, ShieldCheck,
-  Scroll, FileDown, UserCircle, BarChart2, Briefcase
+  Scroll, FileDown, UserCircle, BarChart2, Briefcase, Clock
 } from "lucide-react";
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
 import { Link } from "wouter";
 import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
+import {
+  useSiteContent, useSiteSettings, serviceIcon, serviceTheme, telHref,
+} from "@/lib/site-content";
 import {
   EMPTY_VEHICLE, VEHICLE_CLIENT_FIELDS, VEHICLE_DETAIL_FIELDS, WHATSAPP_URL,
 } from "@/lib/quote-config";
@@ -239,6 +242,7 @@ const services = [
 ];
 
 function ServicesSection() {
+  const { services } = useSiteContent();
   return (
     <section id="services" className="py-20 md:py-28 bg-white" data-testid="services-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -252,12 +256,15 @@ function ServicesSection() {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-          {services.map((svc) => (
+          {services.map((svc, i) => {
+            const Icon = serviceIcon(svc.icon);
+            const theme = serviceTheme(svc.theme);
+            return (
             <a
-              key={svc.id}
-              href={`/services/${svc.id}`}
+              key={i}
+              href={svc.href || "#contact"}
               className="group bg-white rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
-              data-testid={`card-service-${svc.id}`}
+              data-testid={`card-service-${i}`}
             >
               <div className="relative h-44 overflow-hidden">
                 <img
@@ -267,15 +274,15 @@ function ServicesSection() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"/>
                 <div className="absolute bottom-0 left-0 right-0 p-4 flex items-end gap-3">
-                  <div className={`w-10 h-10 rounded-xl ${svc.bg} flex items-center justify-center flex-shrink-0`}>
-                    <svc.icon className={`w-5 h-5 ${svc.iconColor}`} aria-hidden="true"/>
+                  <div className={`w-10 h-10 rounded-xl ${theme.bg} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className={`w-5 h-5 ${theme.iconColor}`} aria-hidden="true"/>
                   </div>
                   <div>
                     <p className="text-white font-bold text-sm leading-tight">{svc.title}</p>
                     <p className="text-blue-200 text-xs">{svc.subtitle}</p>
                   </div>
                 </div>
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${svc.color}`}/>
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${theme.color}`}/>
               </div>
               <div className="p-5 flex-1 flex flex-col">
                 <ul className="space-y-2.5 flex-1">
@@ -292,7 +299,8 @@ function ServicesSection() {
                 </div>
               </div>
             </a>
-          ))}
+            );
+          })}
         </div>
         <div className="text-center mt-12">
           <button
@@ -379,6 +387,7 @@ const assetManagers = [
 ];
 
 function PartnersSection() {
+  const { insurers, assetManagers } = useSiteContent();
   return (
     <section id="partners" className="py-16 md:py-20 bg-white border-y border-gray-200" data-testid="partners-section">
       <div className="max-w-4xl mx-auto px-4">
@@ -390,7 +399,7 @@ function PartnersSection() {
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 justify-items-center">
             {insurers.map((p, i) => (
               <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group" data-testid={`insurer-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
-                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.darkBg ? "bg-[#0d2447] p-0" : "bg-white p-2"}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
                 <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
@@ -400,6 +409,7 @@ function PartnersSection() {
         </div>
       </div>
 
+      {assetManagers.length > 0 && (
       <div className="mx-auto max-w-4xl px-4">
         <div className="rounded-2xl border border-gray-200 bg-gray-50 px-8 py-8">
           <div className="text-center mb-8">
@@ -409,7 +419,7 @@ function PartnersSection() {
           <div className="grid grid-cols-2 gap-6 justify-items-center max-w-xs mx-auto">
             {assetManagers.map((p, i) => (
               <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group" data-testid={`asset-manager-${p.name.toLowerCase().replace(/[\s|]/g, "-")}`}>
-                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.bg} ${p.pad}`}>
+                <div className={`w-28 h-16 sm:w-32 sm:h-20 rounded-2xl border-2 border-gray-200 group-hover:border-blue-300 flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 ${p.darkBg ? "bg-[#0d2447] p-0" : "bg-white p-2"}`}>
                   <img src={p.logo} alt={`${p.name} logo`} className="max-w-full max-h-full object-contain" />
                 </div>
                 <span className="text-xs font-semibold text-gray-500 group-hover:text-blue-600 text-center max-w-[8rem] leading-tight transition-colors duration-200">{p.name}</span>
@@ -418,6 +428,7 @@ function PartnersSection() {
           </div>
         </div>
       </div>
+      )}
     </section>
   );
 }
@@ -660,6 +671,7 @@ function TestimonialsSection() {
 // the /get-a-quote/vehicle action page). Imported at the top of this file.
 
 function ContactSection() {
+  const settings = useSiteSettings();
   const [form, setForm] = useState({ firstName: "", lastName: "", phone: "", insuranceType: "", message: "" });
   const [vehicle, setVehicle] = useState(EMPTY_VEHICLE);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -722,22 +734,22 @@ function ContactSection() {
               at the right price, with complete peace of mind.
             </p>
             <div className="space-y-5">
-              <a href="tel:+264818201522" className="flex items-center gap-4 group" data-testid="contact-phone">
+              <a href={telHref(settings.phone)} className="flex items-center gap-4 group" data-testid="contact-phone">
                 <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
                   <Phone className="w-5 h-5 text-blue-200" aria-hidden="true"/>
                 </div>
                 <div>
                   <p className="text-blue-300 text-xs font-medium uppercase tracking-wide">Call Us</p>
-                  <p className="text-white font-bold text-lg">+264 81 820 1522</p>
+                  <p className="text-white font-bold text-lg">{settings.phone}</p>
                 </div>
               </a>
-              <a href="mailto:info@quantz.com.na" className="flex items-center gap-4 group" data-testid="contact-email">
+              <a href={`mailto:${settings.email}`} className="flex items-center gap-4 group" data-testid="contact-email">
                 <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
                   <Mail className="w-5 h-5 text-blue-200" aria-hidden="true"/>
                 </div>
                 <div>
                   <p className="text-blue-300 text-xs font-medium uppercase tracking-wide">Email Us</p>
-                  <p className="text-white font-semibold">info@quantz.com.na</p>
+                  <p className="text-white font-semibold">{settings.email}</p>
                 </div>
               </a>
               <div className="flex items-center gap-4">
@@ -746,7 +758,8 @@ function ContactSection() {
                 </div>
                 <div>
                   <p className="text-blue-300 text-xs font-medium uppercase tracking-wide">Location</p>
-                  <p className="text-white font-semibold">Windhoek, Namibia</p>
+                  <p className="text-white font-semibold">{settings.location}</p>
+                  {settings.officeHours && <p className="text-blue-200/80 text-sm mt-0.5">{settings.officeHours}</p>}
                 </div>
               </div>
             </div>
@@ -927,6 +940,13 @@ function ContactSection() {
 }
 
 function Footer() {
+  const settings = useSiteSettings();
+  const socialByLabel: Record<string, string> = {
+    Facebook: settings.facebookUrl,
+    Instagram: settings.instagramUrl,
+    WhatsApp: settings.whatsappUrl,
+    LinkedIn: settings.linkedinUrl,
+  };
   return (
     <footer className="bg-[#5a6474] text-gray-200" data-testid="footer">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -938,7 +958,7 @@ function Footer() {
             </p>
             <div className="flex gap-3 mt-5">
               {SOCIAL_LINKS.map(({ Icon, label, href, bgStyle }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                <a key={label} href={socialByLabel[label] || href} target="_blank" rel="noopener noreferrer" aria-label={label}
                   className="w-9 h-9 rounded-lg text-white flex items-center justify-center transition-all hover:opacity-80 hover:shadow-lg"
                   style={bgStyle}
                   data-testid={`link-footer-${label.toLowerCase()}`}
@@ -961,23 +981,38 @@ function Footer() {
             <ul className="space-y-4 text-sm">
               <li className="flex gap-3">
                 <Phone className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
-                <a href="tel:+264818201522" className="font-semibold hover:text-white transition-colors" data-testid="footer-phone">+264 81 820 1522</a>
+                <a href={telHref(settings.phone)} className="font-semibold hover:text-white transition-colors" data-testid="footer-phone">{settings.phone}</a>
               </li>
               <li className="flex gap-3">
                 <Mail className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
-                <a href="mailto:info@quantz.com.na" className="font-semibold hover:text-white transition-colors" data-testid="footer-email">info@quantz.com.na</a>
+                <a href={`mailto:${settings.email}`} className="font-semibold hover:text-white transition-colors" data-testid="footer-email">{settings.email}</a>
               </li>
               <li className="flex gap-3">
                 <MapPin className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
-                <span className="font-semibold">Windhoek, Namibia</span>
+                <span className="font-semibold">{settings.location}</span>
               </li>
+              {settings.officeHours && (
+                <li className="flex gap-3">
+                  <Clock className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
+                  <span className="font-semibold">{settings.officeHours}</span>
+                </li>
+              )}
             </ul>
           </div>
         </div>
         <FooterDisclaimer />
         <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-white/10">
           <p className="text-xs text-gray-300" data-testid="text-copyright">© 2025 Quantz Financial Services (CC). All rights reserved.</p>
-          <p className="text-xs text-gray-300">Authorised financial services provider regulated by NAMFISA</p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-gray-300">Authorised financial services provider regulated by NAMFISA</p>
+            <a
+              href="/admin/login"
+              className="text-xs text-gray-400 hover:text-white transition-colors"
+              data-testid="link-admin"
+            >
+              Admin
+            </a>
+          </div>
         </div>
       </div>
     </footer>
@@ -1153,41 +1188,65 @@ function CarInsuranceAdSection() {
   );
 }
 
-// Exact CTA text and destinations per the Quantz Live-CTA brief.
-type Banner = { src: string; label: string; alt: string; cta: string; href: string; external?: boolean };
-
-const BANNERS: Banner[] = [
-  { src: "/images/banners/life.jpg",        label: "Life Insurance",        alt: "Life Cover That Helps Protect What Matters Most from N$303 per month, up to N$3 million in cover",           cta: "GET A QUOTE TODAY.",                                          href: "/get-a-quote/life" },
-  { src: "/images/banners/car.jpg",         label: "Car Insurance",         alt: "Car Insurance That Keeps You Moving affordable premiums, 24/7 support and fast claims processing",         cta: "Get a Quote Today",                                           href: "/get-a-quote/vehicle" },
-  { src: "/images/banners/funeral.jpg",     label: "Funeral Cover",         alt: "Protect Your Family When It Matters Most funeral cover eases financial pressure for your loved ones",       cta: "GET A QUOTE TODAY",                                           href: "/get-a-quote/funeral" },
-  { src: "/images/banners/gap.jpg",         label: "Medical Aid Gap Cover", alt: "Your Medical Aid Does Not Cover Everything Gap Cover helps pay hospital and specialist shortfalls",         cta: "Find the right option for your needs. Talk to us today.",     href: "/get-a-quote/gap-cover" },
-  { src: "/images/banners/investments.jpg", label: "Savings & Investments", alt: "Make Your Money Work smart savings and thoughtful investments designed for long-term goals",                cta: "Let's Build Your Future",                                     href: "/investments-enquiry" },
-  { src: "/images/banners/bundle.jpg",      label: "Bundle & Save",         alt: "Bundle Your Cover and Save More insure your home, car, gadgets and electronics together",                    cta: "GET YOUR QUOTE TODAY",                                        href: "/get-a-quote/bundle" },
-  { src: "/images/banners/wills.jpg",       label: "Wills & Estates",       alt: "Plan Ahead for the People You Love a well-prepared Will and estate plan protects your family",              cta: "Secure Your Legacy Today | Start Your Estate Plan",           href: "/wills-estate-enquiry" },
-  { src: "/images/banners/whatsapp.jpg",    label: "WhatsApp Channel",      alt: "Smarter Insights Stronger Results stay ahead with fresh perspectives from Quantz Financial Services",       cta: "Join Our WhatsApp Group",                                     href: WHATSAPP_URL, external: true },
-];
+function TeamSection() {
+  const { team } = useSiteContent();
+  if (team.length === 0) return null;
+  return (
+    <section className="py-20 md:py-28 bg-white border-t border-gray-100" data-testid="team-section">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="text-center mb-14">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Our People</div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Meet the Team</h2>
+          <p className="text-gray-500 max-w-xl mx-auto text-base">The advisors behind your financial confidence.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {team.map((member, i) => (
+            <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col" data-testid={`card-team-${i}`}>
+              <div className="h-64 bg-gray-100 overflow-hidden">
+                {member.image ? (
+                  <img src={member.image} alt={member.name} className="w-full h-full object-cover object-center" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <UserCircle className="w-20 h-20 text-gray-300" aria-hidden="true" />
+                  </div>
+                )}
+              </div>
+              <div className="p-6 flex-1">
+                <h3 className="text-gray-900 font-bold text-lg">{member.name}</h3>
+                {member.role && <p className="text-blue-600 text-sm font-semibold mb-2">{member.role}</p>}
+                {member.bio && <p className="text-gray-500 text-sm leading-relaxed">{member.bio}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function BannerSlideshow() {
+  const { slides } = useSiteContent();
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartX = useRef<number | null>(null);
 
   const goTo = useCallback((idx: number) => {
-    setCurrent((idx + BANNERS.length) % BANNERS.length);
-  }, []);
+    setCurrent((idx + slides.length) % slides.length);
+  }, [slides.length]);
 
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
 
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % BANNERS.length), 5500);
-  }, []);
+    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % slides.length), 5500);
+  }, [slides.length]);
 
   useEffect(() => {
-    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % BANNERS.length), 5500);
+    if (slides.length === 0) return;
+    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % slides.length), 5500);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, []);
+  }, [slides.length]);
 
   const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -1197,15 +1256,19 @@ function BannerSlideshow() {
     touchStartX.current = null;
   };
 
+  if (slides.length === 0) return null;
+  const count = slides.length;
+  const idx = current % count;
+
   return (
     <section className="w-full" style={{ background: "#1E3F72" }} data-testid="banner-slideshow">
       <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             <span className="text-white/50 text-xs font-semibold uppercase tracking-widest">Featured Solutions</span>
-            <span className="text-white text-xs font-bold tracking-wide">{BANNERS[current].label}</span>
+            <span className="text-white text-xs font-bold tracking-wide">{slides[idx].label}</span>
           </div>
-          <span className="text-white/40 text-xs font-mono">{current + 1} / {BANNERS.length}</span>
+          <span className="text-white/40 text-xs font-mono">{idx + 1} / {count}</span>
         </div>
 
         <div
@@ -1215,12 +1278,12 @@ function BannerSlideshow() {
         >
           <div
             className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${current * 100}%)` }}
+            style={{ transform: `translateX(-${idx * 100}%)` }}
           >
-            {BANNERS.map((b, i) => (
+            {slides.map((b, i) => (
               <div key={i} className="w-full flex-shrink-0 bg-[#002270]">
                 <img
-                  src={b.src}
+                  src={b.image}
                   alt={b.alt}
                   className="w-full h-auto block"
                   loading={i === 0 ? "eager" : "lazy"}
@@ -1248,35 +1311,35 @@ function BannerSlideshow() {
         </div>
 
         <div className="mt-3 flex justify-center">
-          {BANNERS[current].external ? (
+          {slides[idx].external ? (
             <a
-              href={BANNERS[current].href}
+              href={slides[idx].href}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#1eb954] hover:shadow-xl text-balance text-center"
               data-testid="banner-cta"
             >
               <SiWhatsapp className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-              {BANNERS[current].cta}
+              {slides[idx].cta}
             </a>
           ) : (
             <Link
-              href={BANNERS[current].href}
+              href={slides[idx].href}
               className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-bold text-[#1E3F72] shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl text-balance text-center"
               data-testid="banner-cta"
             >
-              {BANNERS[current].cta}
+              {slides[idx].cta}
               <ArrowRight className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
             </Link>
           )}
         </div>
 
         <div className="flex items-center justify-center gap-1.5 mt-3">
-          {BANNERS.map((_, i) => (
+          {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => { goTo(i); resetTimer(); }}
-              className={`rounded-full transition-all duration-300 ${i === current ? "w-5 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/35 hover:bg-white/60"}`}
+              className={`rounded-full transition-all duration-300 ${i === idx ? "w-5 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/35 hover:bg-white/60"}`}
               aria-label={`Go to banner ${i + 1}`}
               data-testid={`banner-dot-${i}`}
             />
@@ -1300,6 +1363,7 @@ export default function Home() {
       <HowItWorksSection />
       <TestimonialsSection />
       <AdvisorSection />
+      <TeamSection />
       <ContactSection />
       <Footer />
       <AdvisorModal />
