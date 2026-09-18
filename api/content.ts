@@ -1,8 +1,0 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { handlePublicContent } from "../server/admin/content-handlers.js";
-import { send } from "./_vercel.js";
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed." });
-  return send(res, await handlePublicContent());
-}
