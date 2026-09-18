@@ -3,13 +3,16 @@ import express from "express";
 import { createServer } from "http";
 import { registerRoutes } from "../server/routes.js";
 
-// Single serverless entry for the whole API. Every /api/* request is routed
-// here and dispatched by the same Express route table used by the local dev
-// server (server/routes.ts), so development and production behave identically.
+// Single serverless entry for the whole API. A rewrite in vercel.json forwards
+// every /api/* request (any depth) to this one function, which dispatches via
+// the same Express route table used by the local dev server (server/routes.ts),
+// so development and production behave identically.
 //
 // This replaces the previous one-file-per-endpoint layout under api/, which
 // created ~20 Serverless Functions and exceeded the deployment function limit.
-// One catch-all function keeps us well under the limit.
+// The explicit rewrite is required because a bare filesystem catch-all only
+// reliably matched single-segment paths (e.g. /api/content), leaving nested
+// routes like /api/admin/login returning a platform 404.
 
 const app = express();
 
