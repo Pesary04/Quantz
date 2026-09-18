@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { LogOut } from "lucide-react";
+import { LogOut, ExternalLink } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { logout, useSession } from "@/lib/admin-api";
@@ -34,6 +34,16 @@ export function AdminHeader() {
               {data.user.email}
             </span>
           )}
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-1.5 text-sm font-medium text-white/80 transition-colors hover:text-white sm:inline-flex"
+            data-testid="link-view-live"
+          >
+            <ExternalLink className="h-4 w-4" />
+            View live site
+          </a>
           <ChangePasswordDialog />
           <Button
             variant="secondary"
