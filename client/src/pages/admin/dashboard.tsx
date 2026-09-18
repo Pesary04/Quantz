@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import {
   Newspaper, LayoutGrid, Building2, Landmark, Images, Users, Inbox, Settings,
-  ChevronRight, CheckCircle2, ExternalLink, type LucideIcon,
+  ChevronRight, ExternalLink, type LucideIcon,
 } from "lucide-react";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Card } from "@/components/ui/card";
@@ -40,21 +40,10 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-background">
       <AdminHeader />
       <main className="mx-auto max-w-6xl px-4 py-8">
-        <div className="mb-6">
-          <h1 className="font-sans text-2xl font-bold text-foreground">Content Studio</h1>
-          <p className="text-sm text-muted-foreground">Manage everything shown on the Quantz website.</p>
-        </div>
-
-        <div
-          className="mb-8 flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3"
-          data-testid="banner-live"
-        >
-          <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-foreground">Changes go live instantly</p>
-            <p className="text-sm text-muted-foreground">
-              Anything you save here updates the live website straight away. There&apos;s no separate deploy step.
-            </p>
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="font-sans text-2xl font-bold text-foreground">Content Studio</h1>
+            <p className="text-sm text-muted-foreground">Manage everything shown on the Quantz website.</p>
           </div>
           <a
             href="/"
