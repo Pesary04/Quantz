@@ -1,5 +1,7 @@
 import { sendQuantzMail, isMailConfigured } from "./mailer.js";
 import { saveEnquirySafe } from "./admin/enquiries-service.js";
+import { verifyTurnstileToken } from "./turnstile.js";
+import { LIFE_FIELD_LABELS, lifeEnquirySchema } from "../shared/enquiry-validation.js";
 
 /**
  * Framework-agnostic form handlers.
@@ -27,7 +29,29 @@ const esc = (v: unknown) =>
   String(v ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const INVALID_SUBMISSION: HandlerResult = {
+  status: 400,
+  body: { error: "We couldn't process your enquiry. Please check your details and try again." },
+};
+
+const VERIFICATION_FAILED: HandlerResult = {
+  status: 400,
+  body: { error: "We couldn't verify your submission. Please complete the security check and try again." },
+};
+
+const ENQUIRY_SUCCESS: HandlerResult = {
+  status: 200,
+  body: { success: true, message: "Thank you! Your enquiry has been sent and our team will be in touch within 24 hours." },
+};
+
+const MAX_EXTRA_FIELDS = 12;
+const MAX_FIELD_LABEL = 80;
+const MAX_FIELD_VALUE = 1000;
+const MAX_CATEGORY = 60;
 
 const rows = (fields: [string, unknown][]) =>
   fields
@@ -154,15 +178,65 @@ export async function handleAdvisorMessage(body: any): Promise<HandlerResult> {
   }
 }
 
-export async function handleEnquiry(body: any): Promise<HandlerResult> {
-  const data = body || {};
-  const category = String(data.category || "General Enquiry").trim();
-  const fullName = String(data.fullName || "").trim();
-  const phone = String(data.phone || "").trim();
-  const email = String(data.email || "").trim();
+function parseGenericExtraFields(raw: unknown): [string, string][] | null {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw) || raw.length > MAX_EXTRA_FIELDS) return null;
+  const fields: [string, string][] = [];
+  for (const f of raw) {
+    if (!f || typeof f !== "object") return null;
+    const label = String((f as { label?: unknown }).label ?? "").trim();
+    const value = String((f as { value?: unknown }).value ?? "").trim();
+    if (!label || label.length > MAX_FIELD_LABEL || value.length > MAX_FIELD_VALUE) return null;
+    fields.push([label, value]);
+  }
+  return fields;
+}
 
-  if (!fullName || !phone || !email) {
-    return { status: 400, body: { error: "Please provide your name, phone number and email address." } };
+export async function handleEnquiry(body: any, clientIp?: string): Promise<HandlerResult> {
+  const data = body && typeof body === "object" ? body : {};
+
+  // Honeypot: real visitors never see or fill the "company" field.
+  if (typeof data.company === "string" && data.company.trim() !== "") {
+    return ENQUIRY_SUCCESS;
+  }
+
+  if (!(await verifyTurnstileToken(data.turnstileToken, clientIp))) {
+    return VERIFICATION_FAILED;
+  }
+
+  const category = String(data.category || "General Enquiry").trim().slice(0, MAX_CATEGORY);
+  const isLifeCover = category === "Life Cover";
+
+  let fullName: string;
+  let phone: string;
+  let email: string;
+  let extraFields: [string, string][];
+  let payload: Record<string, unknown>;
+
+  if (isLifeCover) {
+    const parsed = lifeEnquirySchema.safeParse({
+      ...data,
+      ...(data.details && typeof data.details === "object" ? data.details : {}),
+    });
+    if (!parsed.success) return INVALID_SUBMISSION;
+    const life = parsed.data;
+    ({ fullName, phone, email } = life);
+    extraFields = [
+      [LIFE_FIELD_LABELS.dateOfBirth, life.dateOfBirth],
+      [LIFE_FIELD_LABELS.coverAmount, life.coverAmount],
+      [LIFE_FIELD_LABELS.dependents, life.dependents],
+      [LIFE_FIELD_LABELS.message, life.message],
+    ];
+    payload = { category, ...life };
+  } else {
+    const parsedBase = lifeEnquirySchema
+      .pick({ fullName: true, phone: true, email: true })
+      .safeParse(data);
+    const parsedExtra = parseGenericExtraFields(data.fields);
+    if (!parsedBase.success || !parsedExtra) return INVALID_SUBMISSION;
+    ({ fullName, phone, email } = parsedBase.data);
+    extraFields = parsedExtra;
+    payload = { category, fullName, phone, email, fields: extraFields.map(([label, value]) => ({ label, value })) };
   }
 
   await saveEnquirySafe({
@@ -171,16 +245,10 @@ export async function handleEnquiry(body: any): Promise<HandlerResult> {
     name: fullName,
     phone,
     email,
-    payload: data,
+    payload,
   });
 
   if (!isMailConfigured()) return NOT_CONFIGURED;
-
-  const extraFields: [string, unknown][] = Array.isArray(data.fields)
-    ? data.fields
-        .filter((f: unknown) => f && typeof f === "object")
-        .map((f: { label?: unknown; value?: unknown }) => [String(f.label ?? ""), f.value] as [string, unknown])
-    : [];
 
   const baseFields: [string, unknown][] = [
     ["Full Name", fullName],

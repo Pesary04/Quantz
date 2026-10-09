@@ -74,7 +74,9 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   app.post("/api/enquiry", async (req, res) => {
-    const { status, body } = await handleEnquiry(req.body);
+    const forwarded = req.headers["x-forwarded-for"];
+    const clientIp = (Array.isArray(forwarded) ? forwarded[0] : forwarded)?.split(",")[0]?.trim() || req.ip;
+    const { status, body } = await handleEnquiry(req.body, clientIp);
     res.status(status).json(body);
   });
 
