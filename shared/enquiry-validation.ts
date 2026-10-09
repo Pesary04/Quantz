@@ -26,12 +26,36 @@ export function ageOn(dateOfBirth: Date, today: Date): number {
   return age;
 }
 
+/**
+ * Flags bot filler like "uICUpRcDRqDmuZysuvEHfiJ": a long single run of letters
+ * that flips between lower and upper case several times. Real words and names
+ * (including "McDonald" or "MacArthur") do not trip this.
+ */
+export function looksLikeGibberish(value: string): boolean {
+  return value
+    .split(/\s+/)
+    .some((word) => word.length >= 12 && /^[A-Za-z]+$/.test(word) && (word.match(/[a-z][A-Z]/g)?.length ?? 0) >= 3);
+}
+
+const GIBBERISH_MESSAGE = "Please write this in plain words.";
+const plainText = (value: string) => !looksLikeGibberish(value);
+
 const fullName = z
   .string()
   .trim()
   .min(2, "Please enter your full name (at least 2 characters).")
   .max(80, "Full name must be 80 characters or fewer.")
-  .regex(NAME_PATTERN, "Name may only contain letters, spaces, hyphens and apostrophes.");
+  .regex(NAME_PATTERN, "Name may only contain letters, spaces, hyphens and apostrophes.")
+  .refine(plainText, "Please enter your real name.");
+
+const namePart = (label: string) =>
+  z
+    .string()
+    .trim()
+    .min(1, `Please enter your ${label}.`)
+    .max(40, `${label[0].toUpperCase()}${label.slice(1)} must be 40 characters or fewer.`)
+    .regex(NAME_PATTERN, "Name may only contain letters, spaces, hyphens and apostrophes.")
+    .refine(plainText, "Please enter your real name.");
 
 const phone = z
   .string()
@@ -73,7 +97,75 @@ const dependents = z
   .regex(/^\d{1,2}$/, "Enter a whole number between 0 and 20.")
   .refine((value) => Number(value) <= 20, "Enter a whole number between 0 and 20.");
 
-const notes = z.string().trim().max(1000, "Notes must be 1000 characters or fewer.").optional().default("");
+const notes = z
+  .string()
+  .trim()
+  .max(1000, "Notes must be 1000 characters or fewer.")
+  .refine(plainText, GIBBERISH_MESSAGE)
+  .optional()
+  .default("");
+
+const optionalEmail = z
+  .string()
+  .trim()
+  .max(120, "Email address must be 120 characters or fewer.")
+  .refine((value) => value === "" || z.string().email().safeParse(value).success, "Please enter a valid email address.")
+  .optional()
+  .default("");
+
+export const contactSchema = z.object({
+  firstName: namePart("first name"),
+  lastName: namePart("last name"),
+  phone,
+  insuranceType: z.string().trim().min(1, "Please choose the type of cover you need.").max(60),
+  message: notes,
+});
+
+export const advisorMessageSchema = z.object({
+  message: z
+    .string()
+    .trim()
+    .min(1, "Please enter a message before sending.")
+    .max(1000, "Message must be 1000 characters or fewer.")
+    .refine(plainText, GIBBERISH_MESSAGE),
+  contact: z
+    .string()
+    .trim()
+    .min(1, "Please enter your email or phone number so we can reply.")
+    .max(120)
+    .refine(
+      (value) => z.string().email().safeParse(value).success || NAMIBIAN_PHONE_PATTERN.test(normalisePhone(value)),
+      "Enter a valid email address or a Namibian phone number.",
+    ),
+});
+
+const vehicleExtraField = z
+  .string()
+  .max(1000, "Each field must be 1000 characters or fewer.")
+  .refine(plainText, GIBBERISH_MESSAGE);
+
+export const vehicleQuoteSchema = z
+  .object({
+    fullName,
+    phone,
+    email: optionalEmail,
+    idNumber: z
+      .string()
+      .trim()
+      .regex(/^[A-Za-z0-9]{5,20}$/, "Enter a valid ID or passport number (letters and digits only)."),
+    makeModel: z
+      .string()
+      .trim()
+      .min(2, "Please enter the vehicle make and model.")
+      .max(80, "Make & model must be 80 characters or fewer.")
+      .refine(plainText, GIBBERISH_MESSAGE),
+  })
+  .catchall(vehicleExtraField);
+
+/** First human-readable validation message, for forms that show a single error. */
+export function firstError(error: z.ZodError): string {
+  return error.issues[0]?.message ?? "Please check your details and try again.";
+}
 
 export const lifeEnquirySchema = z.object({
   fullName,

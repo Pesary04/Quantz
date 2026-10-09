@@ -1,7 +1,15 @@
 import { sendQuantzMail, isMailConfigured } from "./mailer.js";
 import { saveEnquirySafe } from "./admin/enquiries-service.js";
 import { verifyTurnstileToken } from "./turnstile.js";
-import { LIFE_FIELD_LABELS, lifeEnquirySchema } from "../shared/enquiry-validation.js";
+import {
+  LIFE_FIELD_LABELS,
+  advisorMessageSchema,
+  contactSchema,
+  firstError,
+  lifeEnquirySchema,
+  looksLikeGibberish,
+  vehicleQuoteSchema,
+} from "../shared/enquiry-validation.js";
 
 /**
  * Framework-agnostic form handlers.
@@ -48,6 +56,23 @@ const ENQUIRY_SUCCESS: HandlerResult = {
   body: { success: true, message: "Thank you! Your enquiry has been sent and our team will be in touch within 24 hours." },
 };
 
+type GuardOutcome = "ok" | "bot" | "unverified";
+
+/**
+ * Shared spam checks for every public form. "bot" means the hidden honeypot was
+ * filled: callers return a fake success so bots don't learn they were caught.
+ */
+async function runBotGuards(data: Record<string, unknown>, clientIp?: string): Promise<GuardOutcome> {
+  if (typeof data.company === "string" && data.company.trim() !== "") return "bot";
+  if (!(await verifyTurnstileToken(data.turnstileToken, clientIp))) return "unverified";
+  return "ok";
+}
+
+const asObject = (body: unknown): Record<string, unknown> =>
+  body && typeof body === "object" && !Array.isArray(body) ? (body as Record<string, unknown>) : {};
+
+const invalid = (message: string): HandlerResult => ({ status: 400, body: { error: message } });
+
 const MAX_EXTRA_FIELDS = 12;
 const MAX_FIELD_LABEL = 80;
 const MAX_FIELD_VALUE = 1000;
@@ -66,12 +91,20 @@ const rows = (fields: [string, unknown][]) =>
     )
     .join("");
 
-export async function handleContact(body: any): Promise<HandlerResult> {
-  const { firstName, lastName, phone, insuranceType, message } = body || {};
+const CONTACT_SUCCESS: HandlerResult = {
+  status: 200,
+  body: { success: true, message: "Your request has been sent! We will be in touch within 24 hours." },
+};
 
-  if (!firstName || !lastName || !phone || !insuranceType) {
-    return { status: 400, body: { error: "Please fill in all required fields." } };
-  }
+export async function handleContact(body: unknown, clientIp?: string): Promise<HandlerResult> {
+  const data = asObject(body);
+  const guard = await runBotGuards(data, clientIp);
+  if (guard === "bot") return CONTACT_SUCCESS;
+  if (guard === "unverified") return VERIFICATION_FAILED;
+
+  const parsed = contactSchema.safeParse(data);
+  if (!parsed.success) return invalid(firstError(parsed.error));
+  const { firstName, lastName, phone, insuranceType, message } = parsed.data;
 
   await saveEnquirySafe({
     type: "contact",
@@ -112,24 +145,29 @@ export async function handleContact(body: any): Promise<HandlerResult> {
         </div>
       `,
     });
-    return {
-      status: 200,
-      body: { success: true, message: "Your request has been sent! We will be in touch within 24 hours." },
-    };
+    return CONTACT_SUCCESS;
   } catch (err) {
-    console.error("[v0] contact send error:", err);
+    console.error("contact send error:", err);
     return { status: 500, body: { error: "Failed to send your request. Please call us directly on +264 81 820 1522." } };
   }
 }
 
-export async function handleAdvisorMessage(body: any): Promise<HandlerResult> {
-  const { message, contact } = body || {};
+const ADVISOR_SUCCESS: HandlerResult = {
+  status: 200,
+  body: { success: true, message: "Your message has been sent! Our advisor will be in touch shortly." },
+};
 
-  if (!message || !String(message).trim()) {
-    return { status: 400, body: { error: "Please enter a message before sending." } };
-  }
+export async function handleAdvisorMessage(body: unknown, clientIp?: string): Promise<HandlerResult> {
+  const data = asObject(body);
+  const guard = await runBotGuards(data, clientIp);
+  if (guard === "bot") return ADVISOR_SUCCESS;
+  if (guard === "unverified") return VERIFICATION_FAILED;
 
-  const contactStr = (contact || "").toString().trim();
+  const parsed = advisorMessageSchema.safeParse(data);
+  if (!parsed.success) return invalid(firstError(parsed.error));
+  const { message, contact } = parsed.data;
+
+  const contactStr = contact;
   await saveEnquirySafe({
     type: "advisor",
     category: "Advisor Message",
@@ -168,12 +206,9 @@ export async function handleAdvisorMessage(body: any): Promise<HandlerResult> {
         </div>
       `,
     });
-    return {
-      status: 200,
-      body: { success: true, message: "Your message has been sent! Our advisor will be in touch shortly." },
-    };
+    return ADVISOR_SUCCESS;
   } catch (err) {
-    console.error("[v0] advisor message send error:", err);
+    console.error("advisor message send error:", err);
     return { status: 500, body: { error: "Failed to send your message. Please call us directly on +264 81 820 1522." } };
   }
 }
@@ -187,22 +222,17 @@ function parseGenericExtraFields(raw: unknown): [string, string][] | null {
     const label = String((f as { label?: unknown }).label ?? "").trim();
     const value = String((f as { value?: unknown }).value ?? "").trim();
     if (!label || label.length > MAX_FIELD_LABEL || value.length > MAX_FIELD_VALUE) return null;
+    if (looksLikeGibberish(value)) return null;
     fields.push([label, value]);
   }
   return fields;
 }
 
 export async function handleEnquiry(body: any, clientIp?: string): Promise<HandlerResult> {
-  const data = body && typeof body === "object" ? body : {};
-
-  // Honeypot: real visitors never see or fill the "company" field.
-  if (typeof data.company === "string" && data.company.trim() !== "") {
-    return ENQUIRY_SUCCESS;
-  }
-
-  if (!(await verifyTurnstileToken(data.turnstileToken, clientIp))) {
-    return VERIFICATION_FAILED;
-  }
+  const data: Record<string, any> = asObject(body);
+  const guard = await runBotGuards(data, clientIp);
+  if (guard === "bot") return ENQUIRY_SUCCESS;
+  if (guard === "unverified") return VERIFICATION_FAILED;
 
   const category = String(data.category || "General Enquiry").trim().slice(0, MAX_CATEGORY);
   const isLifeCover = category === "Life Cover";
@@ -294,15 +324,24 @@ export async function handleEnquiry(body: any, clientIp?: string): Promise<Handl
   }
 }
 
-export async function handleVehicleQuote(body: any): Promise<HandlerResult> {
-  const data = body || {};
+const VEHICLE_SUCCESS: HandlerResult = {
+  status: 200,
+  body: { success: true, message: "Your vehicle insurance application has been sent! We will be in touch within 24 hours." },
+};
 
-  if (!data.fullName || !data.idNumber || !data.phone || !data.makeModel) {
-    return {
-      status: 400,
-      body: { error: "Please complete the required fields: full name, ID number, contact number and vehicle make & model." },
-    };
-  }
+const MAX_VEHICLE_FIELDS = 40;
+
+export async function handleVehicleQuote(body: unknown, clientIp?: string): Promise<HandlerResult> {
+  const raw = asObject(body);
+  const guard = await runBotGuards(raw, clientIp);
+  if (guard === "bot") return VEHICLE_SUCCESS;
+  if (guard === "unverified") return VERIFICATION_FAILED;
+
+  const { company: _honeypot, turnstileToken: _token, ...fields } = raw;
+  if (Object.keys(fields).length > MAX_VEHICLE_FIELDS) return INVALID_SUBMISSION;
+  const parsed = vehicleQuoteSchema.safeParse(fields);
+  if (!parsed.success) return invalid(firstError(parsed.error));
+  const data: Record<string, string> = parsed.data as Record<string, string>;
 
   await saveEnquirySafe({
     type: "vehicle",
@@ -368,12 +407,9 @@ export async function handleVehicleQuote(body: any): Promise<HandlerResult> {
         </div>
       `,
     });
-    return {
-      status: 200,
-      body: { success: true, message: "Your vehicle insurance application has been sent! We will be in touch within 24 hours." },
-    };
+    return VEHICLE_SUCCESS;
   } catch (err) {
-    console.error("[v0] vehicle quote send error:", err);
+    console.error("vehicle quote send error:", err);
     return { status: 500, body: { error: "Failed to send your application. Please call us directly on +264 81 820 1522." } };
   }
 }
