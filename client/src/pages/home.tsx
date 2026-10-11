@@ -943,6 +943,7 @@ function ContactSection() {
                 {status === "error" && (
                   <p className="text-red-500 text-xs font-medium bg-red-50 border border-red-100 rounded-lg px-4 py-3">{feedback}</p>
                 )}
+                <TurnstileWidget {...bot.widgetProps} />
                 <FormDisclaimer />
                 <button type="submit" disabled={status === "loading"} className="w-full py-4 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:opacity-95 disabled:opacity-70 disabled:cursor-not-allowed" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }} data-testid="button-submit-quote">
                   {status === "loading" ? "Sending…" : isVehicle ? "Submit Vehicle Insurance Application" : "Request My Free Quote"}

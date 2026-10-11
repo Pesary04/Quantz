@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Phone, Mail, Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote, HelpCircle, Users, Star, Scroll, Briefcase } from "lucide-react";
 import { FooterDisclaimer } from "@/components/legal-disclaimer";
+import { HoneypotField, MISSING_SECURITY_CHECK, TurnstileWidget, useBotProtection } from "@/components/bot-protection";
 
 const BLUE = "#1e7bc4";
 const DARK = "#0d2e52";
@@ -443,6 +444,7 @@ function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceT
   const [form, setForm] = useState({ firstName: "", lastName: "", phone: "", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [feedback, setFeedback] = useState("");
+  const bot = useBotProtection();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -450,13 +452,18 @@ function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceT
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!bot.token) {
+      setStatus("error");
+      setFeedback(MISSING_SECURITY_CHECK);
+      return;
+    }
     setStatus("loading");
     setFeedback("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, insuranceType: serviceTitle }),
+        body: JSON.stringify({ ...form, insuranceType: serviceTitle, ...bot.fields }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -470,6 +477,8 @@ function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceT
     } catch {
       setStatus("error");
       setFeedback("Could not send your request. Please call us on +264 81 820 1522.");
+    } finally {
+      bot.reset();
     }
   };
 
@@ -532,6 +541,8 @@ function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceT
                 <label className="block text-xs font-semibold text-gray-600 mb-1.5" htmlFor="q-message">Message <span className="font-normal text-gray-400">(optional)</span></label>
                 <textarea id="q-message" name="message" value={form.message} onChange={handleChange} rows={3} placeholder="Tell us a little about what you need…" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="quote-input-message"/>
               </div>
+              <HoneypotField {...bot.honeypotProps} />
+              <TurnstileWidget {...bot.widgetProps} />
               <button
                 type="submit"
                 disabled={status === "loading"}
