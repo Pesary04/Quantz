@@ -299,3 +299,16 @@
     inset: -1px;
   }
 }
+
+@keyframes newsletter-cta-pulse {
+  0%, 100% { box-shadow: 0 10px 25px -10px rgba(45, 111, 163, 0.5), 0 0 0 0 rgba(45, 111, 163, 0.35); }
+  50% { box-shadow: 0 10px 25px -10px rgba(45, 111, 163, 0.5), 0 0 0 10px rgba(45, 111, 163, 0); }
+}
+
+.newsletter-cta {
+  animation: newsletter-cta-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newsletter-cta { animation: none; }
+}

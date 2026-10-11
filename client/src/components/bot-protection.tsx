@@ -1,25 +1,32 @@
-import { useCallback, useId, useRef, useState } from "react";
-import { TurnstileWidget, type TurnstileHandle } from "@/components/turnstile-widget";
+import { useCallback, useId, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-export const MISSING_SECURITY_CHECK = "Please complete the security check before submitting.";
+async function fetchFormToken(): Promise<string> {
+  const res = await fetch("/api/form-token", { cache: "no-store" });
+  if (!res.ok) throw new Error("form-token");
+  return ((await res.json()) as { token: string }).token;
+}
 
 /**
- * Honeypot + Cloudflare Turnstile state for a public form. Spread `fields` into
- * the request body; call `reset()` after every response because Turnstile
- * tokens are single-use.
+ * Invisible spam protection for a public form: a hidden honeypot plus a
+ * server-signed form token. Spread `fields` into the request body and call
+ * `reset()` after every response because tokens are single-use.
  */
 export function useBotProtection() {
   const [honeypot, setHoneypot] = useState("");
-  const [token, setToken] = useState("");
-  const widgetRef = useRef<TurnstileHandle>(null);
-  const reset = useCallback(() => widgetRef.current?.reset(), []);
+  const { data: formToken = "", refetch } = useQuery({
+    queryKey: ["/api/form-token", useId()],
+    queryFn: fetchFormToken,
+    staleTime: 60 * 60 * 1000,
+    gcTime: 0,
+    refetchOnWindowFocus: false,
+  });
+  const reset = useCallback(() => void refetch(), [refetch]);
 
   return {
-    token,
     reset,
-    fields: { company: honeypot, turnstileToken: token },
+    fields: { company: honeypot, formToken },
     honeypotProps: { value: honeypot, onChange: setHoneypot },
-    widgetProps: { ref: widgetRef, onToken: setToken },
   };
 }
 
@@ -40,5 +47,3 @@ export function HoneypotField({ value, onChange }: { value: string; onChange: (v
     </div>
   );
 }
-
-export { TurnstileWidget };

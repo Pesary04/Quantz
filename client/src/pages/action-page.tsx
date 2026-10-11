@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, ArrowRight, Phone, Mail, CheckCircle2, Loader2 } from "lucide-react";
 import { FormDisclaimer } from "@/components/legal-disclaimer";
-import { TurnstileWidget, type TurnstileHandle } from "@/components/turnstile-widget";
+import { HoneypotField, useBotProtection } from "@/components/bot-protection";
 import { fieldErrors, lifeEnquirySchema } from "@shared/enquiry-validation";
 
 const baseLeadSchema = lifeEnquirySchema.pick({ fullName: true, phone: true, email: true });
@@ -134,9 +134,7 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
   const [status, setStatus] = useState<Status>("idle");
   const [feedback, setFeedback] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [honeypot, setHoneypot] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileRef = useRef<TurnstileHandle>(null);
+  const bot = useBotProtection();
 
   const setField = (name: string, value: string | string[]) => {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -167,13 +165,6 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
       return;
     }
     setErrors({});
-
-    if (!turnstileToken) {
-      setStatus("error");
-      setFeedback("Please complete the security check before submitting.");
-      return;
-    }
-
     setStatus("loading");
     setFeedback("");
     try {
@@ -190,8 +181,7 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
         phone: asString("phone"),
         email: asString("email"),
         ...(isLifeCover ? { details: parsed.data } : { fields: extra }),
-        company: honeypot,
-        turnstileToken,
+        ...bot.fields,
       };
 
       const res = await fetch("/api/enquiry", {
@@ -206,12 +196,12 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
       } else {
         setStatus("error");
         setFeedback(data.error || "Something went wrong. Please try again.");
-        turnstileRef.current?.reset();
+        bot.reset();
       }
     } catch {
       setStatus("error");
       setFeedback(`Could not send your enquiry. Please call us on ${CONTACT_PHONE}.`);
-      turnstileRef.current?.reset();
+      bot.reset();
     }
   };
 
@@ -234,22 +224,9 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
             ))}
           </div>
 
-          <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
-            <label htmlFor="company">Company</label>
-            <input
-              id="company"
-              name="company"
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-            />
-          </div>
+          <HoneypotField {...bot.honeypotProps} />
 
           <FormDisclaimer />
-
-          <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} />
 
           {status === "error" && (
             <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3" role="alert" data-testid="enquiry-error">

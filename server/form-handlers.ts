@@ -1,11 +1,12 @@
 import { sendQuantzMail, isMailConfigured } from "./mailer.js";
 import { saveEnquirySafe } from "./admin/enquiries-service.js";
-import { verifyTurnstileToken } from "./turnstile.js";
+import { checkFormRate, verifyFormToken } from "./form-guard.js";
 import {
   LIFE_FIELD_LABELS,
   advisorMessageSchema,
   contactSchema,
   firstError,
+  insuranceReviewSchema,
   lifeEnquirySchema,
   looksLikeGibberish,
   vehicleQuoteSchema,
@@ -48,7 +49,17 @@ const INVALID_SUBMISSION: HandlerResult = {
 
 const VERIFICATION_FAILED: HandlerResult = {
   status: 400,
-  body: { error: "We couldn't verify your submission. Please complete the security check and try again." },
+  body: { error: "Your session expired. Please refresh the page and try again." },
+};
+
+const TOO_FAST: HandlerResult = {
+  status: 400,
+  body: { error: "That was quick! Please take a moment to check your details, then submit again." },
+};
+
+const RATE_LIMITED: HandlerResult = {
+  status: 429,
+  body: { error: "Too many submissions from your connection. Please wait a few minutes or call us on +264 81 820 1522." },
 };
 
 const ENQUIRY_SUCCESS: HandlerResult = {
@@ -56,16 +67,19 @@ const ENQUIRY_SUCCESS: HandlerResult = {
   body: { success: true, message: "Thank you! Your enquiry has been sent and our team will be in touch within 24 hours." },
 };
 
-type GuardOutcome = "ok" | "bot" | "unverified";
+type GuardOutcome = { ok: true } | { ok: false; bot: true } | { ok: false; bot: false; result: HandlerResult };
 
 /**
- * Shared spam checks for every public form. "bot" means the hidden honeypot was
- * filled: callers return a fake success so bots don't learn they were caught.
+ * Shared spam checks for every public form. A filled honeypot is a bot:
+ * callers return a fake success so bots don't learn they were caught.
  */
 async function runBotGuards(data: Record<string, unknown>, clientIp?: string): Promise<GuardOutcome> {
-  if (typeof data.company === "string" && data.company.trim() !== "") return "bot";
-  if (!(await verifyTurnstileToken(data.turnstileToken, clientIp))) return "unverified";
-  return "ok";
+  if (typeof data.company === "string" && data.company.trim() !== "") return { ok: false, bot: true };
+  const token = await verifyFormToken(data.formToken);
+  if (token === "too-fast") return { ok: false, bot: false, result: TOO_FAST };
+  if (token === "invalid") return { ok: false, bot: false, result: VERIFICATION_FAILED };
+  if (!(await checkFormRate(clientIp))) return { ok: false, bot: false, result: RATE_LIMITED };
+  return { ok: true };
 }
 
 const asObject = (body: unknown): Record<string, unknown> =>
@@ -99,8 +113,7 @@ const CONTACT_SUCCESS: HandlerResult = {
 export async function handleContact(body: unknown, clientIp?: string): Promise<HandlerResult> {
   const data = asObject(body);
   const guard = await runBotGuards(data, clientIp);
-  if (guard === "bot") return CONTACT_SUCCESS;
-  if (guard === "unverified") return VERIFICATION_FAILED;
+  if (!guard.ok) return guard.bot ? CONTACT_SUCCESS : guard.result;
 
   const parsed = contactSchema.safeParse(data);
   if (!parsed.success) return invalid(firstError(parsed.error));
@@ -152,6 +165,68 @@ export async function handleContact(body: unknown, clientIp?: string): Promise<H
   }
 }
 
+const REVIEW_SUCCESS: HandlerResult = {
+  status: 200,
+  body: { success: true, message: "Thank you. We have received your request and will be in touch shortly." },
+};
+
+export async function handleInsuranceReview(body: unknown, clientIp?: string): Promise<HandlerResult> {
+  const data = asObject(body);
+  const guard = await runBotGuards(data, clientIp);
+  if (!guard.ok) return guard.bot ? REVIEW_SUCCESS : guard.result;
+
+  const parsed = insuranceReviewSchema.safeParse(data);
+  if (!parsed.success) return invalid(firstError(parsed.error));
+  const { fullName, phone, email, contactTime, focus } = parsed.data;
+
+  await saveEnquirySafe({
+    type: "insurance-review",
+    category: "Insurance Cover Review",
+    name: fullName,
+    phone,
+    email,
+    message: focus,
+    payload: { fullName, phone, email, contactTime, focus },
+  });
+
+  if (!isMailConfigured()) return NOT_CONFIGURED;
+
+  try {
+    await sendQuantzMail({
+      to: TO,
+      cc: CC,
+      replyTo: email,
+      subject: `New Insurance Review Request — ${fullName}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+          <div style="background: linear-gradient(135deg, #1E3F72, #2D6FA3); padding: 28px 32px;">
+            <h2 style="color: white; margin: 0; font-size: 20px;">New Insurance Review Request</h2>
+            <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Booked via the Quantz Insights newsletter CTA</p>
+          </div>
+          <div style="padding: 28px 32px; background: #ffffff;">
+            <table style="width: 100%; border-collapse: collapse;">
+              ${rows([
+                ["Full Name", fullName],
+                ["Cell Number", phone],
+                ["Email Address", email],
+                ["Preferred Contact Time", contactTime],
+                ["Focus Areas", focus],
+              ])}
+            </table>
+          </div>
+          <div style="padding: 16px 32px; background: #f9fafb; border-top: 1px solid #f3f4f6;">
+            <p style="margin: 0; color: #9ca3af; font-size: 12px;">This review request was submitted from the Quantz Financial Services website. Please respond within 24 hours.</p>
+          </div>
+        </div>
+      `,
+    });
+    return REVIEW_SUCCESS;
+  } catch (err) {
+    console.error("insurance review send error:", err);
+    return { status: 500, body: { error: "Failed to send your request. Please call us directly on +264 81 820 1522." } };
+  }
+}
+
 const ADVISOR_SUCCESS: HandlerResult = {
   status: 200,
   body: { success: true, message: "Your message has been sent! Our advisor will be in touch shortly." },
@@ -160,8 +235,7 @@ const ADVISOR_SUCCESS: HandlerResult = {
 export async function handleAdvisorMessage(body: unknown, clientIp?: string): Promise<HandlerResult> {
   const data = asObject(body);
   const guard = await runBotGuards(data, clientIp);
-  if (guard === "bot") return ADVISOR_SUCCESS;
-  if (guard === "unverified") return VERIFICATION_FAILED;
+  if (!guard.ok) return guard.bot ? ADVISOR_SUCCESS : guard.result;
 
   const parsed = advisorMessageSchema.safeParse(data);
   if (!parsed.success) return invalid(firstError(parsed.error));
@@ -231,8 +305,7 @@ function parseGenericExtraFields(raw: unknown): [string, string][] | null {
 export async function handleEnquiry(body: any, clientIp?: string): Promise<HandlerResult> {
   const data: Record<string, any> = asObject(body);
   const guard = await runBotGuards(data, clientIp);
-  if (guard === "bot") return ENQUIRY_SUCCESS;
-  if (guard === "unverified") return VERIFICATION_FAILED;
+  if (!guard.ok) return guard.bot ? ENQUIRY_SUCCESS : guard.result;
 
   const category = String(data.category || "General Enquiry").trim().slice(0, MAX_CATEGORY);
   const isLifeCover = category === "Life Cover";
@@ -334,10 +407,9 @@ const MAX_VEHICLE_FIELDS = 40;
 export async function handleVehicleQuote(body: unknown, clientIp?: string): Promise<HandlerResult> {
   const raw = asObject(body);
   const guard = await runBotGuards(raw, clientIp);
-  if (guard === "bot") return VEHICLE_SUCCESS;
-  if (guard === "unverified") return VERIFICATION_FAILED;
+  if (!guard.ok) return guard.bot ? VEHICLE_SUCCESS : guard.result;
 
-  const { company: _honeypot, turnstileToken: _token, ...fields } = raw;
+  const { company: _honeypot, formToken: _token, turnstileToken: _legacy, ...fields } = raw;
   if (Object.keys(fields).length > MAX_VEHICLE_FIELDS) return INVALID_SUBMISSION;
   const parsed = vehicleQuoteSchema.safeParse(fields);
   if (!parsed.success) return invalid(firstError(parsed.error));

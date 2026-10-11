@@ -83,6 +83,9 @@ export interface SiteSettingsData {
   facebookUrl: string;
   instagramUrl: string;
   linkedinUrl: string;
+  newsletterImageUrl: string;
+  newsletterIssue: string;
+  newsletterCtaLabel: string;
 }
 
 interface RawItem {
@@ -137,6 +140,9 @@ export const DEFAULT_SETTINGS: SiteSettingsData = {
   facebookUrl: "https://www.facebook.com/profile.php?id=61583774184552",
   instagramUrl: "https://www.instagram.com/quantz_financial_/",
   linkedinUrl: "",
+  newsletterImageUrl: "",
+  newsletterIssue: "Issue 1 | May 2026 – Why most Namibians are underinsured",
+  newsletterCtaLabel: "Book a quick, no-obligation review with us.",
 };
 
 /* --------------------------- Coercion helpers ---------------------------- */
@@ -223,7 +229,10 @@ async function fetchPublicSettings(): Promise<SiteSettingsData> {
   const res = await fetch("/api/site-settings");
   if (!res.ok) throw new Error("settings");
   const body = (await res.json()) as { settings: Partial<SiteSettingsData> };
-  return { ...DEFAULT_SETTINGS, ...(body.settings ?? {}) };
+  const saved = Object.fromEntries(
+    Object.entries(body.settings ?? {}).filter(([, value]) => typeof value === "string" && value !== ""),
+  );
+  return { ...DEFAULT_SETTINGS, ...saved };
 }
 
 export function useSiteSettings(): SiteSettingsData {

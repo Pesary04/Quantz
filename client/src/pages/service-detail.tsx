@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Phone, Mail, Shield, Car, HeartPulse, TrendingUp, PiggyBank, Banknote, HelpCircle, Users, Star, Scroll, Briefcase } from "lucide-react";
 import { FooterDisclaimer } from "@/components/legal-disclaimer";
-import { HoneypotField, MISSING_SECURITY_CHECK, TurnstileWidget, useBotProtection } from "@/components/bot-protection";
+import { HoneypotField, useBotProtection } from "@/components/bot-protection";
 
 const BLUE = "#1e7bc4";
 const DARK = "#0d2e52";
@@ -452,11 +452,6 @@ function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceT
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!bot.token) {
-      setStatus("error");
-      setFeedback(MISSING_SECURITY_CHECK);
-      return;
-    }
     setStatus("loading");
     setFeedback("");
     try {
@@ -542,7 +537,6 @@ function ServiceQuoteForm({ serviceTitle, gradientFrom, gradientTo }: { serviceT
                 <textarea id="q-message" name="message" value={form.message} onChange={handleChange} rows={3} placeholder="Tell us a little about what you need…" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none" data-testid="quote-input-message"/>
               </div>
               <HoneypotField {...bot.honeypotProps} />
-              <TurnstileWidget {...bot.widgetProps} />
               <button
                 type="submit"
                 disabled={status === "loading"}
@@ -580,6 +574,7 @@ function Navbar({ currentService }: { currentService: string }) {
           <a href="/#services" className="text-sm font-medium text-blue-600 font-semibold">Services</a>
           <a href="/#why-us" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Why Us</a>
           <a href="/#partners" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Partners</a>
+          <a href="/news" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">News &amp; Insights</a>
           <a href="/#contact" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Contact</a>
         </nav>
         <a href="#quote"

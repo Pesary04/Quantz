@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ArrowLeft, ArrowRight, Loader2, Newspaper } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import type { Post } from "@/lib/admin-api";
+import { NewsletterSection } from "@/components/newsletter-section";
 
 async function fetchPublicPosts(): Promise<Post[]> {
   const res = await fetch("/api/posts");
@@ -111,6 +112,8 @@ export default function NewsPage() {
           </div>
         )}
       </main>
+
+      <NewsletterSection />
     </div>
   );
 }

@@ -4,8 +4,10 @@ import {
   handleContact,
   handleAdvisorMessage,
   handleEnquiry,
+  handleInsuranceReview,
   handleVehicleQuote,
 } from "./form-handlers.js";
+import { issueFormToken } from "./form-guard.js";
 import {
   handleChangePassword,
   handleCreatePost,
@@ -68,8 +70,18 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     return (Array.isArray(forwarded) ? forwarded[0] : forwarded)?.split(",")[0]?.trim() || req.ip;
   };
 
+  app.get("/api/form-token", (_req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+    res.json({ token: issueFormToken() });
+  });
+
   app.post("/api/contact", async (req, res) => {
     const { status, body } = await handleContact(req.body, clientIpOf(req));
+    res.status(status).json(body);
+  });
+
+  app.post("/api/insurance-review", async (req, res) => {
+    const { status, body } = await handleInsuranceReview(req.body, clientIpOf(req));
     res.status(status).json(body);
   });
 

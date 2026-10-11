@@ -11,6 +11,7 @@ import {
   BundlePage, WillsEstatePage, InvestmentsPage,
 } from "@/pages/action-page";
 import NewsPage from "@/pages/news";
+import InsuranceReviewPage from "@/pages/insurance-review";
 import ArticlePage from "@/pages/article";
 import AdminLogin from "@/pages/admin/login";
 import AdminDashboard from "@/pages/admin/dashboard";
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/investments-enquiry" component={InvestmentsPage} />
 
       {/* Public news */}
+      <Route path="/insurance-review" component={InsuranceReviewPage} />
       <Route path="/news" component={NewsPage} />
       <Route path="/news/:slug" component={ArticlePage} />
 

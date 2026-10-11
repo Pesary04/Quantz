@@ -8,7 +8,9 @@ import {
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
 import { Link } from "wouter";
 import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
-import { HoneypotField, MISSING_SECURITY_CHECK, TurnstileWidget, useBotProtection } from "@/components/bot-protection";
+import { HoneypotField, useBotProtection } from "@/components/bot-protection";
+import { LatestNewsSection } from "@/components/latest-news-section";
+import { NewsletterSection } from "@/components/newsletter-section";
 import { advisorMessageSchema, contactSchema, firstError, vehicleQuoteSchema } from "@shared/enquiry-validation";
 import {
   useSiteContent, useSiteSettings, serviceIcon, serviceTheme, telHref,
@@ -34,6 +36,7 @@ function Navbar() {
     { label: "Services", href: "#services" },
     { label: "Why Us", href: "#why-us" },
     { label: "Partners", href: "#partners" },
+    { label: "News & Insights", href: "/news" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -703,11 +706,6 @@ function ContactSection() {
       setFeedback(firstError(check.error));
       return;
     }
-    if (!bot.token) {
-      setStatus("error");
-      setFeedback(MISSING_SECURITY_CHECK);
-      return;
-    }
 
     setStatus("loading");
     setFeedback("");
@@ -943,7 +941,6 @@ function ContactSection() {
                 {status === "error" && (
                   <p className="text-red-500 text-xs font-medium bg-red-50 border border-red-100 rounded-lg px-4 py-3">{feedback}</p>
                 )}
-                <TurnstileWidget {...bot.widgetProps} />
                 <FormDisclaimer />
                 <button type="submit" disabled={status === "loading"} className="w-full py-4 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:opacity-95 disabled:opacity-70 disabled:cursor-not-allowed" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }} data-testid="button-submit-quote">
                   {status === "loading" ? "Sending…" : isVehicle ? "Submit Vehicle Insurance Application" : "Request My Free Quote"}
@@ -1068,11 +1065,6 @@ function AdvisorModal() {
       setFeedback(firstError(check.error));
       return;
     }
-    if (!bot.token) {
-      setStatus("error");
-      setFeedback(MISSING_SECURITY_CHECK);
-      return;
-    }
     setStatus("loading");
     setFeedback("");
     try {
@@ -1158,7 +1150,6 @@ function AdvisorModal() {
                 onChange={(e) => setContact(e.target.value)}
                 data-testid="input-advisor-contact"
               />
-              <TurnstileWidget {...bot.widgetProps} />
               {status === "error" && (
                 <p className="text-xs text-red-600" data-testid="text-advisor-error">{feedback}</p>
               )}
@@ -1394,6 +1385,8 @@ export default function Home() {
       <FormsSection />
       <WhyUsSection />
       <PartnersSection />
+      <LatestNewsSection />
+      <NewsletterSection />
       <BannerSlideshow />
       <HowItWorksSection />
       <TestimonialsSection />

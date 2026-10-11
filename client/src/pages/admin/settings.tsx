@@ -1,18 +1,19 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { fetchSettings, saveSettings, type SiteSettings } from "@/lib/admin-api";
+import { fetchSettings, saveSettings, uploadImage, type SiteSettings } from "@/lib/admin-api";
 
 interface FieldDef {
   key: keyof SiteSettings;
   label: string;
+  image?: boolean;
   placeholder?: string;
   help?: string;
 }
@@ -36,7 +37,57 @@ const GROUPS: { heading: string; fields: FieldDef[] }[] = [
       { key: "linkedinUrl", label: "LinkedIn URL", placeholder: "https://linkedin.com/…" },
     ],
   },
+  {
+    heading: "Quantz Insights newsletter",
+    fields: [
+      { key: "newsletterImageUrl", label: "Current newsletter image", image: true, help: "Replace this each month with the new issue. The section is shown on the Home and News & Insights pages." },
+      { key: "newsletterIssue", label: "Issue title", placeholder: "Issue 1 | May 2026 – Why most Namibians are underinsured" },
+      { key: "newsletterCtaLabel", label: "Button label", placeholder: "Book a quick, no-obligation review with us." },
+    ],
+  },
 ];
+
+function NewsletterImageInput({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const { toast } = useToast();
+
+  async function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      onChange(await uploadImage(file));
+    } catch (err) {
+      toast({ variant: "destructive", title: "Upload failed", description: (err as Error).message });
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      {value && (
+        <img src={value} alt="Current newsletter" className="max-h-48 w-fit rounded-md border border-border object-contain" />
+      )}
+      <div className="flex gap-2">
+        <Input
+          id="newsletterImageUrl"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Upload an image or paste a URL"
+          data-testid="input-newsletterImageUrl"
+        />
+        <Button type="button" variant="outline" onClick={() => fileRef.current?.click()} disabled={uploading} className="shrink-0 gap-2">
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+          Upload
+        </Button>
+      </div>
+      <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={handleFile} />
+    </div>
+  );
+}
 
 export default function AdminSettings() {
   const [, navigate] = useLocation();
@@ -76,7 +127,7 @@ export default function AdminSettings() {
         </Button>
         <div className="mb-6">
           <h1 className="font-sans text-2xl font-bold text-foreground">Site Settings</h1>
-          <p className="text-sm text-muted-foreground">Contact details and social links used across the website.</p>
+          <p className="text-sm text-muted-foreground">Contact details, social links and the monthly newsletter used across the website.</p>
         </div>
 
         {isLoading && (
@@ -95,13 +146,20 @@ export default function AdminSettings() {
                   {group.fields.map((field) => (
                     <div key={field.key} className="flex flex-col gap-1.5">
                       <Label htmlFor={field.key}>{field.label}</Label>
-                      <Input
-                        id={field.key}
-                        value={form[field.key] ?? ""}
-                        onChange={(e) => setForm((f) => ({ ...f, [field.key]: e.target.value }))}
-                        placeholder={field.placeholder}
-                        data-testid={`input-${field.key}`}
-                      />
+                      {field.image ? (
+                        <NewsletterImageInput
+                          value={form[field.key] ?? ""}
+                          onChange={(url) => setForm((f) => ({ ...f, [field.key]: url }))}
+                        />
+                      ) : (
+                        <Input
+                          id={field.key}
+                          value={form[field.key] ?? ""}
+                          onChange={(e) => setForm((f) => ({ ...f, [field.key]: e.target.value }))}
+                          placeholder={field.placeholder}
+                          data-testid={`input-${field.key}`}
+                        />
+                      )}
                       {field.help && <p className="text-xs text-muted-foreground">{field.help}</p>}
                     </div>
                   ))}

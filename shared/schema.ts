@@ -228,6 +228,9 @@ export const siteSettingsSchema = z.object({
   facebookUrl: z.string().trim().max(500).optional().default(""),
   instagramUrl: z.string().trim().max(500).optional().default(""),
   linkedinUrl: z.string().trim().max(500).optional().default(""),
+  newsletterImageUrl: z.string().trim().max(1000).optional().default(""),
+  newsletterIssue: z.string().trim().max(200).optional().default(""),
+  newsletterCtaLabel: z.string().trim().max(200).optional().default(""),
 });
 
 export type SiteSettings = z.infer<typeof siteSettingsSchema>;
