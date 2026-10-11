@@ -23,6 +23,7 @@ const TYPE_LABELS: Record<string, string> = {
   advisor: "Advisor Message",
   enquiry: "Enquiry",
   vehicle: "Vehicle Application",
+  "insurance-review": "Insurance Review",
 };
 
 function formatDate(value: string): string {

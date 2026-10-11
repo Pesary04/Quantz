@@ -252,6 +252,9 @@ export interface SiteSettings {
   facebookUrl?: string;
   instagramUrl?: string;
   linkedinUrl?: string;
+  newsletterImageUrl?: string;
+  newsletterIssue?: string;
+  newsletterCtaLabel?: string;
 }
 
 export async function fetchSettings(): Promise<SiteSettings> {

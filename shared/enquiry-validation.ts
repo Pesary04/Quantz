@@ -121,6 +121,20 @@ export const contactSchema = z.object({
   message: notes,
 });
 
+export const CONTACT_TIME_OPTIONS = ["Morning", "Afternoon"] as const;
+
+export const insuranceReviewSchema = z.object({
+  fullName,
+  phone,
+  email,
+  contactTime: z.enum(CONTACT_TIME_OPTIONS, {
+    errorMap: () => ({ message: "Please choose a preferred contact time." }),
+  }),
+  focus: notes,
+});
+
+export type InsuranceReview = z.infer<typeof insuranceReviewSchema>;
+
 export const advisorMessageSchema = z.object({
   message: z
     .string()
