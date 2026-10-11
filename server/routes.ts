@@ -63,23 +63,28 @@ function send(res: Response, result: HandlerResult) {
  */
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   /* -------------------- Contact / enquiry forms -------------------- */
+  const clientIpOf = (req: Request) => {
+    const forwarded = req.headers["x-forwarded-for"];
+    return (Array.isArray(forwarded) ? forwarded[0] : forwarded)?.split(",")[0]?.trim() || req.ip;
+  };
+
   app.post("/api/contact", async (req, res) => {
-    const { status, body } = await handleContact(req.body);
+    const { status, body } = await handleContact(req.body, clientIpOf(req));
     res.status(status).json(body);
   });
 
   app.post("/api/advisor-message", async (req, res) => {
-    const { status, body } = await handleAdvisorMessage(req.body);
+    const { status, body } = await handleAdvisorMessage(req.body, clientIpOf(req));
     res.status(status).json(body);
   });
 
   app.post("/api/enquiry", async (req, res) => {
-    const { status, body } = await handleEnquiry(req.body);
+    const { status, body } = await handleEnquiry(req.body, clientIpOf(req));
     res.status(status).json(body);
   });
 
   app.post("/api/vehicle-quote", async (req, res) => {
-    const { status, body } = await handleVehicleQuote(req.body);
+    const { status, body } = await handleVehicleQuote(req.body, clientIpOf(req));
     res.status(status).json(body);
   });
 

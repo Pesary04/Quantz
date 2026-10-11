@@ -2,6 +2,8 @@
 // Single source of truth reused by the homepage vehicle form and the
 // dedicated /get-a-quote/* action pages.
 
+import { COVER_AMOUNT_OPTIONS } from "@shared/enquiry-validation";
+
 export const CONTACT_PHONE = "+264 81 820 1522";
 export const CONTACT_PHONE_TEL = "tel:+264818201522";
 export const CONTACT_EMAIL = "info@quantz.com.na";
@@ -98,9 +100,9 @@ export const ACTION_PAGES: Record<string, ActionPageConfig> = {
     image: "/images/banners/life.jpg",
     fields: [
       ...BASE_LEAD_FIELDS,
-      { name: "dateOfBirth", label: "Date of Birth", type: "date" },
-      { name: "coverAmount", label: "Cover amount interested in", type: "text", placeholder: "e.g. N$500,000 / N$1m / not sure" },
-      { name: "dependents", label: "Number of dependents", type: "number", placeholder: "e.g. 3" },
+      { name: "dateOfBirth", label: "Date of Birth", type: "date", required: true },
+      { name: "coverAmount", label: "Cover amount interested in", type: "select", required: true, options: [...COVER_AMOUNT_OPTIONS] },
+      { name: "dependents", label: "Number of dependents", type: "number", required: true, placeholder: "e.g. 3" },
       { name: "message", label: "Message / notes", type: "textarea", placeholder: "Anything else we should know?" },
     ],
   },

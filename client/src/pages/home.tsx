@@ -8,6 +8,8 @@ import {
 import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
 import { Link } from "wouter";
 import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
+import { HoneypotField, MISSING_SECURITY_CHECK, TurnstileWidget, useBotProtection } from "@/components/bot-protection";
+import { advisorMessageSchema, contactSchema, firstError, vehicleQuoteSchema } from "@shared/enquiry-validation";
 import {
   useSiteContent, useSiteSettings, serviceIcon, serviceTheme, telHref,
 } from "@/lib/site-content";
@@ -676,6 +678,7 @@ function ContactSection() {
   const [vehicle, setVehicle] = useState(EMPTY_VEHICLE);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [feedback, setFeedback] = useState("");
+  const bot = useBotProtection();
 
   const isVehicle = form.insuranceType === "Vehicle Insurance";
 
@@ -689,18 +692,30 @@ function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const endpoint = isVehicle ? "/api/vehicle-quote" : "/api/contact";
+    const payload = isVehicle
+      ? { ...vehicle, fullName: `${form.firstName} ${form.lastName}`.trim(), phone: form.phone, insuranceType: form.insuranceType, message: form.message }
+      : form;
+
+    const check = (isVehicle ? vehicleQuoteSchema : contactSchema).safeParse(payload);
+    if (!check.success) {
+      setStatus("error");
+      setFeedback(firstError(check.error));
+      return;
+    }
+    if (!bot.token) {
+      setStatus("error");
+      setFeedback(MISSING_SECURITY_CHECK);
+      return;
+    }
+
     setStatus("loading");
     setFeedback("");
     try {
-      const endpoint = isVehicle ? "/api/vehicle-quote" : "/api/contact";
-      const payload = isVehicle
-        ? { ...vehicle, fullName: `${form.firstName} ${form.lastName}`.trim(), phone: form.phone, insuranceType: form.insuranceType, message: form.message }
-        : form;
-
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, ...bot.fields }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -715,6 +730,8 @@ function ContactSection() {
     } catch {
       setStatus("error");
       setFeedback("Could not send your request. Please call us on +264 81 820 1522.");
+    } finally {
+      bot.reset();
     }
   };
 
@@ -798,7 +815,8 @@ function ContactSection() {
                 <button onClick={() => setStatus("idle")} className="text-sm font-semibold text-blue-600 hover:underline">Send another request</button>
               </div>
             ) : (
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="relative space-y-4" onSubmit={handleSubmit}>
+                <HoneypotField {...bot.honeypotProps} />
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">First Name</label>
@@ -925,6 +943,7 @@ function ContactSection() {
                 {status === "error" && (
                   <p className="text-red-500 text-xs font-medium bg-red-50 border border-red-100 rounded-lg px-4 py-3">{feedback}</p>
                 )}
+                <TurnstileWidget {...bot.widgetProps} />
                 <FormDisclaimer />
                 <button type="submit" disabled={status === "loading"} className="w-full py-4 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:opacity-95 disabled:opacity-70 disabled:cursor-not-allowed" style={{ background: `linear-gradient(135deg, ${BLUE}, ${DARK})` }} data-testid="button-submit-quote">
                   {status === "loading" ? "Sending…" : isVehicle ? "Submit Vehicle Insurance Application" : "Request My Free Quote"}
@@ -1026,6 +1045,7 @@ function AdvisorModal() {
   const [sent, setSent] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [feedback, setFeedback] = useState("");
+  const bot = useBotProtection();
 
   useEffect(() => {
     const handler = () => {
@@ -1042,13 +1062,24 @@ function AdvisorModal() {
 
   const handleSend = async () => {
     if (!message.trim() || status === "loading") return;
+    const check = advisorMessageSchema.safeParse({ message, contact });
+    if (!check.success) {
+      setStatus("error");
+      setFeedback(firstError(check.error));
+      return;
+    }
+    if (!bot.token) {
+      setStatus("error");
+      setFeedback(MISSING_SECURITY_CHECK);
+      return;
+    }
     setStatus("loading");
     setFeedback("");
     try {
       const res = await fetch("/api/advisor-message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, contact }),
+        body: JSON.stringify({ message, contact, ...bot.fields }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -1061,6 +1092,8 @@ function AdvisorModal() {
     } catch {
       setStatus("error");
       setFeedback("Could not send your message. Please call us on +264 81 820 1522.");
+    } finally {
+      bot.reset();
     }
   };
 
@@ -1106,7 +1139,8 @@ function AdvisorModal() {
             </a>
           </div>
           {!sent ? (
-            <div className="space-y-3">
+            <div className="relative space-y-3">
+              <HoneypotField {...bot.honeypotProps} />
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Or leave a message</p>
               <textarea
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent resize-none"
@@ -1124,6 +1158,7 @@ function AdvisorModal() {
                 onChange={(e) => setContact(e.target.value)}
                 data-testid="input-advisor-contact"
               />
+              <TurnstileWidget {...bot.widgetProps} />
               {status === "error" && (
                 <p className="text-xs text-red-600" data-testid="text-advisor-error">{feedback}</p>
               )}

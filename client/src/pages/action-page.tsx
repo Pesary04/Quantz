@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, ArrowRight, Phone, Mail, CheckCircle2, Loader2 } from "lucide-react";
 import { FormDisclaimer } from "@/components/legal-disclaimer";
+import { TurnstileWidget, type TurnstileHandle } from "@/components/turnstile-widget";
+import { fieldErrors, lifeEnquirySchema } from "@shared/enquiry-validation";
+
+const baseLeadSchema = lifeEnquirySchema.pick({ fullName: true, phone: true, email: true });
 import {
   ACTION_PAGES, type ActionPageConfig, type EnquiryField,
   EMPTY_VEHICLE, VEHICLE_CLIENT_FIELDS, VEHICLE_DETAIL_FIELDS, type VehicleField,
@@ -129,9 +133,15 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
   const [values, setValues] = useState<Record<string, string | string[]>>(initial);
   const [status, setStatus] = useState<Status>("idle");
   const [feedback, setFeedback] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
-  const setField = (name: string, value: string | string[]) =>
+  const setField = (name: string, value: string | string[]) => {
     setValues((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(({ [name]: _cleared, ...rest }) => rest);
+  };
 
   const toggleCheckbox = (name: string, option: string) => {
     setValues((prev) => {
@@ -142,6 +152,28 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (status === "loading") return;
+
+    const asString = (name: string) => (typeof values[name] === "string" ? (values[name] as string) : "");
+    const isLifeCover = config.category === "Life Cover";
+    const schema = isLifeCover ? lifeEnquirySchema : baseLeadSchema;
+    const parsed = schema.safeParse(
+      Object.fromEntries(Object.keys(isLifeCover ? lifeEnquirySchema.shape : baseLeadSchema.shape).map((k) => [k, asString(k)])),
+    );
+    if (!parsed.success) {
+      setErrors(fieldErrors(parsed.error));
+      setStatus("error");
+      setFeedback("Please correct the highlighted fields and try again.");
+      return;
+    }
+    setErrors({});
+
+    if (!turnstileToken) {
+      setStatus("error");
+      setFeedback("Please complete the security check before submitting.");
+      return;
+    }
+
     setStatus("loading");
     setFeedback("");
     try {
@@ -154,10 +186,12 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
 
       const payload = {
         category: config.category,
-        fullName: values.fullName,
-        phone: values.phone,
-        email: values.email,
-        fields: extra,
+        fullName: asString("fullName"),
+        phone: asString("phone"),
+        email: asString("email"),
+        ...(isLifeCover ? { details: parsed.data } : { fields: extra }),
+        company: honeypot,
+        turnstileToken,
       };
 
       const res = await fetch("/api/enquiry", {
@@ -165,17 +199,19 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setStatus("success");
-        setFeedback(data.message);
+        setFeedback(data.message || "Thank you! Your enquiry has been sent.");
       } else {
         setStatus("error");
         setFeedback(data.error || "Something went wrong. Please try again.");
+        turnstileRef.current?.reset();
       }
     } catch {
       setStatus("error");
       setFeedback(`Could not send your enquiry. Please call us on ${CONTACT_PHONE}.`);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -191,13 +227,29 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
                 key={f.name}
                 field={f}
                 value={values[f.name]}
+                error={errors[f.name]}
                 onChange={(v) => setField(f.name, v)}
                 onToggle={(opt) => toggleCheckbox(f.name, opt)}
               />
             ))}
           </div>
 
+          <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+            <label htmlFor="company">Company</label>
+            <input
+              id="company"
+              name="company"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </div>
+
           <FormDisclaimer />
+
+          <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} />
 
           {status === "error" && (
             <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3" role="alert" data-testid="enquiry-error">
@@ -225,16 +277,26 @@ export function ActionPage({ config }: { config: ActionPageConfig }) {
 }
 
 function EnquiryFieldControl({
-  field, value, onChange, onToggle,
+  field, value, error, onChange, onToggle,
 }: {
   field: EnquiryField;
   value: string | string[];
+  error?: string;
   onChange: (v: string) => void;
   onToggle: (option: string) => void;
 }) {
   const full = field.type === "textarea" || field.type === "checkboxes" || field.name === "email";
   const req = field.required;
   const strVal = typeof value === "string" ? value : "";
+  const errorId = `${field.name}-error`;
+  const a11y = {
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
+  } as const;
+  const errorCls = error ? " border-red-400" : "";
+  const numberProps = field.type === "number" ? { min: 0, max: 20, step: 1, inputMode: "numeric" as const } : {};
+  const maxLength =
+    field.name === "fullName" ? 80 : field.name === "email" ? 120 : field.type === "textarea" ? 1000 : undefined;
 
   return (
     <div className={full ? "sm:col-span-2" : ""}>
@@ -251,7 +313,9 @@ function EnquiryFieldControl({
           placeholder={field.placeholder}
           value={strVal}
           onChange={(e) => onChange(e.target.value)}
-          className={inputCls + " resize-none"}
+          maxLength={maxLength}
+          {...a11y}
+          className={inputCls + " resize-none" + errorCls}
         />
       ) : field.type === "select" ? (
         <select
@@ -260,7 +324,8 @@ function EnquiryFieldControl({
           required={req}
           value={strVal}
           onChange={(e) => onChange(e.target.value)}
-          className={inputCls + " bg-white"}
+          {...a11y}
+          className={inputCls + " bg-white" + errorCls}
         >
           <option value="" disabled>Please select...</option>
           {field.options?.map((o) => <option key={o} value={o}>{o}</option>)}
@@ -297,8 +362,16 @@ function EnquiryFieldControl({
           placeholder={field.placeholder}
           value={strVal}
           onChange={(e) => onChange(e.target.value)}
-          className={inputCls}
+          maxLength={maxLength}
+          {...numberProps}
+          {...a11y}
+          className={inputCls + errorCls}
         />
+      )}
+      {error && (
+        <p id={errorId} className="mt-1.5 text-sm text-red-600">
+          {error}
+        </p>
       )}
     </div>
   );
