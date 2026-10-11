@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 type TurnstileApi = {
   render: (
@@ -53,10 +53,12 @@ export const TurnstileWidget = forwardRef<TurnstileHandle, { onToken: (token: st
     const widgetIdRef = useRef<string | null>(null);
     const onTokenRef = useRef(onToken);
     onTokenRef.current = onToken;
+    const [failed, setFailed] = useState(!TURNSTILE_SITE_KEY);
 
     useImperativeHandle(ref, () => ({
       reset: () => {
         onTokenRef.current("");
+        setFailed(false);
         if (widgetIdRef.current && window.turnstile) window.turnstile.reset(widgetIdRef.current);
       },
     }));
@@ -75,10 +77,16 @@ export const TurnstileWidget = forwardRef<TurnstileHandle, { onToken: (token: st
             theme: "light",
             callback: (token) => onTokenRef.current(token),
             "expired-callback": () => onTokenRef.current(""),
-            "error-callback": () => onTokenRef.current(""),
+            "error-callback": () => {
+              onTokenRef.current("");
+              setFailed(true);
+            },
           });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error(err);
+          setFailed(true);
+        });
       return () => {
         cancelled = true;
         if (widgetIdRef.current && window.turnstile) window.turnstile.remove(widgetIdRef.current);
@@ -86,6 +94,15 @@ export const TurnstileWidget = forwardRef<TurnstileHandle, { onToken: (token: st
       };
     }, []);
 
-    return <div ref={containerRef} className="flex justify-center min-h-[65px]" data-testid="turnstile-widget" />;
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <div ref={containerRef} className="flex justify-center min-h-[65px]" data-testid="turnstile-widget" />
+        {failed && (
+          <p role="alert" className="text-sm text-destructive text-center">
+            The security check could not load. Please refresh the page or contact us directly.
+          </p>
+        )}
+      </div>
+    );
   },
 );
