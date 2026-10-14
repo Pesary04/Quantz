@@ -11,11 +11,39 @@ export const COVER_AMOUNT_OPTIONS = [
 export const MIN_APPLICANT_AGE = 18;
 export const MAX_APPLICANT_AGE = 90;
 
-const NAME_PATTERN = new RegExp("^\\p{L}[\\p{L}\\s'’-]*$", "u");
-const NAMIBIAN_PHONE_PATTERN = /^(\+264|0)\d{8,9}$/;
+const NAME_PATTERN = new RegExp("^\\p{L}+(?:['’-]\\p{L}+)*(?: \\p{L}+(?:['’-]\\p{L}+)*)*$", "u");
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-export const normalisePhone = (value: string) => value.replace(/[\s()-]/g, "");
+// Mobile: 081 / 085 + 7 digits. Landline: 06x area code + 6–7 digits.
+const NAMIBIAN_LOCAL_PATTERN = /^(?:8[15]\d{7}|6[1-7]\d{6,7})$/;
+export const PHONE_MESSAGE = "Please enter a valid Namibian number, e.g. 081 123 4567 or +264 81 123 4567.";
+
+export const normalisePhone = (value: string) => value.trim().replace(/[\s().-]/g, "");
+
+export function isValidNamibianPhone(value: string): boolean {
+  const digits = normalisePhone(value);
+  const local = digits.match(/^(?:\+264|00264|264|0)(\d+)$/)?.[1];
+  return local !== undefined && NAMIBIAN_LOCAL_PATTERN.test(local);
+}
+
+const collapseSpaces = (value: string) => value.trim().replace(/\s+/g, " ");
+
+/**
+ * Flags keyboard-mash words such as "hjgdtxjtyugi": a long run of consonants,
+ * no vowels at all, or one letter repeated. "sch" is collapsed first so German
+ * surnames common in Namibia (Hirschfeld, Fleischmann) are not caught.
+ */
+function looksLikeKeyboardMash(word: string): boolean {
+  const letters = word.toLowerCase().replace(/['’-]/g, "");
+  if (letters.length < 3) return false;
+  if (/(.)\1\1/.test(letters)) return true;
+  if (!/[aeiouyàáâäãåèéêëìíîïòóôöõùúûü]/.test(letters)) return true;
+  const consonantRun = letters.replace(/sch/g, "s").match(/[^aeiouyàáâäãåèéêëìíîïòóôöõùúûü]+/g) ?? [];
+  return consonantRun.some((run) => run.length >= 5);
+}
+
+const realName = (value: string) =>
+  !looksLikeGibberish(value) && !value.split(" ").some(looksLikeKeyboardMash);
 
 export function ageOn(dateOfBirth: Date, today: Date): number {
   let age = today.getFullYear() - dateOfBirth.getFullYear();
@@ -40,34 +68,48 @@ export function looksLikeGibberish(value: string): boolean {
 const GIBBERISH_MESSAGE = "Please write this in plain words.";
 const plainText = (value: string) => !looksLikeGibberish(value);
 
+const NAME_LETTERS_MESSAGE = "Names may only contain letters and spaces.";
+const REAL_NAME_MESSAGE = "Please enter your real name, not random letters.";
+
 const fullName = z
   .string()
-  .trim()
-  .min(2, "Please enter your full name (at least 2 characters).")
-  .max(80, "Full name must be 80 characters or fewer.")
-  .regex(NAME_PATTERN, "Name may only contain letters, spaces, hyphens and apostrophes.")
-  .refine(plainText, "Please enter your real name.");
+  .transform(collapseSpaces)
+  .pipe(
+    z
+      .string()
+      .min(1, "Please enter your full name.")
+      .min(3, "Your name must be at least 3 characters.")
+      .max(80, "Full name must be 80 characters or fewer.")
+      .regex(NAME_PATTERN, NAME_LETTERS_MESSAGE)
+      .refine(
+        (value) => {
+          const words = value.split(" ");
+          return words.length >= 2 && words.every((word) => word.length >= 2);
+        },
+        "Please enter your first name and surname, e.g. Maria Shikongo.",
+      )
+      .refine(realName, REAL_NAME_MESSAGE),
+  );
 
 const namePart = (label: string) =>
   z
     .string()
-    .trim()
-    .min(1, `Please enter your ${label}.`)
-    .max(40, `${label[0].toUpperCase()}${label.slice(1)} must be 40 characters or fewer.`)
-    .regex(NAME_PATTERN, "Name may only contain letters, spaces, hyphens and apostrophes.")
-    .refine(plainText, "Please enter your real name.");
+    .transform(collapseSpaces)
+    .pipe(
+      z
+        .string()
+        .min(1, `Please enter your ${label}.`)
+        .min(2, `Your ${label} must be at least 2 characters.`)
+        .max(40, `${label[0].toUpperCase()}${label.slice(1)} must be 40 characters or fewer.`)
+        .regex(NAME_PATTERN, NAME_LETTERS_MESSAGE)
+        .refine(realName, REAL_NAME_MESSAGE),
+    );
 
 const phone = z
   .string()
-  .transform(normalisePhone)
-  .pipe(
-    z
-      .string()
-      .regex(
-        NAMIBIAN_PHONE_PATTERN,
-        "Enter a Namibian number starting with +264 or 0, e.g. +264 81 123 4567.",
-      ),
-  );
+  .min(1, "Please enter your phone number.")
+  .refine(isValidNamibianPhone, PHONE_MESSAGE)
+  .transform(normalisePhone);
 
 const email = z
   .string()
@@ -148,7 +190,7 @@ export const advisorMessageSchema = z.object({
     .min(1, "Please enter your email or phone number so we can reply.")
     .max(120)
     .refine(
-      (value) => z.string().email().safeParse(value).success || NAMIBIAN_PHONE_PATTERN.test(normalisePhone(value)),
+      (value) => z.string().email().safeParse(value).success || isValidNamibianPhone(value),
       "Enter a valid email address or a Namibian phone number.",
     ),
 });
