@@ -9,7 +9,7 @@ import { SiFacebook, SiInstagram, SiWhatsapp } from "react-icons/si";
 import { Link } from "wouter";
 import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
 import { HoneypotField, useBotProtection } from "@/components/bot-protection";
-import { LatestNewsSection } from "@/components/latest-news-section";
+import { LatestNewsPopup } from "@/components/latest-news-popup";
 import { NewsletterSection } from "@/components/newsletter-section";
 import { advisorMessageSchema, contactSchema, firstError, vehicleQuoteSchema } from "@shared/enquiry-validation";
 import {
@@ -1380,12 +1380,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#f2f2f2]" data-testid="home-page">
       <Navbar />
+      <LatestNewsPopup />
       <HeroSection />
       <ServicesSection />
       <FormsSection />
       <WhyUsSection />
       <PartnersSection />
-      <LatestNewsSection />
       <NewsletterSection />
       <BannerSlideshow />
       <HowItWorksSection />
