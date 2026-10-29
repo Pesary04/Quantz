@@ -41,7 +41,7 @@ export async function createEnquiry(input: NewEnquiry): Promise<Enquiry> {
 }
 
 /**
- * Store an enquiry without ever throwing — form submissions must keep working
+ * Store an enquiry without ever throwing, because form submissions must keep working
  * (and still send email) even if the database write fails for some reason.
  */
 export async function saveEnquirySafe(input: NewEnquiry): Promise<void> {

@@ -21,7 +21,7 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
 /* ------------------------------------------------------------------ *
- * Admin accounts — used to sign in to the Quantz content dashboard.  *
+ * Admin accounts: used to sign in to the Quantz content dashboard.  *
  * ------------------------------------------------------------------ */
 export const adminUsers = pgTable("admin_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -55,7 +55,7 @@ export const adminSessions = pgTable(
 export type AdminSession = typeof adminSessions.$inferSelect;
 
 /* ------------------------------------------------------------------ *
- * Content — news / articles authored in the dashboard.              *
+ * Content: news / articles authored in the dashboard.              *
  * ------------------------------------------------------------------ */
 export const posts = pgTable(
   "posts",
@@ -102,7 +102,7 @@ export const postInputSchema = z.object({
 export type PostInput = z.infer<typeof postInputSchema>;
 
 /* ------------------------------------------------------------------ *
- * Editable site content — services, partner logos, banner slides and *
+ * Editable site content: services, partner logos, banner slides and *
  * team members. One generic table keyed by `collection`, each row     *
  * carrying its fields in a JSON `data` blob and an explicit sort      *
  * order so the admin can reorder items.                               *
@@ -182,7 +182,7 @@ export const contentDataSchemas: Record<ContentCollection, z.ZodTypeAny> = {
 };
 
 /* ------------------------------------------------------------------ *
- * Enquiries — every website form submission is stored here so it can  *
+ * Enquiries: every website form submission is stored here so it can  *
  * be reviewed in the dashboard as well as emailed.                    *
  * ------------------------------------------------------------------ */
 export const enquiries = pgTable(
@@ -208,7 +208,7 @@ export const enquiries = pgTable(
 export type Enquiry = typeof enquiries.$inferSelect;
 
 /* ------------------------------------------------------------------ *
- * Site settings — a single row (id = "main") of editable contact and  *
+ * Site settings: a single row (id = "main") of editable contact and  *
  * social details used across the public site.                         *
  * ------------------------------------------------------------------ */
 export const siteSettings = pgTable("site_settings", {

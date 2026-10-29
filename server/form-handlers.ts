@@ -135,7 +135,7 @@ export async function handleContact(body: unknown, clientIp?: string): Promise<H
       to: TO,
       cc: CC,
       replyTo: process.env.SMTP_USER,
-      subject: `New Quote Request — ${insuranceType} — ${firstName} ${lastName}`,
+      subject: `New Quote Request | ${insuranceType} | ${firstName} ${lastName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
           <div style="background: linear-gradient(135deg, #1E3F72, #2D6FA3); padding: 28px 32px;">
@@ -196,7 +196,7 @@ export async function handleInsuranceReview(body: unknown, clientIp?: string): P
       to: TO,
       cc: CC,
       replyTo: email,
-      subject: `New Insurance Review Request — ${fullName}`,
+      subject: `New Insurance Review Request | ${fullName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
           <div style="background: linear-gradient(135deg, #1E3F72, #2D6FA3); padding: 28px 32px;">
@@ -259,11 +259,11 @@ export async function handleAdvisorMessage(body: unknown, clientIp?: string): Pr
       to: TO,
       cc: CC,
       replyTo: safeContact && safeContact.includes("@") ? safeContact : process.env.SMTP_USER,
-      subject: `New Advisor Message${safeContact ? ` — ${safeContact}` : ""}`,
+      subject: `New Advisor Message${safeContact ? ` | ${safeContact}` : ""}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
           <div style="background: linear-gradient(135deg, #1E3F72, #00A896); padding: 28px 32px;">
-            <h2 style="color: white; margin: 0; font-size: 20px;">Speak to an Advisor — New Message</h2>
+            <h2 style="color: white; margin: 0; font-size: 20px;">Speak to an Advisor: New Message</h2>
             <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px;">Submitted via quantz.com.na</p>
           </div>
           <div style="padding: 28px 32px; background: #ffffff;">
@@ -364,7 +364,7 @@ export async function handleEnquiry(body: any, clientIp?: string): Promise<Handl
       to: TO,
       cc: CC,
       replyTo: email.includes("@") ? email : process.env.SMTP_USER,
-      subject: `New ${category} Enquiry — ${fullName}`,
+      subject: `New ${category} Enquiry | ${fullName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
           <div style="background: linear-gradient(135deg, #1E3F72, #2D6FA3); padding: 28px 32px;">
@@ -460,7 +460,7 @@ export async function handleVehicleQuote(body: unknown, clientIp?: string): Prom
       to: TO,
       cc: CC,
       replyTo: clientEmail.includes("@") ? clientEmail : process.env.SMTP_USER,
-      subject: `New Vehicle Insurance Application — ${esc(data.fullName)}`,
+      subject: `New Vehicle Insurance Application | ${esc(data.fullName)}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
           <div style="background: linear-gradient(135deg, #1e7bc4, #0d2e52); padding: 28px 32px;">

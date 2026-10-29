@@ -7,7 +7,7 @@ function ShareLinks({ title }: { title: string }) {
   const [copied, setCopied] = useState(false);
   const url = typeof window !== "undefined" ? window.location.href : "";
   const encodedUrl = encodeURIComponent(url);
-  const encodedText = encodeURIComponent(`${title} — ${url}`);
+  const encodedText = encodeURIComponent(`${title}: ${url}`);
 
   const linkClass =
     "flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-[#1E3F72] transition-colors hover:bg-[#1E3F72] hover:text-primary-foreground";

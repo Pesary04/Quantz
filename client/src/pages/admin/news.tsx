@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { deletePost, fetchAdminPosts, type Post } from "@/lib/admin-api";
 
 function formatDate(value: string | null): string {
-  if (!value) return "—";
+  if (!value) return "Not published";
   return new Date(value).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
