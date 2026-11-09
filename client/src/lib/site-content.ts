@@ -141,7 +141,7 @@ export const DEFAULT_SETTINGS: SiteSettingsData = {
   instagramUrl: "https://www.instagram.com/quantz_financial_/",
   linkedinUrl: "",
   newsletterImageUrl: "",
-  newsletterIssue: "Issue 1 | May 2026 – Why most Namibians are underinsured",
+  newsletterIssue: "Issue 1 | May 2026 | Why most Namibians are underinsured",
   newsletterCtaLabel: "Book a quick, no-obligation review with us.",
 };
 
