@@ -5,7 +5,7 @@ import * as schema from "../shared/schema.js";
 /**
  * The connection is created lazily on first use rather than at import time.
  * The Express entry point (server/index.ts) loads .env files in its module
- * body, which — because ES module imports are evaluated first — runs *after*
+ * body, which (because ES module imports are evaluated first) runs *after*
  * this file is imported. Reading DATABASE_URL eagerly here would therefore see
  * an empty value. A single pooled connection is then reused across warm
  * serverless invocations and for the lifetime of the dev server.
@@ -22,7 +22,7 @@ function init(): Db {
 
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
-    throw new Error("DATABASE_URL is not set — the database is not provisioned.");
+    throw new Error("DATABASE_URL is not set. The database is not provisioned.");
   }
 
   const pool =

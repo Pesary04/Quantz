@@ -128,7 +128,7 @@ function MoreInsights({ currentSlug }: { currentSlug: string }) {
         <div className="flex max-w-xl flex-col gap-3">
           <h2 className="text-balance text-2xl font-bold md:text-3xl">Close the gaps in your cover this month</h2>
           <p className="text-pretty leading-relaxed text-primary-foreground/80">
-            A quick, honest review with a Quantz advisor shows you exactly where you stand — at no cost.
+            A quick, honest review with a Quantz advisor shows you exactly where you stand, at no cost.
           </p>
         </div>
         <Link
@@ -215,14 +215,8 @@ export default function ArticlePage() {
           <div className="relative mx-auto -mt-16 grid max-w-6xl gap-8 px-4 pb-16 lg:grid-cols-[minmax(0,1fr)_300px]">
             <article className="rounded-3xl bg-card p-6 shadow-xl md:p-12">
               <ArticleBody blocks={blocks} />
-              <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
+              <div className="mt-12 border-t border-border pt-6">
                 <p className="text-sm text-muted-foreground">Written by the Quantz Financial Services team</p>
-                <Button variant="outline" asChild className="gap-2">
-                  <Link href="/news">
-                    <ArrowLeft className="h-4 w-4" />
-                    Back to news
-                  </Link>
-                </Button>
               </div>
             </article>
 

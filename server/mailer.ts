@@ -8,7 +8,7 @@ import type Mail from "nodemailer/lib/mailer";
  * sendMail() on each request. That meant a full cold TCP + STARTTLS + AUTH
  * handshake to Office 365 on every submission (~3.5s), which frequently
  * outlasted the preview proxy / browser fetch window and surfaced to users as
- * "Could not send your request" — even though the mail often did go out.
+ * "Could not send your request", even though the mail often did go out.
  *
  * A single pooled transporter keeps warm connections open and reuses them, so
  * subsequent sends complete in well under a second. Explicit timeouts ensure a
@@ -86,7 +86,7 @@ export async function sendQuantzMail(options: Mail.Options): Promise<void> {
 // surface credential/connection problems early in the server logs.
 export function verifyMailer(): void {
   if (!isMailConfigured()) {
-    console.warn("[v0] SMTP not configured — contact forms will report an error until SMTP_* env vars are set.");
+    console.warn("[v0] SMTP not configured. Contact forms will report an error until SMTP_* env vars are set.");
     return;
   }
   getTransporter()

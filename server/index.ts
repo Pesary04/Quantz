@@ -7,7 +7,7 @@ import { execFile } from "child_process";
 // project env files at startup so server-only secrets (SMTP_*, etc.) are
 // available in process.env when they are not already injected by the platform.
 // Platform-injected values (already present in process.env) always take
-// precedence — file values only fill in keys that are otherwise missing.
+// precedence: file values only fill in keys that are otherwise missing.
 for (const file of [".env.development.local", ".env.local", ".env"]) {
   const path = resolve(process.cwd(), file);
   if (!existsSync(path)) continue;
@@ -145,12 +145,12 @@ app.use((req, res, next) => {
   process.on("SIGTERM", shutdown);
   process.on("SIGINT", shutdown);
 
-  // Binding strategy — "the newest instance always wins":
+  // Binding strategy: "the newest instance always wins":
   //
   // The dev server must be the single process holding port 5000. Every prior
   // "port in use" / "Development server failed" banner came from TWO dev
   // servers existing at once (e.g. the platform's supervised instance plus a
-  // stray one), where the loser retried until it exited — and the platform
+  // stray one), where the loser retried until it exited, and the platform
   // treats ANY exit as a failure.
   //
   // The fix: when the port is held, first wait briefly (a normal restart hands

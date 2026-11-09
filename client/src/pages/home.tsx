@@ -10,7 +10,7 @@ import { Link } from "wouter";
 import { FooterDisclaimer, FormDisclaimer } from "@/components/legal-disclaimer";
 import { HoneypotField, useBotProtection } from "@/components/bot-protection";
 import { LatestNewsPopup } from "@/components/latest-news-popup";
-import { NewsletterSection } from "@/components/newsletter-section";
+import { NewsletterSpotlight } from "@/components/newsletter-spotlight";
 import { advisorMessageSchema, contactSchema, firstError, vehicleQuoteSchema } from "@shared/enquiry-validation";
 import {
   useSiteContent, useSiteSettings, serviceIcon, serviceTheme, telHref,
@@ -1381,12 +1381,12 @@ export default function Home() {
     <div className="min-h-screen bg-[#f2f2f2]" data-testid="home-page">
       <Navbar />
       <LatestNewsPopup />
+      <NewsletterSpotlight />
       <HeroSection />
       <ServicesSection />
       <FormsSection />
       <WhyUsSection />
       <PartnersSection />
-      <NewsletterSection />
       <BannerSlideshow />
       <HowItWorksSection />
       <TestimonialsSection />
